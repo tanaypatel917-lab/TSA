@@ -7,7 +7,9 @@
     "build": "next build",
     "lint": "next lint",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:e2e": "playwright test --project=chromium --grep-invert @a11y",
+    "test:a11y": "playwright test --project=chromium --grep @a11y"
   },
   "dependencies": {
     "@tailwindcss/forms": "0.5.10",
@@ -16,6 +18,8 @@
     "react-dom": "18.3.1"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.63.0",
     "@types/node": "22.10.7",
     "@types/react": "18.3.18",
     "@types/react-dom": "18.3.5",
@@ -23,6 +27,7 @@
     "eslint": "8.57.1",
     "eslint-config-next": "14.2.15",
     "postcss": "8.5.1",
+    "serve": "^14.2.6",
     "tailwindcss": "3.4.17",
     "typescript": "5.7.3",
     "vitest": "2.1.8"

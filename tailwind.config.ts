@@ -7,7 +7,7 @@ const config: Config = {
       colors: {
         ink: "#0f172a",
         paper: "#f8fafc",
-        accent: "#6366f1",
+        accent: "#4f46e5",
         glow: "#f59e0b"
       }
     }
