@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Inter_Tight, JetBrains_Mono } from "next/font/google";
+import "@fontsource/instrument-serif/400.css";
+import "@fontsource/instrument-serif/400-italic.css";
+import "@fontsource-variable/inter-tight/index.css";
+import "@fontsource-variable/jetbrains-mono/index.css";
 import "./globals.css";
 import { BadgeToast } from "@/components/BadgeToast";
 import { Cursor } from "@/components/motion/Cursor";
@@ -7,12 +10,9 @@ import { Nav } from "@/components/Nav";
 import { ProgressProvider } from "@/state/ProgressProvider";
 
 export const metadata: Metadata = { title: "AI Compass", description: "An interactive AI learning portal for grades 9–12." };
-const display = Instrument_Serif({ subsets: ["latin"], variable: "--font-display", style: "italic", weight: "400" });
-const sans = Inter_Tight({ subsets: ["latin"], variable: "--font-sans" });
-const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en" className={`${display.variable} ${sans.variable} ${mono.variable}`}><body>
+  return <html lang="en" style={{ "--font-display": "\"Instrument Serif\"", "--font-sans": "\"Inter Tight Variable\"", "--font-mono": "\"JetBrains Mono Variable\"" } as React.CSSProperties}><body>
     <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-paper focus:px-4 focus:py-3 focus:font-mono focus:text-xs focus:uppercase focus:tracking-wider">Skip to content</a>
     <ProgressProvider>
       <Nav /><Cursor /><main id="main">{children}</main><BadgeToast />

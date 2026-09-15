@@ -11,6 +11,11 @@ const config: Config = {
         accent: "#ff4f1f",
         lime: "#c8f560",
         dark: "#141414"
+      },
+      fontFamily: {
+        display: ["Instrument Serif", "Georgia", "serif"],
+        sans: ["Inter Tight Variable", "Inter", "system-ui", "sans-serif"],
+        mono: ["JetBrains Mono Variable", "ui-monospace", "monospace"]
       }
     }
   },
