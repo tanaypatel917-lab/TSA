@@ -1,0 +1,22 @@
+export const glossary = [
+  ["AI", "Computer systems designed to perform tasks that involve patterns, language, perception, or decisions."],
+  ["Machine learning", "A method where a system adjusts from examples instead of receiving every rule directly."],
+  ["Model", "A set of learned patterns and settings used to make predictions or generate results."],
+  ["LLM", "Large language model; a model trained to predict and generate sequences of language."],
+  ["Token", "A small piece of text, such as a word, part of a word, or punctuation mark."],
+  ["Training data", "Examples used to shape a model's patterns and behavior."],
+  ["Prompt", "An instruction, question, or context given to an AI tool."],
+  ["Context", "Background information that helps a tool understand a task and audience."],
+  ["Hallucination", "A plausible-sounding but unsupported or invented AI output."],
+  ["Bias", "A repeated pattern that can produce unfair or inaccurate outcomes."],
+  ["Fairness", "The practice of evaluating and reducing unequal or unjust impact."],
+  ["Privacy", "A person's ability to control personal information and how it is used."],
+  ["Deepfake", "Synthetic audio, video, or images that imitate a real person's appearance or voice."],
+  ["Misinformation", "False or misleading content, whether shared deliberately or by mistake."],
+  ["Generative AI", "AI that creates new text, images, audio, code, or other content."],
+  ["Algorithm", "A repeatable set of steps used to solve a problem or process information."],
+  ["Classifier", "A system that sorts examples into categories."],
+  ["Prompt injection", "An attempt to manipulate a tool by placing conflicting instructions in its input."],
+  ["Verification", "Checking a result against evidence, calculations, or a trusted source."],
+  ["Human oversight", "People reviewing, guiding, or taking responsibility for an AI-assisted decision."]
+].map(([term, definition]) => ({ term, definition }));
