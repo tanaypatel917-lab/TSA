@@ -42,6 +42,7 @@ test("golden path: lesson, badge, quiz, persistence, export, reset", async ({ pa
   await expect(page.getByText("60 XP", { exact: true })).toBeVisible();
   const stored = await page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? "null"), STORAGE_KEY);
   expect(stored.xp).toBe(60);
+  expect(stored.quizBest[foundations.id]).toBe(100);
   expect(stored.completedLessons).toContain(`${foundations.id}/${foundations.lessons[0].id}`);
 
   const downloadPromise = page.waitForEvent("download");
