@@ -39,11 +39,13 @@ you fork the repo under a different name, change the value in the workflow to
 To check a Pages-style build locally:
 
 ```bash
-NEXT_PUBLIC_BASE_PATH=/TSA npm run build && npx serve out
+NEXT_PUBLIC_BASE_PATH=/TSA npm run build
+mkdir -p /tmp/site && ln -sfn "$PWD/out" /tmp/site/TSA
+npx serve /tmp/site   # open http://localhost:3000/TSA/
 ```
 
-Note: serve `out/` under `/` — the base-path build expects the site at `/TSA`,
-so a quick smoke test of asset paths is easiest via the plain `npm run build`.
+The base-path build expects to be mounted at `/TSA`, so it must be served from
+a parent directory (as above); a plain `npm run build` serves fine from `out/`.
 
 ### PWA / offline
 
