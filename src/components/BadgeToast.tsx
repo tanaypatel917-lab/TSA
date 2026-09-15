@@ -8,10 +8,10 @@ export function BadgeToast() {
   if (!newBadgeToast.length) return null;
   const badge = BADGES.find((item) => item.id === newBadgeToast[0]);
   return (
-    <div aria-live="polite" className="fixed bottom-4 right-4 z-50 max-w-sm rounded-2xl bg-ink px-5 py-4 text-white shadow-2xl">
-      <p className="text-xs font-bold uppercase tracking-widest text-amber-300">New badge unlocked</p>
-      <p className="mt-1 text-lg font-bold">{badge?.icon} {badge?.name ?? newBadgeToast[0]}</p>
-      <p className="mt-1 text-sm text-slate-200">{badge?.description}</p>
+    <div aria-live="polite" className="terminal frame fixed bottom-14 right-4 z-50 max-w-sm animate-rise px-5 py-4 normal-case">
+      <p className="mono-label text-signal">:// New badge unlocked</p>
+      <p className="mt-2 font-display text-xl font-black uppercase tracking-tight text-paper">{badge?.icon} {badge?.name ?? newBadgeToast[0]}</p>
+      <p className="mt-1 font-display text-sm text-paper/80">{badge?.description}</p>
     </div>
   );
 }

@@ -4,14 +4,60 @@
 
 :root { color-scheme: light; }
 html { scroll-behavior: smooth; }
-body { @apply bg-paper text-ink; }
+body { @apply bg-paper font-display text-ink antialiased; padding-bottom: 2.5rem; }
+::selection { @apply bg-signal text-ink; }
+
 @layer components {
-  .shell { @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8; }
-  .card { @apply rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7; }
-  .eyebrow { @apply text-xs font-bold uppercase tracking-[0.18em] text-accent; }
-  .button-primary { @apply inline-flex items-center justify-center rounded-xl bg-accent px-4 py-2.5 font-bold text-white transition hover:bg-indigo-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-200 disabled:cursor-not-allowed disabled:opacity-50; }
-  .button-secondary { @apply inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-4 py-2.5 font-bold text-ink transition hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-200 disabled:cursor-not-allowed disabled:opacity-50; }
+  .shell { @apply mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12; }
+
+  /* Typography */
+  .display { @apply font-display font-black uppercase leading-[0.88] tracking-[-0.035em]; }
+  .display-xl { @apply display text-[clamp(3.5rem,11vw,11rem)]; }
+  .display-lg { @apply display text-[clamp(2.75rem,7vw,6.5rem)]; }
+  .display-md { @apply display text-[clamp(2rem,4.5vw,4rem)]; }
+  .display-sm { @apply display text-[clamp(1.5rem,2.6vw,2.25rem)]; }
+  .mono-label { @apply font-mono text-[11px] font-medium uppercase tracking-[0.14em]; }
+  .eyebrow { @apply mono-label text-ink; }
+  .eyebrow::before { content: "://"; @apply mr-2 text-signal; }
+  .index { @apply font-mono text-[11px] font-medium tabular-nums uppercase tracking-[0.14em] text-mute; }
+  .prose-body { @apply text-[1.05rem] leading-[1.65] text-ink sm:text-lg; }
+
+  /* Surfaces */
+  .frame { @apply relative border border-ink bg-paper; }
+  .frame::before, .frame::after { content: ""; @apply pointer-events-none absolute -left-[3px] -right-[3px] h-[5px]; --mark: theme("colors.ink"); background: linear-gradient(to right, var(--mark) 5px, transparent 5px, transparent calc(100% - 5px), var(--mark) calc(100% - 5px)); }
+  .frame::before { top: -3px; }
+  .frame::after { bottom: -3px; }
+  .frame-signal::before, .frame-signal::after { --mark: theme("colors.signal"); }
+  .card { @apply frame p-5 sm:p-7; }
+  .terminal { @apply bg-ink font-mono text-signal; }
+  .terminal .frame { @apply border-signal bg-ink; }
+  .terminal .frame::before, .terminal .frame::after { --mark: theme("colors.signal"); }
+  .rule { @apply border-t border-dotted border-ink; }
+  .grid-lines { background-image: linear-gradient(to right, rgb(11 11 11 / 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgb(11 11 11 / 0.08) 1px, transparent 1px); background-size: 48px 48px; }
+  .scanlines { background-image: repeating-linear-gradient(to bottom, rgb(255 45 26 / 0.09) 0 1px, transparent 1px 3px); }
+  .ghost { @apply display pointer-events-none absolute select-none text-signal blur-[14px] sm:blur-[22px]; }
+
+  /* Controls */
+  .button-primary { @apply inline-flex items-center justify-center gap-2 border border-ink bg-ink px-5 py-3 font-mono text-[12px] font-bold uppercase tracking-[0.12em] text-paper transition-colors hover:border-signal hover:bg-signal hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2 focus-visible:ring-offset-paper disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-ink disabled:hover:bg-ink disabled:hover:text-paper; }
+  .button-secondary { @apply inline-flex items-center justify-center gap-2 border border-ink bg-transparent px-5 py-3 font-mono text-[12px] font-bold uppercase tracking-[0.12em] text-ink transition-colors hover:bg-ink hover:text-paper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2 focus-visible:ring-offset-paper disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-ink; }
+  .choice { @apply w-full border border-ink bg-transparent p-4 text-left font-display text-base font-bold leading-snug text-ink transition-colors hover:bg-ink hover:text-paper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2 focus-visible:ring-offset-paper disabled:cursor-default disabled:hover:bg-transparent disabled:hover:text-ink; }
+  .choice:hover:not(:disabled) .index, .choice-correct .index { @apply text-paper/70; }
+  .choice-correct { @apply !bg-ink !text-paper; }
+  .choice-wrong { @apply !border-signal !bg-signal !text-ink; }
+  .field { @apply mt-2 w-full border-ink bg-paper font-display text-base text-ink placeholder:text-mute focus:border-ink focus:ring-2 focus:ring-signal; }
+  .nav-link { @apply mono-label relative text-ink transition-colors hover:text-signal focus-visible:outline-none focus-visible:text-signal; }
+  .nav-link[aria-current="page"]::after { content: ""; @apply absolute -bottom-1 left-0 h-[2px] w-full bg-signal; }
+
+  /* Cards that invert on hover */
+  .flip { @apply transition-colors duration-200 hover:bg-ink hover:text-paper; }
+  .flip:hover .index, .flip:hover .text-mute { @apply text-paper/70; }
+  .flip:hover .eyebrow { @apply text-paper; }
+  .flip:hover::before, .flip:hover::after { --mark: theme("colors.signal"); }
+
+  .marquee-track { @apply flex w-max animate-marquee whitespace-nowrap; }
 }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+  .marquee-track { animation: none; }
 }
