@@ -1,21 +1,22 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Instrument_Serif, Inter_Tight, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { BadgeToast } from "@/components/BadgeToast";
+import { Cursor } from "@/components/motion/Cursor";
+import { Nav } from "@/components/Nav";
 import { ProgressProvider } from "@/state/ProgressProvider";
 
 export const metadata: Metadata = { title: "AI Compass", description: "An interactive AI learning portal for grades 9–12." };
+const display = Instrument_Serif({ subsets: ["latin"], variable: "--font-display", style: "italic", weight: "400" });
+const sans = Inter_Tight({ subsets: ["latin"], variable: "--font-sans" });
+const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body>
-    <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-3 focus:shadow">Skip to content</a>
+  return <html lang="en" className={`${display.variable} ${sans.variable} ${mono.variable}`}><body>
+    <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-paper focus:px-4 focus:py-3 focus:font-mono focus:text-xs focus:uppercase focus:tracking-wider">Skip to content</a>
     <ProgressProvider>
-      <header className="border-b border-slate-200 bg-white"><div className="shell flex flex-wrap items-center justify-between gap-4 py-4">
-        <Link href="/" className="flex items-center gap-2 text-xl font-black tracking-tight"><span className="grid h-9 w-9 place-items-center rounded-xl bg-indigo-100">🧭</span> AI Compass</Link>
-        <nav aria-label="Main navigation" className="flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold text-slate-600"><Link className="hover:text-accent" href="/">Dashboard</Link><Link className="hover:text-accent" href="/modules">Modules</Link><Link className="hover:text-accent" href="/badges">Badges</Link><Link className="hover:text-accent" href="/glossary">Glossary</Link><Link className="hover:text-accent" href="/about">About</Link></nav>
-      </div></header>
-      <main id="main">{children}</main><BadgeToast />
-      <footer className="mt-20 border-t border-slate-200 bg-white"><div className="shell flex flex-col gap-2 py-8 text-sm text-slate-500 sm:flex-row sm:justify-between"><span>AI Compass · Learn with curiosity and care.</span><span>Your progress stays on this device.</span></div></footer>
+      <Nav /><Cursor /><main id="main">{children}</main><BadgeToast />
+      <footer className="mt-24 border-t border-line bg-paper"><div className="shell pt-16"><p className="font-display text-[14vw] leading-[.7] tracking-[-.05em] text-ink/10">AI Compass</p><div className="mt-12 flex flex-col gap-3 border-t border-line py-6 font-mono text-[10px] uppercase tracking-[0.16em] text-ink/60 sm:flex-row sm:justify-between"><span>Learn with curiosity and care.</span><span>Local-first · No tracking · Grades 9–12</span></div></div></footer>
     </ProgressProvider>
   </body></html>;
 }
