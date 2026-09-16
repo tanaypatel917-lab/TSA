@@ -7,7 +7,8 @@ const links = [
   { href: "/modules", label: "Modules", index: "01" },
   { href: "/badges", label: "Badges", index: "02" },
   { href: "/glossary", label: "Glossary", index: "03" },
-  { href: "/about", label: "About", index: "04" }
+  { href: "/sources", label: "Sources", index: "04" },
+  { href: "/about", label: "About", index: "05" }
 ];
 
 export function SiteNav() {

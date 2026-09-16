@@ -10,13 +10,13 @@ const pad = (n: number) => String(n).padStart(2, "0");
 export function QuizRunner({ module }: { module: Module }) {
   const { dispatch } = useProgress(); const [index, setIndex] = useState(0); const [selected, setSelected] = useState<number | null>(null); const [score, setScore] = useState(0); const [finished, setFinished] = useState(false); const question = module.quiz[index];
   function choose(choice: number) { if (selected !== null) return; setSelected(choice); if (choice === question.answerIndex) setScore((value) => value + 1); }
-  function next() { if (index === module.quiz.length - 1) { const finalScore = score + (selected === question.answerIndex ? 1 : 0); dispatch({ type: "quiz-completed", moduleId: module.id, scorePct: finalScore / module.quiz.length * 100, day: todayKey() }); setFinished(true); } else { setIndex((value) => value + 1); setSelected(null); } }
+  function next() { if (index === module.quiz.length - 1) { dispatch({ type: "quiz-completed", moduleId: module.id, scorePct: score / module.quiz.length * 100, day: todayKey() }); setFinished(true); } else { setIndex((value) => value + 1); setSelected(null); } }
   function retry() { setIndex(0); setSelected(null); setScore(0); setFinished(false); }
   if (finished) return (
     <div className="terminal frame p-8 sm:p-12">
       <p className="mono-label">:// Quiz complete</p>
       <h2 className="display-xl mt-6 tabular-nums text-paper">{Math.round(score / module.quiz.length * 100)}%</h2>
-      <p className="mt-6 max-w-md font-display text-lg text-paper">{score >= 4 ? "Strong work. Your best score is now saved." : "Review the lessons and try again when you are ready."}</p>
+      <p className="mt-6 max-w-md font-display text-lg text-paper">{score / module.quiz.length >= 0.7 ? "Strong work. Your best score is now saved." : "Review the lessons and try again when you are ready."}</p>
       <div className="mt-8 flex flex-wrap gap-3"><button className="button-secondary border-signal text-signal hover:bg-signal hover:text-ink" onClick={retry}>Retry quiz</button><Link className="button-primary border-paper bg-paper text-ink hover:border-signal hover:bg-signal" href={`/modules/${module.slug}`}>Back to module</Link></div>
     </div>
   );

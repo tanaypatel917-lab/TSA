@@ -10,6 +10,7 @@ const pages = [
   "/modules/",
   "/badges/",
   "/glossary/",
+  "/sources/",
   "/about/",
   `/modules/${foundations.slug}/`,
   `/modules/${foundations.slug}/lessons/${foundations.lessons[0].id}/`,
