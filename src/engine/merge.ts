@@ -25,7 +25,6 @@ export function mergeProgress(local: ProgressState, remote: ProgressState): Prog
 
   const streak = {
     ...laterStreak(local.streak, remote.streak),
-    shields: Math.max(local.streak.shields, remote.streak.shields),
     longest: Math.max(local.streak.longest, remote.streak.longest)
   };
 
