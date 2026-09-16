@@ -8,7 +8,7 @@ html { overflow-x: clip; }
 body { @apply bg-paper font-sans text-ink; font-feature-settings: "ss01", "cv11"; -webkit-font-smoothing: antialiased; }
 body::before { content: ""; position: fixed; inset: 0; z-index: 40; pointer-events: none; opacity: .06; mix-blend-mode: multiply; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.36'/%3E%3C/svg%3E"); }
 * { border-color: theme("colors.line"); }
-::selection { background: #c8f560; color: #111111; }
+::selection { background: #c8f560; color: #0b0b0b; }
 @layer components {
   .shell { @apply mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12; }
   .eyebrow { @apply font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-ink; }
@@ -40,6 +40,12 @@ body::before { content: ""; position: fixed; inset: 0; z-index: 40; pointer-even
   100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
 }
 .confetti-piece { position: absolute; top: 0; border-radius: 2px; animation-name: confetti-fall; animation-timing-function: linear; animation-fill-mode: forwards; }
+
+/* Re-layered terminal identity */
+.terminal { @apply bg-ink font-mono text-signalBright; }
+.terminal .frame { @apply border-signal bg-ink; }
+.terminal .frame::before, .terminal .frame::after { --mark: theme("colors.signal"); }
+.scanlines { background-image: repeating-linear-gradient(to bottom, rgb(176 42 8 / 0.09) 0 1px, transparent 1px 3px); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }

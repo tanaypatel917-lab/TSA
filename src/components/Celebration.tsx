@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useProgress } from "@/state/ProgressProvider";
 
-const CONFETTI_COLORS = ["#b02a08", "#c8f560", "#111111", "#d9d4c7"];
+const CONFETTI_COLORS = ["#b02a08", "#c8f560", "#0b0b0b", "#d9d4c7"];
 
 function chime() {
   try {
