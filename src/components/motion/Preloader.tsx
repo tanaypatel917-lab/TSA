@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import GridLoader from "@/components/smoothui/grid-loader";
 import { useEffect, useState } from "react";
 
 export function Preloader() {
@@ -45,7 +46,10 @@ export function Preloader() {
     transition={{ duration: exiting ? 0.6 : 0, ease: [0.22, 1, 0.36, 1] }}
     onAnimationComplete={() => { if (exiting) setVisible(false); }}
   >
-    <p className="font-mono text-[10px] uppercase tracking-[.22em] text-paper/50">Loading the signal</p>
+    <div className="flex items-center justify-between">
+      <p className="font-mono text-[10px] uppercase tracking-[.22em] text-paper/50">Loading the signal</p>
+      <GridLoader mode="sequence" sequence={["cross", "corners", "checkerboard", "border", "breathing"]} color="#ff4f1f" size="lg" speed="fast" />
+    </div>
     <div>
       <p className="font-display text-[clamp(3rem,10vw,9rem)] italic leading-none">AI Compass</p>
       <div className="mt-6 flex items-baseline justify-between border-t border-paper/20 pt-3 font-mono text-xs uppercase tracking-[.2em]">
