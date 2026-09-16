@@ -23,9 +23,9 @@ export function SoundToggle() {
       onClick={toggle}
       aria-pressed={on}
       title={on ? "Mute celebration sounds" : "Enable celebration sounds"}
-      className="rounded-lg px-2 py-1 text-sm hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-200"
+      className="py-2 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-ink transition hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4"
     >
-      {on ? "🔊" : "🔇"}<span className="sr-only">{on ? "Sound on" : "Sound off"}</span>
+      Sound {on ? "on" : "off"}<span className="sr-only">{on ? " — turn celebration sounds off" : " — turn celebration sounds on"}</span>
     </button>
   );
 }

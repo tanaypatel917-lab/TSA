@@ -19,12 +19,12 @@ export function DailyChallenge() {
 
   if (state.dailyChallenge.lastDay === today || done) {
     return (
-      <div className="card">
+      <div className="border border-line bg-paper p-7">
         <div className="flex items-start justify-between">
           <div>
-            <p className="eyebrow">Today&apos;s Compass Check</p>
-            <h2 className="mt-2 text-xl font-black">Done for today — come back tomorrow for a new check. 🧭</h2>
-            {done && <p className="mt-2 text-slate-600">You got {correct}/{questions.length} correct — every answer taught you something.</p>}
+            <p className="eyebrow">Today&rsquo;s Compass Check</p>
+            <h2 className="mt-3 font-display text-3xl italic">Done for today — come back tomorrow for a new check. 🧭</h2>
+            {done && <p className="mt-2 text-ink/60">You got {correct}/{questions.length} correct — every answer taught you something.</p>}
           </div>
           <span className="text-3xl">✅</span>
         </div>
@@ -51,23 +51,23 @@ export function DailyChallenge() {
   }
 
   return (
-    <div className="card">
+    <div className="border border-line bg-paper p-7">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
-          <p className="eyebrow">Today&apos;s Compass Check</p>
-          <h2 className="mt-2 text-xl font-black">Question {index + 1} of {questions.length}</h2>
+          <p className="eyebrow">Today&rsquo;s Compass Check</p>
+          <h2 className="mt-3 font-display text-3xl italic">Question {index + 1} of {questions.length}</h2>
         </div>
-        <span className="rounded-full bg-indigo-100 px-3 py-1 text-sm font-bold text-indigo-800">+15 XP</span>
+        <span className="rounded-full border border-lime bg-lime px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-wider">+15 XP</span>
       </div>
-      <p className="mt-4 font-bold text-ink">{current.question.prompt}</p>
+      <p className="mt-5 font-bold text-ink">{current.question.prompt}</p>
       <div className="mt-4 grid gap-2 sm:grid-cols-2">
         {current.question.choices.map((choice, choiceIndex) => {
           const isAnswer = choiceIndex === current.question.answerIndex;
           const isPicked = choiceIndex === picked;
           let classes = "button-secondary justify-start text-left";
           if (picked !== null) {
-            if (isAnswer) classes += " !border-emerald-400 !bg-emerald-50";
-            else if (isPicked) classes += " !border-rose-300 !bg-rose-50";
+            if (isAnswer) classes += " !border-lime !bg-lime";
+            else if (isPicked) classes += " !border-accent !text-accent";
           }
           return (
             <button key={choiceIndex} onClick={() => choose(choiceIndex)} disabled={picked !== null} className={classes}>
@@ -77,13 +77,13 @@ export function DailyChallenge() {
         })}
       </div>
       {picked !== null && (
-        <div className="mt-4 rounded-2xl bg-slate-50 p-4 text-sm text-slate-700">
-          <p className="font-bold">{picked === current.question.answerIndex ? "Nice — that's right." : "Not quite — good thing this is practice."}</p>
+        <div className="mt-4 border border-line bg-paper/60 p-4 text-sm text-ink/70">
+          <p className="font-bold text-ink">{picked === current.question.answerIndex ? "Nice — that's right." : "Not quite — good thing this is practice."}</p>
           <p className="mt-1">{current.question.explanation}</p>
-          <button onClick={next} className="button-primary mt-3">{index === questions.length - 1 ? "See results" : "Next question"}</button>
+          <button onClick={next} className="btn-pill mt-3">{index === questions.length - 1 ? "See results" : "Next question"}</button>
         </div>
       )}
-      <p className="mt-3 text-xs text-slate-500">Three quick questions, new every day. Answering counts — the XP is yours either way.</p>
+      <p className="mt-3 font-mono text-[10px] uppercase tracking-wider text-ink/50">Three quick questions, new every day. Answering counts — the XP is yours either way.</p>
     </div>
   );
 }
