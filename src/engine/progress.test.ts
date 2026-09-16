@@ -90,3 +90,30 @@ describe("tier 1 engagement", () => {
     expect(poor.leveledUp).toBe(false);
   });
 });
+
+describe("streak shield coverage", () => {
+  const day = (n: number) => `2027-04-${String(n).padStart(2, "0")}`;
+  const lesson = (d: string) => ({ type: "lesson-completed" as const, moduleId: "foundations", lessonId: `l-${d}`, day: d });
+  const withShields = (shields: number) => ({
+    ...initialState,
+    streak: { count: 5, lastDay: day(1), shields, longest: 5 }
+  });
+
+  it("one shield covers one missed day", () => {
+    const result = apply(withShields(1), lesson(day(3)), [foundations]);
+    expect(result.shieldUsed).toBe(true);
+    expect(result.state.streak).toMatchObject({ count: 6, shields: 0, lastDay: day(3) });
+  });
+
+  it("one shield does not cover two missed days", () => {
+    const result = apply(withShields(1), lesson(day(4)), [foundations]);
+    expect(result.shieldUsed).toBe(false);
+    expect(result.state.streak).toMatchObject({ count: 1, shields: 0, lastDay: day(4) });
+  });
+
+  it("two shields cover two missed days", () => {
+    const result = apply(withShields(2), lesson(day(4)), [foundations]);
+    expect(result.shieldUsed).toBe(true);
+    expect(result.state.streak).toMatchObject({ count: 6, shields: 0, lastDay: day(4) });
+  });
+});

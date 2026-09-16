@@ -53,7 +53,7 @@ export function Nav() {
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [open]);
-  return <motion.header animate={{ y: reduced || !hidden ? 0 : "-100%" }} transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }} className={`fixed inset-x-0 top-0 z-30 ${scrolled ? "is-scrolled border-b border-line bg-paper/85 backdrop-blur-md" : ""}`}><div className="shell flex h-20 items-center justify-between">
+  return <motion.header onFocusCapture={() => setHidden(false)} animate={{ y: reduced || !hidden ? 0 : "-100%" }} transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }} className={`fixed inset-x-0 top-0 z-30 ${scrolled ? "is-scrolled border-b border-line bg-paper/85 backdrop-blur-md" : ""}`}><div className="shell flex h-20 items-center justify-between">
     <Link href="/" className="font-display text-3xl italic leading-none" onClick={closeMenu}>AI Compass</Link>
     <nav className="hidden items-center gap-7 md:flex" aria-label="Main navigation">{links.map(([label, href], index) => <Link key={href} href={href} className="link-underline font-mono text-[10px] font-bold uppercase tracking-[0.18em]" data-cursor="hover"><span className="mr-2 text-accent">0{index + 1}</span>{label}</Link>)}<SoundToggle /> </nav>
     {hydrated && state.startedAt && <span className="hidden rounded-full border border-line bg-paper/70 px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider lg:block">{state.xp} XP · Lvl {levelFor(state.xp).name}{emailLocalpart && emailLocalpart.length <= 16 ? ` · ${emailLocalpart}` : ""}</span>}

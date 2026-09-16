@@ -16,8 +16,8 @@ export function Stagger({ children, className = "" }: { children: React.ReactNod
     className={className}
     initial="hidden"
     whileInView="show"
-    viewport={{ once: true, margin: "-10%" }}
-    variants={{ hidden, show: { transition: { staggerChildren: 0.08 } } }}
+    viewport={{ once: true, amount: 0.1 }}
+    variants={{ hidden, show: { opacity: 1, y: 0, transition: { staggerChildren: 0.08 } } }}
   >
     {children}
   </motion.div></StaggerContext.Provider>;
