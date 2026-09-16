@@ -8,7 +8,7 @@ const config: Config = {
         ink: "#111111",
         paper: "#f4f1ea",
         line: "#d9d4c7",
-        accent: "#c0300a",
+        accent: "#b02a08",
         lime: "#c8f560",
         dark: "#141414"
       },

@@ -12,7 +12,23 @@ npm run dev
 ```
 
 The verification scripts are `npm run typecheck`, `npm run lint`, `npm test`,
-and `npm run build`. There is no backend, account system, or API call.
+and `npm run build`. Accounts are optional; the app remains fully local when
+Supabase is not configured.
+
+## Accounts (optional)
+
+To enable cloud progress sync, create a Supabase project and run
+[`supabase/schema.sql`](supabase/schema.sql) in its SQL editor. Copy
+[`.env.example`](.env.example) to `.env.local` and set
+`NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`. For GitHub Pages,
+add those values as repository Variables and pass them to the deploy workflow's
+build step:
+
+```yaml
+env:
+  NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+```
 
 ## Testing
 

@@ -30,7 +30,9 @@ test("golden path: lesson, badge, quiz, persistence, export, reset", async ({ pa
     await page.getByRole("button", { name: /Next question|See results/ }).click();
   }
   await expect(page.getByText("Quiz complete")).toBeVisible();
-  await expect(page.getByText("100%", { exact: true })).toBeVisible();
+  const result = page.getByRole("heading", { level: 2 });
+  await result.scrollIntoViewIfNeeded();
+  await expect(result).toHaveText(/^100%$/);
 
   await page.goto("/");
   await expect(page.getByText("60 XP", { exact: true })).toBeVisible();
