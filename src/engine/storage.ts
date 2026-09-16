@@ -1,4 +1,4 @@
-import { initialState, type ProgressState } from "./progress";
+import { initialState, normalizeState, type ProgressState } from "./progress";
 
 const KEY = "ai-compass:progress:v1";
 
@@ -19,7 +19,7 @@ export function loadProgress(): ProgressState {
     const raw = window.localStorage.getItem(KEY);
     if (!raw) return initialState;
     const parsed: unknown = JSON.parse(raw);
-    return isProgressState(parsed) ? parsed : initialState;
+    return isProgressState(parsed) ? normalizeState(parsed) : initialState;
   } catch {
     return initialState;
   }
@@ -36,7 +36,7 @@ export function exportProgress(state: ProgressState): string {
 export function importProgress(json: string): ProgressState | null {
   try {
     const parsed: unknown = JSON.parse(json);
-    return isProgressState(parsed) ? parsed : null;
+    return isProgressState(parsed) ? normalizeState(parsed) : null;
   } catch {
     return null;
   }
