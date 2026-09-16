@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { modules } from "@/content";
+import { ModuleList } from "@/components/ModuleList";
 
 export default function ModulesPage() {
-  return <div className="shell py-12"><p className="eyebrow">The learning path</p><h1 className="mt-2 text-4xl font-black">Choose your next direction.</h1><p className="mt-4 max-w-2xl text-lg text-slate-600">Each module combines short lessons, an interactive activity, and a five-question quiz.</p><div className="mt-8 grid gap-5 md:grid-cols-2">{modules.map((module, index) => <Link href={`/modules/${module.slug}`} key={module.id} className="card group hover:-translate-y-1 hover:border-indigo-300"><div className="flex items-center justify-between"><span className="text-4xl">{module.icon}</span><span className="text-sm font-bold text-slate-500">0{index + 1}</span></div><h2 className="mt-6 text-2xl font-bold group-hover:text-accent">{module.title}</h2><p className="mt-2 text-slate-600">{module.tagline}</p><p className="mt-6 text-sm font-bold text-accent">Explore module →</p></Link>)}</div></div>;
+  return <div className="shell py-32"><div className="grid gap-8 lg:grid-cols-12"><div className="lg:col-span-8"><p className="eyebrow"><span className="mr-3 text-accent">01</span> The learning path</p><h1 className="mt-7 font-display text-[clamp(3rem,8vw,7rem)] leading-[.88]">Choose your<br /><em>direction.</em></h1></div><p className="self-end text-lg leading-relaxed text-ink/65 lg:col-start-9 lg:col-span-4">Five ways into AI literacy. Start with the foundations, or follow the question that has your attention today.</p></div><div className="mt-24"><ModuleList modules={modules} /></div></div>;
 }

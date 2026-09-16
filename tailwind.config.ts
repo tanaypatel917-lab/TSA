@@ -5,15 +5,17 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#0f172a",
-        paper: "#f8fafc",
-        accent: "#4f46e5",
-        glow: "#f59e0b"
+        ink: "#111111",
+        paper: "#f4f1ea",
+        line: "#d9d4c7",
+        accent: "#c0300a",
+        lime: "#c8f560",
+        dark: "#141414"
       },
       fontFamily: {
-        sans: ["var(--font-karrik)", "system-ui", "sans-serif"],
-        mono: ["var(--font-martian)", "ui-monospace", "monospace"],
-        pixel: ["var(--font-departure)", "var(--font-martian)", "monospace"]
+        display: ["Instrument Serif", "Georgia", "serif"],
+        sans: ["Inter Tight Variable", "Inter", "system-ui", "sans-serif"],
+        mono: ["JetBrains Mono Variable", "ui-monospace", "monospace"]
       }
     }
   },
