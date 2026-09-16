@@ -10,7 +10,8 @@ const esc = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 test("golden path: lesson, badge, quiz, persistence, export, reset", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("link", { name: /Start learning|Begin the journey/ }).click();
+  await page.getByRole("button", { name: /Skip for now/ }).click();
+  await page.goto("/modules/");
 
   await page.getByRole("link", { name: new RegExp(esc(foundations.title)) }).first().click();
   await page.getByRole("link", { name: new RegExp(esc(foundations.lessons[0].title)) }).click();
@@ -29,7 +30,7 @@ test("golden path: lesson, badge, quiz, persistence, export, reset", async ({ pa
     await expect(page.getByText(/^Correct!?$/)).toBeVisible();
     await page.getByRole("button", { name: /Next question|See results/ }).click();
   }
-  await expect(page.getByText("Quiz complete")).toBeVisible();
+  await expect(page.getByText("Quiz complete", { exact: true })).toBeVisible();
   const result = page.getByRole("heading", { level: 2 });
   await result.scrollIntoViewIfNeeded();
   await expect(result).toHaveText(/^100%$/);
@@ -57,7 +58,7 @@ test("golden path: lesson, badge, quiz, persistence, export, reset", async ({ pa
 
   page.once("dialog", (dialog) => dialog.accept());
   await page.getByRole("button", { name: /^Reset/ }).click();
-  await expect(page.getByRole("link", { name: /Start learning|Begin the journey/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Skip for now/ })).toBeVisible();
   const afterReset = await page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? "null"), STORAGE_KEY);
   expect(afterReset === null || afterReset.xp === 0).toBeTruthy();
 });

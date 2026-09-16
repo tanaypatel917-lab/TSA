@@ -25,6 +25,12 @@ async function expectNoSeriousViolations(page: Page) {
   expect(serious, JSON.stringify(serious, null, 2)).toEqual([]);
 }
 
+// Reduced motion makes the motion components render their settled, non-animated
+// paths so axe measures final colors rather than mid-fade opacity blends.
+test.beforeEach(async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+});
+
 for (const path of pages) {
   test(`@a11y ${path} has no serious violations`, async ({ page }) => {
     await page.goto(path);

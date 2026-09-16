@@ -3,7 +3,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { evaluateBadges } from "@/engine/badges";
 import { mergeProgress } from "@/engine/merge";
-import { apply, initialState, type ProgressEvent, type ProgressState } from "@/engine/progress";
+import { apply, initialState, normalizeState, type ProgressEvent, type ProgressState } from "@/engine/progress";
+import { levelFor } from "@/engine/levels";
 import { exportProgress, importProgress, isProgressState, loadProgress, saveProgress } from "@/engine/storage";
 import { modules } from "@/content";
 import { supabase } from "@/lib/supabase";
@@ -11,12 +12,16 @@ import { useAuth } from "./AuthProvider";
 
 type SyncStatus = "off" | "syncing" | "synced" | "error";
 
+export type Celebration = { kind: "level-up" | "quiz" | "badge" | "daily" | "shield"; title: string; detail?: string };
+
 type ProgressContextValue = {
   state: ProgressState;
   dispatch: (event: ProgressEvent) => void;
   reset: () => void;
   importJson: (json: string) => boolean;
   newBadgeToast: string[];
+  celebration: Celebration | null;
+  dismissCelebration: () => void;
   hydrated: boolean;
   syncStatus: SyncStatus;
   lastSyncedAt: string | null;
@@ -31,6 +36,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState(initialState);
   const [hydrated, setHydrated] = useState(false);
   const [newBadgeToast, setNewBadgeToast] = useState<string[]>([]);
+  const [celebration, setCelebration] = useState<Celebration | null>(null);
   const [syncStatus, setSyncStatus] = useState<SyncStatus>("off");
   const [lastSyncedAt, setLastSyncedAt] = useState<string | null>(null);
   const skipNextSync = useRef(false);
@@ -54,6 +60,14 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     const timer = window.setTimeout(() => setNewBadgeToast([]), 4000);
     return () => window.clearTimeout(timer);
   }, [newBadgeToast]);
+
+  useEffect(() => {
+    if (!celebration) return;
+    const timer = window.setTimeout(() => setCelebration(null), 3500);
+    return () => window.clearTimeout(timer);
+  }, [celebration]);
+
+  const dismissCelebration = useCallback(() => setCelebration(null), []);
 
   const writeCloudState = useCallback(async (userId: string, nextState: ProgressState) => {
     if (!supabase) return { error: null };
@@ -89,7 +103,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      const remote = isProgressState(data?.state) ? data.state : null;
+      const remote = isProgressState(data?.state) ? normalizeState(data.state) : null;
       const merged = evaluateState(remote ? mergeProgress(stateRef.current, remote) : stateRef.current);
       skipNextSync.current = true;
       setState(merged);
@@ -127,6 +141,16 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       const badges = evaluateBadges(result.state, modules);
       const fresh = badges.filter((badge) => !current.badges.includes(badge));
       if (fresh.length) setNewBadgeToast(fresh);
+      if (result.leveledUp) {
+        setCelebration({ kind: "level-up", title: `Level up! You're now ${levelFor(result.state.xp).name}` });
+      } else if (event.type === "quiz-completed" && event.scorePct >= 70) {
+        setCelebration({ kind: "quiz", title: "Quiz complete!", detail: `You scored ${Math.round(event.scorePct)}%.` });
+      } else if (event.type === "daily-challenge-completed" && result.xpGained > 0) {
+        setCelebration({ kind: "daily", title: "Compass Check complete", detail: "+15 XP" });
+      }
+      if (result.shieldUsed) {
+        setCelebration({ kind: "shield", title: "Welcome back! Your compass is still pointing north.", detail: "A streak shield kept your streak alive." });
+      }
       return { ...result.state, badges };
     });
   }, []);
@@ -161,11 +185,13 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     reset,
     importJson,
     newBadgeToast,
+    celebration,
+    dismissCelebration,
     hydrated,
     syncStatus,
     lastSyncedAt,
     deleteCloudData
-  }), [state, dispatch, reset, importJson, newBadgeToast, hydrated, syncStatus, lastSyncedAt, deleteCloudData]);
+  }), [state, dispatch, reset, importJson, newBadgeToast, celebration, dismissCelebration, hydrated, syncStatus, lastSyncedAt, deleteCloudData]);
   return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>;
 }
 

@@ -23,6 +23,12 @@ export function mergeProgress(local: ProgressState, remote: ProgressState): Prog
     quizBest[key] = Math.max(local.quizBest[key] ?? 0, remote.quizBest[key] ?? 0);
   }
 
+  const streak = {
+    ...laterStreak(local.streak, remote.streak),
+    shields: Math.max(local.streak.shields, remote.streak.shields),
+    longest: Math.max(local.streak.longest, remote.streak.longest)
+  };
+
   return {
     version: 1,
     xp: Math.max(local.xp, remote.xp),
@@ -30,7 +36,13 @@ export function mergeProgress(local: ProgressState, remote: ProgressState): Prog
     completedActivities: union(local.completedActivities, remote.completedActivities),
     quizBest,
     badges: union(local.badges, remote.badges),
-    streak: laterStreak(local.streak, remote.streak),
+    streak,
+    daysActive: Math.max(local.daysActive, remote.daysActive),
+    dailyChallenge: {
+      lastDay: local.dailyChallenge.lastDay > remote.dailyChallenge.lastDay ? local.dailyChallenge.lastDay : remote.dailyChallenge.lastDay,
+      completed: Math.max(local.dailyChallenge.completed, remote.dailyChallenge.completed)
+    },
+    onboarding: local.onboarding.done ? local.onboarding : remote.onboarding,
     startedAt: earliestStartedAt(local.startedAt, remote.startedAt)
   };
 }

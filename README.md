@@ -73,7 +73,7 @@ a parent directory (as above); a plain `npm run build` serves fine from `out/`.
 
 ### PWA / offline
 
-The app ships a web app manifest (`src/app/manifest.ts`) and a hand-written
+The app ships a web app manifest (`public/manifest.webmanifest`, relative URLs so it works under any base path) and a hand-written
 service worker (`public/sw.js`) that precaches the app shell and serves pages
 stale-while-revalidate, including offline navigation fallback. The service
 worker only registers in production builds (`NODE_ENV === "production"`), so
