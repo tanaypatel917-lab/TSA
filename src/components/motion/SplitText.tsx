@@ -33,14 +33,14 @@ export function SplitText({ as: Tag = "div", className = "", children, delay = 0
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, margin: "-10%" });
   const parts = units(children);
-  if (!mounted || reduced) return <Tag ref={ref} className={className}>{parts.map((part, index) => <span className="mr-[.24em] inline-block overflow-hidden align-bottom" key={`${index}-${typeof part === "string" ? part : "node"}`}>{isValidElement(part) ? cloneElement(part) : part}</span>)}</Tag>;
+  if (!mounted || reduced) return <Tag ref={ref} className={className}>{parts.map((part, index) => <span className="ml-[-.08em] mr-[.16em] inline-block overflow-hidden align-bottom px-[.08em] pb-[.15em] -mb-[.15em]" key={`${index}-${typeof part === "string" ? part : "node"}`}>{isValidElement(part) ? cloneElement(part) : part}</span>)}</Tag>;
   return <Tag ref={ref} className={className}>{parts.map((part, index) => {
     const child = isValidElement(part) ? cloneElement(part) : part;
-    return <span className="mr-[.24em] inline-block overflow-hidden align-bottom" key={`${index}-${typeof part === "string" ? part : "node"}`}>
+    return <span className="ml-[-.08em] mr-[.16em] inline-block overflow-hidden align-bottom px-[.08em] pb-[.15em] -mb-[.15em]" key={`${index}-${typeof part === "string" ? part : "node"}`}>
       <motion.span
         className="inline-block"
-        initial={{ y: "110%" }}
-        animate={immediate || inView ? { y: 0 } : { y: "110%" }}
+        initial={{ y: "130%" }}
+        animate={immediate || inView ? { y: 0 } : { y: "130%" }}
         transition={{ duration: 0.9, delay: delay + index * stagger, ease: [0.22, 1, 0.36, 1] }}
       >
         {child}

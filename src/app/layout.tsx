@@ -1,9 +1,6 @@
 import type { Metadata, Viewport } from "next";
+import localFont from "next/font/local";
 import Link from "next/link";
-import "@fontsource/instrument-serif/400.css";
-import "@fontsource/instrument-serif/400-italic.css";
-import "@fontsource-variable/inter-tight/index.css";
-import "@fontsource-variable/jetbrains-mono/index.css";
 import "./globals.css";
 import { BadgeToast } from "@/components/BadgeToast";
 import { Cursor } from "@/components/motion/Cursor";
@@ -18,6 +15,30 @@ import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { Celebration } from "@/components/Celebration";
 import { Hud } from "@/components/Hud";
 import { ProgressIsland } from "@/components/ProgressIsland";
+
+const karrik = localFont({
+  src: [
+    { path: "./fonts/Karrik-Regular.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/Karrik-Italic.woff2", weight: "400", style: "italic" }
+  ],
+  variable: "--font-karrik",
+  display: "swap"
+});
+
+const departure = localFont({
+  src: "./fonts/DepartureMono-Regular.woff2",
+  variable: "--font-departure",
+  display: "swap"
+});
+
+const martian = localFont({
+  src: [
+    { path: "./fonts/MartianMono-Regular.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/MartianMono-Bold.woff2", weight: "700", style: "normal" }
+  ],
+  variable: "--font-martian",
+  display: "swap"
+});
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
@@ -54,7 +75,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { themeColor: "#e9e7e1", width: "device-width", initialScale: 1 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en" style={{ "--font-display": "\"Instrument Serif\"", "--font-sans": "\"Inter Tight Variable\"", "--font-mono": "\"JetBrains Mono Variable\"" } as React.CSSProperties}><body>
+  return <html lang="en" className={`${karrik.variable} ${departure.variable} ${martian.variable}`}><body>
     <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-paper focus:px-4 focus:py-3 focus:font-mono focus:text-xs focus:uppercase focus:tracking-wider">Skip to content</a>
       <AuthProvider>
       <ProgressProvider>
