@@ -21,10 +21,10 @@ export function Hud() {
       <div className="shell flex h-10 items-center justify-between gap-4">
         <span className="hidden sm:inline">ai://compass <span aria-hidden="true" className="animate-blink">_</span></span>
         <span aria-label="Progress status" role="status" className="flex gap-4 sm:gap-6">
-          <span>xp://{hydrated ? state.xp : 0}</span>
-          <span>lvl://{level.name}</span>
-          <span className="hidden sm:inline">streak://{state.streak.count}</span>
-          <span className="hidden md:inline">badges://{state.badges.length}</span>
+          <span>xp://<span className="font-pixel">{hydrated ? state.xp : 0}</span></span>
+          <span>lvl://<span className="font-pixel">{level.name}</span></span>
+          <span className="hidden sm:inline">streak://<span className="font-pixel">{state.streak.count}</span></span>
+          <span className="hidden md:inline">badges://<span className="font-pixel">{state.badges.length}</span></span>
         </span>
         <span>local: {time}</span>
       </div>

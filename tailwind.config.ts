@@ -16,9 +16,10 @@ const config: Config = {
         dark: "#141414"
       },
       fontFamily: {
-        display: ["Instrument Serif", "Georgia", "serif"],
-        sans: ["Inter Tight Variable", "Inter", "system-ui", "sans-serif"],
-        mono: ["JetBrains Mono Variable", "ui-monospace", "monospace"]
+        display: ["var(--font-karrik)", "system-ui", "sans-serif"],
+        sans: ["var(--font-karrik)", "system-ui", "sans-serif"],
+        mono: ["var(--font-martian)", "ui-monospace", "monospace"],
+        pixel: ["var(--font-departure)", "var(--font-martian)", "monospace"]
       },
       keyframes: {
         marquee: { from: { transform: "translateX(0)" }, to: { transform: "translateX(-50%)" } },

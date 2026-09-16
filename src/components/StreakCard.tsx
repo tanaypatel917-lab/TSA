@@ -34,7 +34,7 @@ export function StreakCard() {
   return (
     <div className="bg-paper p-7">
       <p className="eyebrow">Streak</p>
-      <p className="mt-6 font-mono text-6xl">🔥{count}<span className="text-2xl"> days</span></p>
+      <p className="mt-6 font-pixel text-6xl">🔥{count}<span className="text-2xl"> days</span></p>
       <p className="mt-3 text-ink/75">Longest {longest} · {state.daysActive} {state.daysActive === 1 ? "day" : "days"} learned total</p>
       <div className="mt-4 flex items-center gap-1" role="img" aria-label={`${shields} of 2 streak shields`}>
         {[0, 1].map((slot) => (

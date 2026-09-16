@@ -57,7 +57,7 @@ export function DailyChallenge() {
           <p className="eyebrow">Today&rsquo;s Compass Check</p>
           <h2 className="mt-3 font-display text-3xl italic">Question {index + 1} of {questions.length}</h2>
         </div>
-        <span className="rounded-full border border-lime bg-lime px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-wider">+15 XP</span>
+        <span className="rounded-full border border-lime bg-lime px-3 py-1 font-pixel text-[10px] font-bold uppercase tracking-wider">+15 XP</span>
       </div>
       <p className="mt-5 font-bold text-ink">{current.question.prompt}</p>
       <div className="mt-4 grid gap-2 sm:grid-cols-2">
