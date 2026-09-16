@@ -1,9 +1,8 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import {
   motion,
-  useInView,
   useReducedMotion,
   type MotionProps,
   type UseInViewOptions,
@@ -44,12 +43,9 @@ export function BlurFade({
   blur = "6px",
   ...props
 }: BlurFadeProps) {
-  const ref = useRef(null)
   const reduced = useReducedMotion()
   const [mounted, setMounted] = useState(false)
   useEffect(() => setMounted(true), [])
-  const inViewResult = useInView(ref, { once: true, margin: inViewMargin })
-  const isInView = !inView || inViewResult
   const defaultVariants: Variants = {
     hidden: {
       [direction === "left" || direction === "right" ? "x" : "y"]:
@@ -78,22 +74,22 @@ export function BlurFade({
   }
 
   return (
-      <motion.div
-        ref={ref}
-        initial="hidden"
-        animate={isInView ? "visible" : "hidden"}
-        exit="hidden"
-        variants={combinedVariants}
-        transition={{
-          delay: 0.04 + delay,
-          duration,
-          ease: "easeOut",
-          ...(shouldTransitionFilter ? { filter: { duration } } : {}),
-        }}
-        className={className}
-        {...props}
-      >
-        {children}
-      </motion.div>
+    <motion.div
+      initial="hidden"
+      animate={inView ? undefined : "visible"}
+      whileInView={inView ? "visible" : undefined}
+      viewport={inView ? { once: true, margin: inViewMargin } : undefined}
+      variants={combinedVariants}
+      transition={{
+        delay: 0.04 + delay,
+        duration,
+        ease: "easeOut",
+        ...(shouldTransitionFilter ? { filter: { duration } } : {}),
+      }}
+      className={className}
+      {...props}
+    >
+      {children}
+    </motion.div>
   )
 }

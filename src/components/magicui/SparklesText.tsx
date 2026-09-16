@@ -51,7 +51,7 @@ interface SparklesTextProps {
    * @description
    * The component to be rendered as the text
    * */
-  as?: ReactElement
+  as?: "span"
 
   /**
    * @default ""
@@ -94,7 +94,7 @@ export const SparklesText: React.FC<SparklesTextProps> = ({
   colors = { first: "#9E7AFF", second: "#FE8BBB" },
   className,
   sparklesCount = 10,
-  ...props
+  as: Component = "span",
 }) => {
   const [sparkles, setSparkles] = useState<Sparkle[]>([])
   const reduced = useReducedMotion()
@@ -137,9 +137,8 @@ export const SparklesText: React.FC<SparklesTextProps> = ({
   }, [colors.first, colors.second, sparklesCount, reduced])
 
   return (
-    <div
-      className={cn("text-6xl font-bold", className)}
-      {...props}
+    <Component
+      className={cn("inline-block text-6xl font-bold", className)}
       style={
         {
           "--sparkles-first-color": `${colors.first}`,
@@ -153,6 +152,6 @@ export const SparklesText: React.FC<SparklesTextProps> = ({
         ))}
         <strong>{children}</strong>
       </span>
-    </div>
+    </Component>
   )
 }
