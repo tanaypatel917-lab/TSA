@@ -31,6 +31,7 @@ body::before { content: ""; position: fixed; inset: 0; z-index: 40; pointer-even
 .cursor-ring.cursor-open::after { content: "Open"; position: absolute; inset: 0; display: grid; place-items: center; color: #111; font: 10px/1 "JetBrains Mono Variable", monospace; text-transform: uppercase; letter-spacing: .12em; }
 .marquee-track { animation: marquee 24s linear infinite; }
 .marquee-track:hover { animation-play-state: paused; }
+.magicui-shiny-text { color: rgb(11 11 11 / .78); background-image: linear-gradient(110deg, transparent 35%, rgb(176 42 8 / .9) 50%, transparent 65%); background-size: 100px 100%; animation: shiny 2.5s ease-in-out infinite; }
 .compass-dial { animation: compass-spin 60s linear infinite; }
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 @keyframes compass-spin { to { transform: rotate(360deg); } }
@@ -50,5 +51,5 @@ body::before { content: ""; position: fixed; inset: 0; z-index: 40; pointer-even
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
   body::before { opacity: .04; }
-  .marquee-track, .compass-dial { animation-play-state: paused; }
+  .marquee-track, .compass-dial, .animate-marquee, .animate-marquee-vertical, .magicui-shiny-text { animation-play-state: paused; }
 }

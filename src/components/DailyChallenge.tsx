@@ -5,6 +5,7 @@ import { modules } from "@/content";
 import { pickDailyQuestions } from "@/engine/daily";
 import { todayKey } from "@/engine/dates";
 import { useProgress } from "@/state/ProgressProvider";
+import { BorderBeam } from "@/components/magicui/BorderBeam";
 
 export function DailyChallenge() {
   const { state, dispatch, hydrated } = useProgress();
@@ -19,7 +20,8 @@ export function DailyChallenge() {
 
   if (state.dailyChallenge.lastDay === today || done) {
     return (
-      <div className="border border-line bg-paper p-7">
+      <div className="relative overflow-hidden border border-line bg-paper p-7">
+        <BorderBeam colorFrom="#b02a08" colorTo="#c8f560" />
         <div className="flex items-start justify-between">
           <div>
             <p className="eyebrow">Today&rsquo;s Compass Check</p>
@@ -51,7 +53,8 @@ export function DailyChallenge() {
   }
 
   return (
-    <div className="border border-line bg-paper p-7">
+    <div className="relative overflow-hidden border border-line bg-paper p-7">
+      <BorderBeam colorFrom="#b02a08" colorTo="#c8f560" />
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
           <p className="eyebrow">Today&rsquo;s Compass Check</p>
