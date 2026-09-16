@@ -78,7 +78,7 @@ function updateStreak(state: ProgressState, day: string) {
       shieldEarned = true;
     }
   } else {
-    const missed = Math.round((new Date(`${day}T12:00:00`).getTime() - new Date(`${streak.lastDay}T12:00:00`).getTime()) / 86400000) - 1;
+    const missed = Math.max(1, Math.round((new Date(`${day}T12:00:00`).getTime() - new Date(`${streak.lastDay}T12:00:00`).getTime()) / 86400000) - 1);
     if (streak.shields >= missed) {
       streak.shields -= missed;
       streak.count += 1;
