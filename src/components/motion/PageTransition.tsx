@@ -2,17 +2,19 @@
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export function PageTransition({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const reduced = useReducedMotion();
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     window.scrollTo(0, 0);
   }, [pathname]);
 
-  if (reduced) return <>{children}</>;
+  if (!mounted || reduced) return <>{children}</>;
   return <><AnimatePresence mode="wait">
     <motion.div
       key={pathname}
