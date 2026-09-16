@@ -41,31 +41,9 @@ export function HeroDial() {
       className="relative aspect-square w-full max-w-[520px] text-ink"
       aria-hidden="true"
     >
-      <svg viewBox="0 0 500 500" fill="none" className="h-full w-full overflow-visible">
-        <defs>
-          <radialGradient id="dial-face" cx="50%" cy="42%" r="60%">
-            <stop offset="0" stopColor="#f4f2ec" />
-            <stop offset=".7" stopColor="#e9e7e1" />
-            <stop offset="1" stopColor="#d9d6cd" />
-          </radialGradient>
-          <radialGradient id="dial-hub" cx="40%" cy="35%" r="70%">
-            <stop offset="0" stopColor="#3a3a3a" />
-            <stop offset="1" stopColor="#0b0b0b" />
-          </radialGradient>
-          <linearGradient id="needle-n" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stopColor="#ff4f1f" />
-            <stop offset="1" stopColor="#b02a08" />
-          </linearGradient>
-          <filter id="dial-shadow" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="18" stdDeviation="18" floodColor="#0b0b0b" floodOpacity=".22" />
-          </filter>
-          <filter id="needle-shadow" x="-50%" y="-50%" width="200%" height="200%">
-            <feDropShadow dx="0" dy="6" stdDeviation="5" floodColor="#0b0b0b" floodOpacity=".35" />
-          </filter>
-        </defs>
-
+      <svg viewBox="0 0 500 500" fill="none" className="h-full w-full">
         {/* face */}
-        <circle cx="250" cy="250" r="236" fill="url(#dial-face)" stroke="currentColor" strokeOpacity=".9" strokeWidth="1.5" filter="url(#dial-shadow)" />
+        <circle cx="250" cy="250" r="236" className="fill-paper" stroke="currentColor" strokeWidth="2" />
         <circle cx="250" cy="250" r="222" stroke="currentColor" strokeOpacity=".35" strokeWidth="1" />
         <circle cx="250" cy="250" r="150" stroke="currentColor" strokeOpacity=".25" strokeWidth="1" />
 
@@ -78,11 +56,11 @@ export function HeroDial() {
         })}
         {DEGREES.filter((d) => d % 90 !== 0).map((d) => {
           const [x, y] = polar(182, d);
-          return <text key={d} x={x} y={y + 3} textAnchor="middle" fill="currentColor" fillOpacity=".6" fontFamily="JetBrains Mono Variable, monospace" fontSize="9" letterSpacing="1">{String(d).padStart(3, "0")}</text>;
+          return <text key={d} x={x} y={y + 3} textAnchor="middle" fill="currentColor" fillOpacity=".6" className="font-mono" fontSize="9" letterSpacing="1">{String(d).padStart(3, "0")}</text>;
         })}
         {CARDINALS.map(([c, d]) => {
           const [x, y] = polar(176, d);
-          return <text key={c} x={x} y={y + 9} textAnchor="middle" fill={c === "N" ? "#b02a08" : "currentColor"} fontFamily="Instrument Serif, serif" fontStyle="italic" fontSize="30">{c}</text>;
+          return <text key={c} x={x} y={y + 9} textAnchor="middle" fill={c === "N" ? "#b02a08" : "currentColor"} className="font-display" fontStyle="italic" fontSize="30">{c}</text>;
         })}
 
         {/* slow rotating inner ring */}
@@ -97,22 +75,18 @@ export function HeroDial() {
         <circle cx="250" cy="250" r="96" stroke="currentColor" strokeOpacity=".5" strokeWidth="1" />
 
         {/* needle */}
-        <motion.g style={{ rotate: needle, transformOrigin: "250px 250px" }} filter="url(#needle-shadow)">
-          <path d="m250 62 14 188h-28L250 62Z" fill="url(#needle-n)" />
+        <motion.g style={{ rotate: needle, transformOrigin: "250px 250px" }}>
+          <path d="m250 62 14 188h-28L250 62Z" fill="#b02a08" />
           <path d="m250 438 14-188h-28L250 438Z" fill="#141414" />
           <path d="m62 250 188-9v18L62 250Z" fill="#c8f560" fillOpacity=".9" />
           <path d="m438 250-188-9v18L438 250Z" fill="#c8f560" fillOpacity=".5" />
         </motion.g>
 
         {/* hub */}
-        <circle cx="250" cy="250" r="18" fill="url(#dial-hub)" />
-        <circle cx="250" cy="250" r="18" stroke="#e9e7e1" strokeOpacity=".5" strokeWidth="1" />
-        <circle cx="245" cy="245" r="4" fill="#e9e7e1" fillOpacity=".7" />
-
-        {/* glass highlight */}
-        <path d="M60 210a190 190 0 0 1 300-110" stroke="#fff" strokeOpacity=".55" strokeWidth="2" strokeLinecap="round" />
+        <circle cx="250" cy="250" r="18" fill="#0b0b0b" />
+        <circle cx="250" cy="250" r="6" className="fill-paper" />
       </svg>
-      <span className="absolute bottom-[17%] left-1/2 -translate-x-1/2 font-mono text-[10px] uppercase tracking-[.3em] text-ink/70">
+      <span className="absolute bottom-[20%] left-1/2 -translate-x-1/2 font-mono text-[10px] uppercase tracking-[.3em] text-ink/70">
         Stay curious
       </span>
     </motion.div>
