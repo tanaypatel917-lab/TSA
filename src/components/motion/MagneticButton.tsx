@@ -13,7 +13,7 @@ type MagneticButtonProps = {
   className?: string;
 };
 
-const MotionLink = motion(Link);
+const MotionLink = motion.create(Link);
 
 export function MagneticButton({ href, as = "a", children, onClick, type, className = "" }: MagneticButtonProps) {
   const anchorRef = useRef<HTMLAnchorElement>(null);
