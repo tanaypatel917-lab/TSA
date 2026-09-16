@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { modules } from "@/content";
 import { ONBOARDING_STATEMENTS } from "@/content/onboarding";
 import { todayKey } from "@/engine/dates";
@@ -18,16 +18,15 @@ const START_MODULES = ["foundations", "tools", "ethics"];
 
 export function Onboarding() {
   const { dispatch } = useProgress();
+  const router = useRouter();
   const [step, setStep] = useState(0);
   const [index, setIndex] = useState(0);
   const [answered, setAnswered] = useState<null | boolean>(null);
   const [correct, setCorrect] = useState(0);
   const [goal, setGoal] = useState<1 | 2 | 3>(2);
   const [startModule, setStartModule] = useState("foundations");
-  const [finished, setFinished] = useState(false);
 
   const recommended = correct <= 3 ? "foundations" : "tools";
-  const chosenModule = modules.find((item) => item.id === startModule) ?? modules[0];
   const statement = ONBOARDING_STATEMENTS[index];
 
   function answer(guessFact: boolean) {
@@ -46,16 +45,19 @@ export function Onboarding() {
     }
   }
 
-  function finish(skipped = false) {
+  function finish(skipped = false, moduleId?: string) {
+    const moduleChoice = skipped ? "foundations" : (moduleId ?? startModule);
     dispatch({
       type: "onboarding-completed",
       day: todayKey(),
       dailyGoal: skipped ? 2 : goal,
-      startModule: skipped ? "foundations" : startModule,
+      startModule: moduleChoice,
       correct: skipped ? 0 : correct,
       skipped
     });
-    setFinished(true);
+    if (skipped) return;
+    const chosen = modules.find((item) => item.id === moduleChoice) ?? modules[0];
+    router.push(`/modules/${chosen.slug}/lessons/${chosen.lessons[0].id}`);
   }
 
   return (
@@ -63,16 +65,7 @@ export function Onboarding() {
       <Hero />
       <section id="calibrate" className="shell py-24 sm:py-32">
         <div className="mx-auto max-w-2xl border border-line bg-paper p-7 sm:p-10">
-          {finished ? (
-            <div>
-              <p className="eyebrow">Calibrate your compass</p>
-              <h2 className="mt-4 font-display text-4xl italic">Your compass is calibrated 🧭</h2>
-              <p className="mt-4 text-ink/60">Start with your first lesson and earn XP as you go. Your progress stays on this device.</p>
-              <Link href={`/modules/${chosenModule.slug}/lessons/${chosenModule.lessons[0].id}`} className="btn-pill mt-6">
-                Start {chosenModule.title} ↗
-              </Link>
-            </div>
-          ) : step === 0 ? (
+          {step === 0 ? (
             <div>
               <p className="eyebrow">Calibrate your compass · myth or fact {index + 1}/{ONBOARDING_STATEMENTS.length}</p>
               <h2 className="mt-4 font-display text-4xl italic">{statement.statement}</h2>
@@ -118,7 +111,7 @@ export function Onboarding() {
                   return (
                     <button
                       key={id}
-                      onClick={() => { setStartModule(id); finish(); }}
+                      onClick={() => { setStartModule(id); finish(false, id); }}
                       className="border border-line p-4 text-left transition hover:border-accent"
                     >
                       <span className="text-2xl">{entry.icon}</span>

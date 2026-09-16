@@ -46,12 +46,12 @@ describe("progress merge", () => {
 });
 
 describe("tier 1 fields", () => {
-  it("keeps max shields and longest regardless of which streak wins", () => {
+  it("keeps shields from the winning streak and max longest", () => {
     const merged = mergeProgress(
       { ...initialState, streak: { count: 9, lastDay: "2027-01-09", shields: 2, longest: 9 } },
       { ...initialState, streak: { count: 3, lastDay: "2027-01-10", shields: 1, longest: 12 } }
     );
-    expect(merged.streak).toEqual({ count: 3, lastDay: "2027-01-10", shields: 2, longest: 12 });
+    expect(merged.streak).toEqual({ count: 3, lastDay: "2027-01-10", shields: 1, longest: 12 });
   });
 
   it("takes max daysActive and merges the daily challenge", () => {
