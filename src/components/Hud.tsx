@@ -17,10 +17,10 @@ export function Hud() {
   }, []);
   const level = levelFor(state.xp);
   return (
-    <div aria-label="Progress status" role="status" className="terminal fixed inset-x-0 bottom-0 z-40 border-t border-signal/40 text-[11px] uppercase tracking-[0.12em]">
+    <div className="terminal fixed inset-x-0 bottom-0 z-40 border-t border-signal/40 text-[11px] uppercase tracking-[0.12em]">
       <div className="shell flex h-10 items-center justify-between gap-4">
         <span className="hidden sm:inline">ai://compass <span aria-hidden="true" className="animate-blink">_</span></span>
-        <span className="flex gap-4 sm:gap-6">
+        <span aria-label="Progress status" role="status" className="flex gap-4 sm:gap-6">
           <span>xp://{hydrated ? state.xp : 0}</span>
           <span>lvl://{level.name}</span>
           <span className="hidden sm:inline">streak://{state.streak.count}</span>
