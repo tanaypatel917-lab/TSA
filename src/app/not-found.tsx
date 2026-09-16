@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { FindNorthSlide } from "@/components/FindNorthSlide";
 
 export const metadata: Metadata = { title: "Page not found" };
 
@@ -13,6 +14,7 @@ export default function NotFound() {
         <Link href="/" className="btn-pill">Back to the dashboard</Link>
         <Link href="/modules" className="btn-ghost">Browse modules ↗</Link>
       </div>
+      <div className="mt-12"><FindNorthSlide /></div>
     </div>
   );
 }
