@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { modules } from "@/content";
 
-export const metadata: Metadata = { title: "About & Teacher Guide · AI Compass", description: "How AI Compass works, learning objectives per module, and how to run it in a classroom." };
+export const metadata: Metadata = { title: "About & Teacher Guide", description: "How AI Compass works, learning objectives per module, and how to run it in a classroom." };
 
 const objectives: Record<string, { objectives: string[]; classTime: string; standards: string }> = {
   foundations: { objectives: ["Explain the difference between rule-based programs and machine learning using everyday examples such as spam filters.", "Describe how a language model predicts text one token at a time and why that can produce hallucinations.", "Identify how training data can introduce bias and name at least two ways teams check for it."], classTime: "Two 50-minute periods (lessons + classifier activity), quiz as homework", standards: "AI4K12 Big Ideas 1-3 (Perception, Representation & Reasoning, Learning)" },

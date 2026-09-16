@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { glossary } from "@/content/glossary";
 
-export const metadata: Metadata = { title: "Glossary · AI Compass", description: "Student-friendly definitions of key AI terms." };
+export const metadata: Metadata = { title: "Glossary", description: "Student-friendly definitions of key AI terms." };
 
 const sorted = [...glossary].sort((a, b) => a.term.localeCompare(b.term));
 

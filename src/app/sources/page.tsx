@@ -3,7 +3,7 @@ import Link from "next/link";
 import { modules } from "@/content";
 import { sources } from "@/content/sources";
 
-export const metadata: Metadata = { title: "Sources · AI Compass", description: "Reputable sources behind the AI Compass lessons." };
+export const metadata: Metadata = { title: "Sources", description: "Reputable sources behind the AI Compass lessons." };
 
 const moduleTitle = (id: string) => modules.find((module) => module.id === id)?.title ?? id;
 
