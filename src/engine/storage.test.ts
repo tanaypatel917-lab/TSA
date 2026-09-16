@@ -23,9 +23,23 @@ describe("normalizeState via import", () => {
     expect(imported).not.toBeNull();
     expect(imported).toMatchObject({
       xp: 40,
-      streak: { count: 2, lastDay: "2027-01-01", shields: 0, longest: 0 },
+      streak: { count: 2, lastDay: "2027-01-01", shields: 0, longest: 2 },
       daysActive: 0,
       dailyChallenge: { lastDay: "", completed: 0 },
+      onboarding: { done: true, dailyGoal: 2, startModule: null }
+    });
+  });
+
+  it("sends brand-new users through onboarding", () => {
+    const old = {
+      version: 1, xp: 0, completedLessons: [], completedActivities: [],
+      quizBest: {}, badges: [],
+      streak: { count: 0, lastDay: "" }, startedAt: null
+    };
+    const imported = importProgress(JSON.stringify(old));
+    expect(imported).not.toBeNull();
+    expect(imported).toMatchObject({
+      streak: { count: 0, lastDay: "", shields: 0, longest: 0 },
       onboarding: { done: false, dailyGoal: 2, startModule: null }
     });
   });

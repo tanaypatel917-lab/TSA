@@ -60,7 +60,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       if (result.leveledUp) {
         setCelebration({ kind: "level-up", title: `Level up! You're now ${levelFor(result.state.xp).name}` });
       } else if (event.type === "quiz-completed" && event.scorePct >= 70) {
-        setCelebration({ kind: "quiz", title: "Quiz complete!", detail: `You scored ${event.scorePct}%.` });
+        setCelebration({ kind: "quiz", title: "Quiz complete!", detail: `You scored ${Math.round(event.scorePct)}%.` });
       } else if (event.type === "daily-challenge-completed" && result.xpGained > 0) {
         setCelebration({ kind: "daily", title: "Compass Check complete", detail: "+15 XP" });
       }

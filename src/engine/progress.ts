@@ -30,12 +30,17 @@ export const initialState: ProgressState = {
 };
 
 export function normalizeState(raw: ProgressState): ProgressState {
+  const onboarding = raw.onboarding === undefined && raw.startedAt !== null
+    ? { done: true, dailyGoal: 2 as const, startModule: null }
+    : { ...initialState.onboarding, ...raw.onboarding };
+  const streak = { ...initialState.streak, ...raw.streak };
+  if (raw.streak && raw.streak.longest === undefined) streak.longest = raw.streak.count;
   return {
     ...initialState,
     ...raw,
-    streak: { ...initialState.streak, ...raw.streak },
+    streak,
     dailyChallenge: { ...initialState.dailyChallenge, ...raw.dailyChallenge },
-    onboarding: { ...initialState.onboarding, ...raw.onboarding }
+    onboarding
   };
 }
 
