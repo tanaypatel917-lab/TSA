@@ -82,6 +82,7 @@ export function TypingAnimation({
   ] as TypingAnimationMotionComponent
 
   const [displayedText, setDisplayedText] = useState<string>("")
+  const [mounted, setMounted] = useState(false)
   const reduced = useReducedMotion()
   const [currentWordIndex, setCurrentWordIndex] = useState(0)
   const [currentCharIndex, setCurrentCharIndex] = useState(0)
@@ -91,6 +92,7 @@ export function TypingAnimation({
     amount: 0.3,
     once: true,
   })
+  useEffect(() => setMounted(true), [])
 
   const wordsToAnimate = useMemo(
     () => words ?? (children ? [children] : []),
@@ -216,18 +218,28 @@ export function TypingAnimation({
     }
   }
 
+  const classes = cn(
+    "leading-5 tracking-[-0.02em]",
+    Component === "span" && "inline-block",
+    className
+  )
+
+  if (!mounted || reduced) {
+    return (
+      <Component className={classes}>
+        {finalText}
+      </Component>
+    )
+  }
+
   return (
     <MotionComponent
       ref={elementRef}
-      className={cn(
-        "leading-5 tracking-[-0.02em]",
-        Component === "span" && "inline-block",
-        className
-      )}
+      className={classes}
       {...props}
     >
-      {reduced ? finalText : displayedText}
-      {(reduced || shouldShowCursor) && (
+      {displayedText}
+      {shouldShowCursor && (
         <span
           className={cn("inline-block", blinkCursor && "animate-blink")}
         >

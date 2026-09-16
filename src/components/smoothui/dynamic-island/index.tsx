@@ -256,7 +256,7 @@ export default function DynamicIsland({
           <motion.div
             animate={
               shouldReduceMotion
-                ? { opacity: 1, scale: 1 }
+                ? { filter: "blur(0px)", opacity: 1, scale: 1 }
                 : {
                     filter: "blur(0px)",
                     opacity: 1,
