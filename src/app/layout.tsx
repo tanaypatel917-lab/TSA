@@ -4,6 +4,8 @@ import "./globals.css";
 import { BadgeToast } from "@/components/BadgeToast";
 import { ProgressProvider } from "@/state/ProgressProvider";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
+import { Celebration } from "@/components/Celebration";
+import { SoundToggle } from "@/components/SoundToggle";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
@@ -45,9 +47,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <ProgressProvider>
       <header className="border-b border-slate-200 bg-white"><div className="shell flex flex-wrap items-center justify-between gap-4 py-4">
         <Link href="/" className="flex items-center gap-2 text-xl font-black tracking-tight"><span className="grid h-9 w-9 place-items-center rounded-xl bg-indigo-100">🧭</span> AI Compass</Link>
-        <nav aria-label="Main navigation" className="flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold text-slate-600"><Link className="hover:text-accent" href="/">Dashboard</Link><Link className="hover:text-accent" href="/modules">Modules</Link><Link className="hover:text-accent" href="/badges">Badges</Link><Link className="hover:text-accent" href="/glossary">Glossary</Link><Link className="hover:text-accent" href="/about">About</Link></nav>
+        <nav aria-label="Main navigation" className="flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold text-slate-600"><Link className="hover:text-accent" href="/">Dashboard</Link><Link className="hover:text-accent" href="/modules">Modules</Link><Link className="hover:text-accent" href="/badges">Badges</Link><Link className="hover:text-accent" href="/glossary">Glossary</Link><Link className="hover:text-accent" href="/about">About</Link><SoundToggle /></nav>
       </div></header>
-      <main id="main">{children}</main><BadgeToast /><ServiceWorkerRegister />
+      <main id="main">{children}</main><BadgeToast /><Celebration /><ServiceWorkerRegister />
       <footer className="mt-20 border-t border-slate-200 bg-white"><div className="shell flex flex-col gap-2 py-8 text-sm text-slate-500 sm:flex-row sm:justify-between"><span>AI Compass · Learn with curiosity and care.</span><span>Your progress stays on this device.</span></div></footer>
     </ProgressProvider>
   </body></html>;
