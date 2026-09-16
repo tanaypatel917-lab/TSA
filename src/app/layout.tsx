@@ -17,6 +17,7 @@ import { ProgressProvider } from "@/state/ProgressProvider";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { Celebration } from "@/components/Celebration";
 import { Hud } from "@/components/Hud";
+import { ProgressIsland } from "@/components/ProgressIsland";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
@@ -57,7 +58,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-paper focus:px-4 focus:py-3 focus:font-mono focus:text-xs focus:uppercase focus:tracking-wider">Skip to content</a>
       <AuthProvider>
       <ProgressProvider>
-        <Preloader /><Nav /><ScrollProgress /><Cursor /><main id="main"><PageTransition>{children}</PageTransition></main><BadgeToast /><Celebration /><Hud /><ServiceWorkerRegister />
+        <Preloader /><Nav /><ScrollProgress /><Cursor /><main id="main"><PageTransition>{children}</PageTransition></main><BadgeToast /><Celebration /><Hud /><ProgressIsland /><ServiceWorkerRegister />
         <footer className="mt-24 border-t border-line bg-paper pb-10"><div className="shell pt-16"><Parallax speed={-.15}><p className="font-display text-[14vw] leading-[.7] tracking-[-.05em] text-ink/75">AI Compass</p></Parallax><div className="mt-12 flex flex-col gap-3 border-t border-line py-6 font-mono text-[10px] uppercase tracking-[0.16em] text-ink/75 sm:flex-row sm:justify-between"><span>Learn with curiosity and care.</span><span className="flex flex-wrap gap-x-4 gap-y-2"><span>Local-first · No tracking · Grades 9–12</span><Link href="/sources" className="link-underline">Facts cited on the Sources page</Link></span></div></div></footer>
       </ProgressProvider>
     </AuthProvider>

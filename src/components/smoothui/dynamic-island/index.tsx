@@ -187,6 +187,8 @@ export interface DynamicIslandProps {
   ringContent?: ReactNode;
   timerContent?: ReactNode;
   view?: View;
+  /** Hide the demo mode switcher and the fixed-height demo frame. */
+  bare?: boolean;
 }
 
 export default function DynamicIsland({
@@ -196,6 +198,7 @@ export default function DynamicIsland({
   ringContent,
   timerContent,
   className = "",
+  bare = false,
 }: DynamicIslandProps) {
   const [internalView, setInternalView] = useState<View>("idle");
   const [variantKey, setVariantKey] = useState<string>("idle");
@@ -231,7 +234,7 @@ export default function DynamicIsland({
   };
 
   return (
-    <div className={`h-[200px] ${className}`}>
+    <div className={`${bare ? "" : "h-[200px]"} ${className}`}>
       <div className="relative flex h-full w-full flex-col justify-center">
         <motion.div
           className="mx-auto w-fit min-w-[100px] overflow-hidden rounded-full bg-black"
@@ -282,6 +285,7 @@ export default function DynamicIsland({
           </motion.div>
         </motion.div>
 
+        {bare ? null : (
         <div className="absolute bottom-2 left-1/2 z-10 flex -translate-x-1/2 justify-center gap-1 rounded-full border bg-background p-1">
           {[
             { icon: <CloudLightning className="size-3" />, key: "idle" },
@@ -306,6 +310,7 @@ export default function DynamicIsland({
             </button>
           ))}
         </div>
+        )}
       </div>
     </div>
   );
