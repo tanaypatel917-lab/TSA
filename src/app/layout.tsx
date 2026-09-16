@@ -57,7 +57,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <AuthProvider>
       <ProgressProvider>
         <Preloader /><Nav /><ScrollProgress /><Cursor /><main id="main"><PageTransition>{children}</PageTransition></main><BadgeToast /><Celebration /><ServiceWorkerRegister />
-        <footer className="mt-24 border-t border-line bg-paper"><div className="shell pt-16"><Parallax speed={-.15}><p className="font-display text-[14vw] leading-[.7] tracking-[-.05em] text-ink/10">AI Compass</p></Parallax><div className="mt-12 flex flex-col gap-3 border-t border-line py-6 font-mono text-[10px] uppercase tracking-[0.16em] text-ink/60 sm:flex-row sm:justify-between"><span>Learn with curiosity and care.</span><span className="flex flex-wrap gap-x-4 gap-y-2"><span>Local-first · No tracking · Grades 9–12</span><Link href="/sources" className="link-underline">Facts cited on the Sources page</Link></span></div></div></footer>
+        <footer className="mt-24 border-t border-line bg-paper"><div className="shell pt-16"><Parallax speed={-.15}><p className="font-display text-[14vw] leading-[.7] tracking-[-.05em] text-ink/75">AI Compass</p></Parallax><div className="mt-12 flex flex-col gap-3 border-t border-line py-6 font-mono text-[10px] uppercase tracking-[0.16em] text-ink/75 sm:flex-row sm:justify-between"><span>Learn with curiosity and care.</span><span className="flex flex-wrap gap-x-4 gap-y-2"><span>Local-first · No tracking · Grades 9–12</span><Link href="/sources" className="link-underline">Facts cited on the Sources page</Link></span></div></div></footer>
       </ProgressProvider>
     </AuthProvider>
   </body></html>;

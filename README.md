@@ -30,6 +30,14 @@ env:
   NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
 ```
 
+## Testing
+
+Unit tests for the progress engine run with `npm test` (Vitest). Browser tests
+run with Playwright: `npm run test:e2e` covers the golden path and every
+activity, and `npm run test:a11y` runs axe scans tagged `@a11y`. Playwright
+builds the static export and serves `out/` on port 4173 automatically; the
+first run needs `npx playwright install chromium`.
+
 ## Content and adding a module
 
 Typed content lives in `src/content/`. Add a module file under

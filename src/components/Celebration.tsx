@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useProgress } from "@/state/ProgressProvider";
 
-const CONFETTI_COLORS = ["#ff4f1f", "#c8f560", "#111111", "#d9d4c7"];
+const CONFETTI_COLORS = ["#b02a08", "#c8f560", "#111111", "#d9d4c7"];
 
 function chime() {
   try {
@@ -72,7 +72,7 @@ export function Celebration() {
       <div role="status" aria-live="polite" className="pointer-events-auto mx-4 max-w-sm border border-line bg-paper p-7 text-center shadow-xl">
         <p className="text-2xl">{celebration.kind === "shield" ? "🛡️" : "🎉"}</p>
         <p className="mt-2 font-display text-2xl italic text-ink">{celebration.title}</p>
-        {celebration.detail && <p className="mt-1 text-sm text-ink/60">{celebration.detail}</p>}
+        {celebration.detail && <p className="mt-1 text-sm text-ink/75">{celebration.detail}</p>}
         <button onClick={dismissCelebration} className="btn-ghost mt-3">Nice!</button>
       </div>
     </div>

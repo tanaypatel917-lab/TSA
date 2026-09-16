@@ -24,8 +24,8 @@ body::before { content: ""; position: fixed; inset: 0; z-index: 40; pointer-even
   .link-underline { @apply relative after:absolute after:bottom-[-5px] after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-accent after:transition-transform after:duration-300 hover:after:scale-x-100; }
   .text-outline { -webkit-text-stroke: 1px currentColor; color: transparent; }
 }
-.cursor-dot { position: fixed; z-index: 100; width: 10px; height: 10px; border-radius: 9999px; background: #ff4f1f; pointer-events: none; }
-.cursor-ring { position: fixed; z-index: 99; width: 36px; height: 36px; border: 1px solid #ff4f1f; border-radius: 9999px; pointer-events: none; mix-blend-mode: difference; transition: width .25s, height .25s, margin .25s, background .25s; }
+.cursor-dot { position: fixed; z-index: 100; width: 10px; height: 10px; border-radius: 9999px; background: #b02a08; pointer-events: none; }
+.cursor-ring { position: fixed; z-index: 99; width: 36px; height: 36px; border: 1px solid #b02a08; border-radius: 9999px; pointer-events: none; mix-blend-mode: difference; transition: width .25s, height .25s, margin .25s, background .25s; }
 .cursor-ring.cursor-hover { width: 56px; height: 56px; margin: -10px; background: #c8f560; border-color: #c8f560; }
 .cursor-ring.cursor-open { width: 64px; height: 64px; margin: -14px; background: #c8f560; border-color: #c8f560; }
 .cursor-ring.cursor-open::after { content: "Open"; position: absolute; inset: 0; display: grid; place-items: center; color: #111; font: 10px/1 "JetBrains Mono Variable", monospace; text-transform: uppercase; letter-spacing: .12em; }

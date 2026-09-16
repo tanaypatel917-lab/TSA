@@ -86,7 +86,7 @@ export function Onboarding() {
             <div>
               <p className="eyebrow">Calibrate your compass · step 2 of 3</p>
               <h2 className="mt-4 font-display text-4xl italic">Pick a daily goal</h2>
-              <p className="mt-3 text-sm text-ink/60">A gentle target, not a requirement. You can always do more or less.</p>
+              <p className="mt-3 text-sm text-ink/75">A gentle target, not a requirement. You can always do more or less.</p>
               <div className="mt-6 grid gap-3 sm:grid-cols-3">
                 {GOALS.map((option) => (
                   <button
@@ -95,7 +95,7 @@ export function Onboarding() {
                     className={`border p-4 text-left transition ${goal === option.value ? "border-accent" : "border-line"} hover:border-accent`}
                   >
                     <span className="block font-display text-2xl italic">{option.label}</span>
-                    <span className="mt-1 block font-mono text-[10px] uppercase tracking-wider text-ink/60">{option.detail}</span>
+                    <span className="mt-1 block font-mono text-[10px] uppercase tracking-wider text-ink/75">{option.detail}</span>
                   </button>
                 ))}
               </div>
@@ -117,7 +117,7 @@ export function Onboarding() {
                       <span className="text-2xl">{entry.icon}</span>
                       <span className="mt-2 block font-display text-xl italic">{entry.title}</span>
                       {id === recommended && <span className="mt-1 inline-block rounded-full border border-lime bg-lime px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider">Recommended</span>}
-                      <span className="mt-1 block text-sm text-ink/60">{entry.tagline}</span>
+                      <span className="mt-1 block text-sm text-ink/75">{entry.tagline}</span>
                     </button>
                   );
                 })}

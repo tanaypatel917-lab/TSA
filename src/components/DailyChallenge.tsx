@@ -24,7 +24,7 @@ export function DailyChallenge() {
           <div>
             <p className="eyebrow">Today&rsquo;s Compass Check</p>
             <h2 className="mt-3 font-display text-3xl italic">Done for today — come back tomorrow for a new check. 🧭</h2>
-            {done && <p className="mt-2 text-ink/60">You got {correct}/{questions.length} correct — every answer taught you something.</p>}
+            {done && <p className="mt-2 text-ink/75">You got {correct}/{questions.length} correct — every answer taught you something.</p>}
           </div>
           <span className="text-3xl">✅</span>
         </div>
@@ -83,7 +83,7 @@ export function DailyChallenge() {
           <button onClick={next} className="btn-pill mt-3">{index === questions.length - 1 ? "See results" : "Next question"}</button>
         </div>
       )}
-      <p className="mt-3 font-mono text-[10px] uppercase tracking-wider text-ink/50">Three quick questions, new every day. Answering counts — the XP is yours either way.</p>
+      <p className="mt-3 font-mono text-[10px] uppercase tracking-wider text-ink/75">Three quick questions, new every day. Answering counts — the XP is yours either way.</p>
     </div>
   );
 }
