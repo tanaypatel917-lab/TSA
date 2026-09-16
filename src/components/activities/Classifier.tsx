@@ -3,6 +3,7 @@ import { useState } from "react";
 import type { Activity } from "@/content/types";
 import { useProgress } from "@/state/ProgressProvider";
 import { todayKey } from "@/engine/dates";
+import { Stagger, StaggerItem } from "@/components/motion/Stagger";
 
 export function Classifier({ activity, moduleId }: { activity: Extract<Activity, { kind: "classifier" }>; moduleId: string }) {
   const { dispatch } = useProgress();
@@ -23,26 +24,15 @@ export function Classifier({ activity, moduleId }: { activity: Extract<Activity,
       window.setTimeout(() => { setIndex((value) => value + 1); setChoice(null); }, 500);
     }
   }
-  if (done) return (
-    <div className="terminal frame p-8 sm:p-12">
-      <p className="mono-label">:// Classifier complete</p>
-      <h2 className="display-xl mt-6 tabular-nums text-paper">{correct}<span className="text-signal">/</span>{activity.items.length}</h2>
-      <p className="mt-6 max-w-md font-display text-lg text-paper">A real classifier would need many examples and careful testing.</p>
-    </div>
-  );
-  return (
-    <div className="card">
-      <div className="flex items-center justify-between"><p className="eyebrow">Message {index + 1} of {activity.items.length}</p><span className="index">{correct} correct</span></div>
-      <h2 className="display-md mt-4">{activity.title}</h2><p className="mt-4 text-base leading-relaxed text-mute">{activity.intro}</p>
-      <div className="terminal frame my-10 p-6 sm:p-8">
-        <p className="mono-label">:// incoming message</p>
-        <p className="mt-4 font-display text-lg leading-relaxed text-paper sm:text-xl">{item.text}</p>
-      </div>
-      <div className="grid gap-2 sm:grid-cols-2">
-        <button className="choice text-center" onClick={() => answer("spam")} disabled={!!choice}>Spam</button>
-        <button className="choice text-center" onClick={() => answer("not-spam")} disabled={!!choice}>Not spam</button>
-      </div>
-      {choice && <p className="mono-label mt-6" role="status">{choice === item.label ? ":// Correct — nice pattern spotting." : `:// Not quite. This was ${item.label}.`}</p>}
-    </div>
-  );
+  if (done) return <div className="card"><p className="eyebrow">Classifier complete</p><h2 className="mt-2 text-2xl font-bold">You scored {correct}/{activity.items.length}</h2><p className="mt-2 text-slate-600">A real classifier would need many examples and careful testing.</p></div>;
+  return <div className="card">
+    <p className="eyebrow">Message {index + 1} of {activity.items.length}</p>
+    <h2 className="mt-2 text-2xl font-bold">{activity.title}</h2><p className="mt-2 text-slate-600">{activity.intro}</p>
+    <p className="my-8 rounded-2xl bg-slate-100 p-5 text-lg font-medium">{item.text}</p>
+    <Stagger className="grid gap-3 sm:grid-cols-2">
+      <StaggerItem><button className="button-secondary w-full" onClick={() => answer("spam")} disabled={!!choice}>Spam</button></StaggerItem>
+      <StaggerItem><button className="button-secondary w-full" onClick={() => answer("not-spam")} disabled={!!choice}>Not spam</button></StaggerItem>
+    </Stagger>
+    {choice && <p className="mt-4 font-semibold">{choice === item.label ? "Correct — nice pattern spotting." : `Not quite. This was ${item.label}.`}</p>}
+  </div>;
 }

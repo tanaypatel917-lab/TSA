@@ -7,15 +7,18 @@ const config: Config = {
       colors: {
         ink: "#0b0b0b",
         paper: "#e9e7e1",
-        paperDeep: "#dcd9d1",
-        signal: "#ff2d1a",
+        line: "#cfccc3",
+        accent: "#b02a08",
+        signal: "#b02a08",
+        signalBright: "#ff4f1f",
         mute: "#5c5c57",
-        accent: "#0b0b0b",
-        glow: "#ff2d1a"
+        lime: "#c8f560",
+        dark: "#141414"
       },
       fontFamily: {
-        display: ["var(--font-display)", "Helvetica Neue", "Arial", "sans-serif"],
-        mono: ["var(--font-mono)", "ui-monospace", "SFMono-Regular", "Menlo", "monospace"]
+        display: ["Instrument Serif", "Georgia", "serif"],
+        sans: ["Inter Tight Variable", "Inter", "system-ui", "sans-serif"],
+        mono: ["JetBrains Mono Variable", "ui-monospace", "monospace"]
       },
       keyframes: {
         marquee: { from: { transform: "translateX(0)" }, to: { transform: "translateX(-50%)" } },

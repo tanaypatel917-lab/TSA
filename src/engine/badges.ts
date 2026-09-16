@@ -14,6 +14,8 @@ export const BADGES = [
   { id: "myth-buster", name: "Myth Buster", description: "Score at least 90% on foundations.", icon: "🔎" },
   { id: "streak-3", name: "Three-Day Spark", description: "Build a three-day streak.", icon: "🔥" },
   { id: "streak-7", name: "Week of Wonder", description: "Build a seven-day streak.", icon: "🌟" },
+  { id: "daily-5", name: "Compass Regular", description: "Complete five daily Compass Checks.", icon: "📅" },
+  { id: "shield-bearer", name: "Shield Bearer", description: "Earn your first streak shield.", icon: "🛡️" },
   { id: "ai-ally", name: "AI Ally", description: "Complete every module.", icon: "🏆" }
 ] as const;
 
@@ -24,8 +26,10 @@ export function evaluateBadges(state: ProgressState, modules: Module[]): string[
   if (state.completedActivities.includes("tools")) earned.add("prompt-engineer");
   if ((state.quizBest.ethics ?? 0) >= 90) earned.add("ethics-champion");
   if ((state.quizBest.foundations ?? 0) >= 90) earned.add("myth-buster");
-  if (state.streak.count >= 3) earned.add("streak-3");
-  if (state.streak.count >= 7) earned.add("streak-7");
+  if (state.streak.longest >= 3) earned.add("streak-3");
+  if (state.streak.longest >= 7) earned.add("streak-7");
+  if (state.dailyChallenge.completed >= 5) earned.add("daily-5");
+  if (state.streak.shields >= 1 || state.streak.longest >= 5) earned.add("shield-bearer");
   for (const currentModule of modules) {
     if (currentModule.lessons.every((lesson) => state.completedLessons.includes(`${currentModule.id}/${lesson.id}`))
       && state.completedActivities.includes(currentModule.id) && (state.quizBest[currentModule.id] ?? 0) >= 70) {

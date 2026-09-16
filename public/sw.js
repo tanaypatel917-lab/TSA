@@ -1,6 +1,6 @@
 const BASE = new URL(self.registration.scope).pathname.replace(/\/$/, "");
-const CACHE = "ai-compass-v1";
-const SHELL = [`${BASE}/`, `${BASE}/modules/`, `${BASE}/badges/`, `${BASE}/glossary/`, `${BASE}/about/`];
+const CACHE = "ai-compass-v2";
+const SHELL = [`${BASE}/`, `${BASE}/modules/`, `${BASE}/badges/`, `${BASE}/glossary/`, `${BASE}/sources/`, `${BASE}/about/`];
 
 self.addEventListener("install", (event) => {
   self.skipWaiting();

@@ -12,7 +12,23 @@ npm run dev
 ```
 
 The verification scripts are `npm run typecheck`, `npm run lint`, `npm test`,
-and `npm run build`. There is no backend, account system, or API call.
+and `npm run build`. Accounts are optional; the app remains fully local when
+Supabase is not configured.
+
+## Accounts (optional)
+
+To enable cloud progress sync, create a Supabase project and run
+[`supabase/schema.sql`](supabase/schema.sql) in its SQL editor. Copy
+[`.env.example`](.env.example) to `.env.local` and set
+`NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`. For GitHub Pages,
+add those values as repository Variables and pass them to the deploy workflow's
+build step:
+
+```yaml
+env:
+  NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+```
 
 ## Testing
 
@@ -57,7 +73,7 @@ a parent directory (as above); a plain `npm run build` serves fine from `out/`.
 
 ### PWA / offline
 
-The app ships a web app manifest (`src/app/manifest.ts`) and a hand-written
+The app ships a web app manifest (`public/manifest.webmanifest`, relative URLs so it works under any base path) and a hand-written
 service worker (`public/sw.js`) that precaches the app shell and serves pages
 stale-while-revalidate, including offline navigation fallback. The service
 worker only registers in production builds (`NODE_ENV === "production"`), so

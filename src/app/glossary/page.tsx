@@ -1,24 +1,4 @@
-import type { Metadata } from "next";
 import { glossary } from "@/content/glossary";
+import { SplitText } from "@/components/motion/SplitText";
 
-export const metadata: Metadata = { title: "Glossary", description: "Student-friendly definitions of key AI terms." };
-
-const sorted = [...glossary].sort((a, b) => a.term.localeCompare(b.term));
-
-export default function GlossaryPage() {
-  return (
-    <div className="shell py-12 sm:py-16">
-      <p className="eyebrow">Words to know / {String(glossary.length).padStart(2, "0")} terms</p>
-      <h1 className="display-lg mt-4">AI glossary<span className="text-signal">.</span></h1>
-      <p className="prose-body mt-6 max-w-2xl text-mute">Keep this page nearby while you learn. These terms also appear as dotted words inside lessons, where you can select them for a quick definition.</p>
-      <dl className="mt-14 grid border-t border-ink sm:grid-cols-2 lg:grid-cols-3">
-        {sorted.map((item, i) => (
-          <div id={item.term.toLowerCase().replace(/\s+/g, "-")} className="border-b border-ink py-6 pr-6 sm:[&:nth-child(2n)]:pl-6 lg:[&:nth-child(2n)]:pl-0 lg:[&:nth-child(3n+2)]:px-6 lg:[&:nth-child(3n)]:pl-6" key={item.term}>
-            <dt className="flex items-baseline gap-4"><span className="index">{String(i + 1).padStart(2, "0")}</span><span className="display-sm">{item.term}</span></dt>
-            <dd className="mt-3 text-sm leading-relaxed text-mute">{item.definition}</dd>
-          </div>
-        ))}
-      </dl>
-    </div>
-  );
-}
+export default function GlossaryPage() { return <div className="shell py-32"><div className="grid gap-8 lg:grid-cols-12"><div className="lg:col-span-7"><p className="eyebrow"><span className="mr-3 text-accent">01</span> Reference</p><SplitText as="h1" className="mt-7 font-display text-[clamp(3rem,8vw,7rem)] leading-[.88]">Words to<br /><em>know.</em></SplitText></div><p className="self-end text-lg leading-relaxed text-ink/75 lg:col-start-9 lg:col-span-4">A working vocabulary for asking better questions and spotting when an answer needs more checking.</p></div><dl className="mt-24 grid border-t border-line sm:grid-cols-2">{glossary.map((item, index) => <div className="border-b border-line py-7 sm:nth-[odd]:border-r sm:nth-[odd]:pr-8 sm:nth-[even]:pl-8" key={item.term}><dt className="flex items-baseline gap-4 font-display text-3xl italic"><span className="font-mono text-[10px] not-italic text-accent">{String(index + 1).padStart(2, "0")}</span>{item.term}</dt><dd className="mt-3 max-w-prose leading-relaxed text-ink/75">{item.definition}</dd></div>)}</dl></div>; }

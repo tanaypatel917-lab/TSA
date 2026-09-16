@@ -1,61 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getModule, modules } from "@/content";
+import { ModuleGlyph } from "@/components/ModuleGlyph";
+import { SplitText } from "@/components/motion/SplitText";
 
 export function generateStaticParams() { return modules.map((module) => ({ slug: module.slug })); }
 
-const pad = (n: number) => String(n).padStart(2, "0");
-
 export default function ModulePage({ params }: { params: { slug: string } }) {
   const currentModule = getModule(params.slug); if (!currentModule) notFound();
-  const moduleIndex = modules.findIndex((module) => module.id === currentModule.id);
-  const steps = currentModule.lessons.length + 2;
-  return (
-    <div className="shell py-12 sm:py-16">
-      <Link href="/modules" className="nav-link"><span aria-hidden="true">←</span> All modules</Link>
-      <div className="mt-10">
-        <p className="eyebrow">Module {pad(moduleIndex + 1)} / {pad(steps)} steps</p>
-        <h1 className="display-lg mt-4 max-w-5xl">{currentModule.title}</h1>
-        <p className="prose-body mt-6 max-w-xl text-mute">{currentModule.tagline}</p>
-      </div>
-
-      <div className="mt-16 grid gap-12 lg:grid-cols-[1fr_0.35fr]">
-        <div>
-          <div className="flex items-end justify-between border-b border-ink pb-3"><h2 className="display-sm">Lessons</h2><span className="index">read</span></div>
-          <ol className="divide-y divide-ink border-b border-ink">
-            {currentModule.lessons.map((lesson, index) => (
-              <li key={lesson.id}>
-                <Link className="group flex items-baseline gap-5 py-5 transition-colors hover:text-signal focus-visible:outline-none focus-visible:text-signal sm:gap-8" href={`/modules/${currentModule.slug}/lessons/${lesson.id}`}>
-                  <span className="index w-8 shrink-0">{pad(index + 1)}</span>
-                  <span className="flex-1"><strong className="block font-display text-lg font-bold leading-tight sm:text-xl">{lesson.title}</strong><span className="index mt-1 block">{lesson.minutes} min read · {lesson.keyTakeaways.length} takeaways</span></span>
-                  <span aria-hidden="true" className="text-xl transition-transform group-hover:translate-x-2">→</span>
-                </Link>
-              </li>
-            ))}
-          </ol>
-
-          <div className="mt-12 grid gap-px border border-ink bg-ink md:grid-cols-2">
-            <Link href={`/modules/${currentModule.slug}/activity`} className="flip flex min-h-[220px] flex-col justify-between bg-paper p-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-signal sm:p-8">
-              <span className="eyebrow">Interactive activity</span>
-              <div><h3 className="display-sm mt-8">{currentModule.activity.title}</h3><p className="mt-3 text-sm text-mute">{currentModule.activity.intro}</p></div>
-            </Link>
-            <Link href={`/modules/${currentModule.slug}/quiz`} className="flip flex min-h-[220px] flex-col justify-between bg-paper p-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-signal sm:p-8">
-              <span className="eyebrow">Knowledge check</span>
-              <div><h3 className="display-sm mt-8">Five-question quiz</h3><p className="mt-3 text-sm text-mute">Test your understanding and keep your best score.</p></div>
-            </Link>
-          </div>
-        </div>
-
-        <aside className="terminal frame h-fit p-6 sm:p-8">
-          <p className="mono-label">:// module map</p>
-          <ol className="mt-6 space-y-3 font-display text-sm text-paper">
-            <li className="flex gap-3"><span className="font-mono text-signal">01</span>Read each lesson.</li>
-            <li className="flex gap-3"><span className="font-mono text-signal">02</span>Try the activity.</li>
-            <li className="flex gap-3"><span className="font-mono text-signal">03</span>Take the quiz. You need 70% for module completion.</li>
-          </ol>
-          <p className="mono-label mt-8 border-t border-signal/40 pt-4 text-paper/70">tip: revisit any step and improve your quiz score later.</p>
-        </aside>
-      </div>
-    </div>
-  );
+  return <div className="shell py-32"><Link href="/modules" className="btn-ghost">← All modules</Link><div className="mt-16 grid gap-8 lg:grid-cols-12"><div className="lg:col-span-8"><p className="eyebrow"><span className="mr-3 text-accent">0{modules.findIndex((item) => item.id === currentModule.id) + 1}</span> Module / {currentModule.activity.kind.replace("-", " ")}</p><div className="mt-7 flex items-end gap-6"><ModuleGlyph moduleId={currentModule.id} className="mb-2 h-12 w-12" /><SplitText as="h1" className="font-display text-[clamp(3rem,8vw,7rem)] leading-[.88]">{currentModule.title}</SplitText></div></div><p className="self-end text-lg leading-relaxed text-ink/75 lg:col-start-9 lg:col-span-4">{currentModule.tagline}</p></div><div className="mt-24 grid gap-16 lg:grid-cols-[1fr_280px]"><main><p className="eyebrow">Lessons</p><div className="mt-5 divide-y divide-line border-y border-line">{currentModule.lessons.map((lesson, index) => <Link className="group flex items-center gap-5 py-6 hover:bg-ink hover:px-5 hover:text-paper" href={`/modules/${currentModule.slug}/lessons/${lesson.id}`} key={lesson.id}><span className="font-mono text-2xl text-ink/75 group-hover:text-paper/50">0{index + 1}</span><span className="flex-1"><strong className="block font-display text-3xl italic">{lesson.title}</strong><span className="mt-1 block font-mono text-[10px] uppercase tracking-wider text-ink/75 group-hover:text-paper/55">{lesson.minutes} min read · {lesson.keyTakeaways.length} takeaways</span></span><span className="font-mono text-2xl">↗</span></Link>)}</div><Link href={`/modules/${currentModule.slug}/activity`} className="mt-12 block border-y border-line py-7 hover:bg-lime hover:px-5"><p className="eyebrow">Interactive activity</p><h2 className="mt-3 font-display text-4xl italic">{currentModule.activity.title}</h2><p className="mt-2 max-w-2xl text-ink/75">{currentModule.activity.intro}</p></Link><Link href={`/modules/${currentModule.slug}/quiz`} className="block border-b border-line py-7 hover:bg-ink hover:px-5 hover:text-paper"><p className="eyebrow">Knowledge check</p><h2 className="mt-3 font-display text-4xl italic">Short quiz</h2><p className="mt-2 text-ink/75">Test your understanding and keep your best score.</p></Link></main><aside className="h-fit border-t border-line pt-5"><p className="eyebrow">Module map</p><p className="mt-5 leading-relaxed text-ink/75">Read each lesson, try the activity, then take the quiz. You need 70% for module completion.</p><p className="mt-8 border-l-2 border-lime pl-4 text-sm leading-relaxed">You can revisit any step and improve your quiz score later.</p></aside></div></div>;
 }

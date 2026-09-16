@@ -4,60 +4,51 @@
 
 :root { color-scheme: light; }
 html { scroll-behavior: smooth; }
-body { @apply bg-paper font-display text-ink antialiased; padding-bottom: 2.5rem; }
-::selection { @apply bg-signal text-ink; }
-
+html { overflow-x: clip; }
+body { @apply bg-paper font-sans text-ink; font-feature-settings: "ss01", "cv11"; -webkit-font-smoothing: antialiased; }
+body::before { content: ""; position: fixed; inset: 0; z-index: 40; pointer-events: none; opacity: .06; mix-blend-mode: multiply; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.36'/%3E%3C/svg%3E"); }
+* { border-color: theme("colors.line"); }
+::selection { background: #c8f560; color: #0b0b0b; }
 @layer components {
   .shell { @apply mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12; }
-
-  /* Typography */
-  .display { @apply font-display font-black uppercase leading-[0.88] tracking-[-0.035em]; }
-  .display-xl { @apply display text-[clamp(3.5rem,11vw,11rem)]; }
-  .display-lg { @apply display text-[clamp(2.75rem,7vw,6.5rem)]; }
-  .display-md { @apply display text-[clamp(2rem,4.5vw,4rem)]; }
-  .display-sm { @apply display text-[clamp(1.5rem,2.6vw,2.25rem)]; }
-  .mono-label { @apply font-mono text-[11px] font-medium uppercase tracking-[0.14em]; }
-  .eyebrow { @apply mono-label text-ink; }
-  .eyebrow::before { content: "://"; @apply mr-2 text-signal; }
-  .index { @apply font-mono text-[11px] font-medium tabular-nums uppercase tracking-[0.14em] text-mute; }
-  .prose-body { @apply text-[1.05rem] leading-[1.65] text-ink sm:text-lg; }
-
-  /* Surfaces */
-  .frame { @apply relative border border-ink bg-paper; }
-  .frame::before, .frame::after { content: ""; @apply pointer-events-none absolute -left-[3px] -right-[3px] h-[5px]; --mark: theme("colors.ink"); background: linear-gradient(to right, var(--mark) 5px, transparent 5px, transparent calc(100% - 5px), var(--mark) calc(100% - 5px)); }
-  .frame::before { top: -3px; }
-  .frame::after { bottom: -3px; }
-  .frame-signal::before, .frame-signal::after { --mark: theme("colors.signal"); }
-  .card { @apply frame p-5 sm:p-7; }
-  .terminal { @apply bg-ink font-mono text-signal; }
-  .terminal .frame { @apply border-signal bg-ink; }
-  .terminal .frame::before, .terminal .frame::after { --mark: theme("colors.signal"); }
-  .rule { @apply border-t border-dotted border-ink; }
-  .grid-lines { background-image: linear-gradient(to right, rgb(11 11 11 / 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgb(11 11 11 / 0.08) 1px, transparent 1px); background-size: 48px 48px; }
-  .scanlines { background-image: repeating-linear-gradient(to bottom, rgb(255 45 26 / 0.09) 0 1px, transparent 1px 3px); }
-  .ghost { @apply display pointer-events-none absolute select-none text-signal blur-[14px] sm:blur-[22px]; }
-
-  /* Controls */
-  .button-primary { @apply inline-flex items-center justify-center gap-2 border border-ink bg-ink px-5 py-3 font-mono text-[12px] font-bold uppercase tracking-[0.12em] text-paper transition-colors hover:border-signal hover:bg-signal hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2 focus-visible:ring-offset-paper disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-ink disabled:hover:bg-ink disabled:hover:text-paper; }
-  .button-secondary { @apply inline-flex items-center justify-center gap-2 border border-ink bg-transparent px-5 py-3 font-mono text-[12px] font-bold uppercase tracking-[0.12em] text-ink transition-colors hover:bg-ink hover:text-paper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2 focus-visible:ring-offset-paper disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-ink; }
-  .choice { @apply w-full border border-ink bg-transparent p-4 text-left font-display text-base font-bold leading-snug text-ink transition-colors hover:bg-ink hover:text-paper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2 focus-visible:ring-offset-paper disabled:cursor-default disabled:hover:bg-transparent disabled:hover:text-ink; }
-  .choice:hover:not(:disabled) .index, .choice-correct .index { @apply text-paper/70; }
-  .choice-correct { @apply !bg-ink !text-paper; }
-  .choice-wrong { @apply !border-signal !bg-signal !text-ink; }
-  .field { @apply mt-2 w-full border-ink bg-paper font-display text-base text-ink placeholder:text-mute focus:border-ink focus:ring-2 focus:ring-signal; }
-  .nav-link { @apply mono-label relative text-ink transition-colors hover:text-signal focus-visible:outline-none focus-visible:text-signal; }
-  .nav-link[aria-current="page"]::after { content: ""; @apply absolute -bottom-1 left-0 h-[2px] w-full bg-signal; }
-
-  /* Cards that invert on hover */
-  .flip { @apply transition-colors duration-200 hover:bg-ink hover:text-paper; }
-  .flip:hover .index, .flip:hover .text-mute { @apply text-paper/70; }
-  .flip:hover .eyebrow { @apply text-paper; }
-  .flip:hover::before, .flip:hover::after { --mark: theme("colors.signal"); }
-
-  .marquee-track { @apply flex w-max animate-marquee whitespace-nowrap; }
+  .eyebrow { @apply font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-ink; }
+  .rule { @apply border-t border-line; }
+  .card { @apply border border-line bg-white/60 p-5 sm:p-7; }
+  .row { @apply border-t border-line py-6 transition-colors duration-500; }
+  .btn-pill { @apply relative isolate inline-flex items-center justify-center overflow-hidden rounded-full bg-ink px-6 py-3 font-mono text-xs font-bold uppercase tracking-[0.16em] text-paper transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4 focus-visible:ring-offset-paper disabled:cursor-not-allowed disabled:opacity-50; }
+  .btn-pill::before { content: ""; @apply absolute inset-0 -z-10 translate-y-full bg-accent transition-transform duration-300 ease-[cubic-bezier(.22,1,.36,1)]; }
+  .btn-pill:hover::before, .btn-pill:focus-visible::before { transform: translateY(0); }
+  .btn-ghost { @apply link-underline inline-flex items-center justify-center border-b border-ink py-2 font-mono text-xs font-bold uppercase tracking-[0.16em] text-ink transition hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4; }
+  .button-primary { @apply btn-pill; }
+  .button-secondary { @apply inline-flex items-center justify-center border border-ink px-5 py-3 font-mono text-xs font-bold uppercase tracking-[0.12em] text-ink transition hover:bg-ink hover:text-paper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4 disabled:cursor-not-allowed disabled:opacity-50; }
+  .link-underline { @apply relative after:absolute after:bottom-[-5px] after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-accent after:transition-transform after:duration-300 hover:after:scale-x-100; }
+  .text-outline { -webkit-text-stroke: 1px currentColor; color: transparent; }
 }
+.cursor-dot { position: fixed; z-index: 100; width: 10px; height: 10px; border-radius: 9999px; background: #b02a08; pointer-events: none; }
+.cursor-ring { position: fixed; z-index: 99; width: 36px; height: 36px; border: 1px solid #b02a08; border-radius: 9999px; pointer-events: none; mix-blend-mode: difference; transition: width .25s, height .25s, margin .25s, background .25s; }
+.cursor-ring.cursor-hover { width: 56px; height: 56px; margin: -10px; background: #c8f560; border-color: #c8f560; }
+.cursor-ring.cursor-open { width: 64px; height: 64px; margin: -14px; background: #c8f560; border-color: #c8f560; }
+.cursor-ring.cursor-open::after { content: "Open"; position: absolute; inset: 0; display: grid; place-items: center; color: #111; font: 10px/1 "JetBrains Mono Variable", monospace; text-transform: uppercase; letter-spacing: .12em; }
+.marquee-track { animation: marquee 24s linear infinite; }
+.marquee-track:hover { animation-play-state: paused; }
+.compass-dial { animation: compass-spin 60s linear infinite; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes compass-spin { to { transform: rotate(360deg); } }
+@keyframes reveal { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes confetti-fall {
+  0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+.confetti-piece { position: absolute; top: 0; border-radius: 2px; animation-name: confetti-fall; animation-timing-function: linear; animation-fill-mode: forwards; }
+
+/* Re-layered terminal identity */
+.terminal { @apply bg-ink font-mono text-signalBright; }
+.terminal .frame { @apply border-signal bg-ink; }
+.terminal .frame::before, .terminal .frame::after { --mark: theme("colors.signal"); }
+.scanlines { background-image: repeating-linear-gradient(to bottom, rgb(176 42 8 / 0.09) 0 1px, transparent 1px 3px); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
-  .marquee-track { animation: none; }
+  body::before { opacity: .04; }
+  .marquee-track, .compass-dial { animation-play-state: paused; }
 }
