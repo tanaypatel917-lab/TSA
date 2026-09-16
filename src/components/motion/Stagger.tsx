@@ -10,17 +10,11 @@ const StaggerContext = createContext(false);
 export function Stagger({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   const reduced = useReducedMotion();
   const [mounted, setMounted] = useState(false);
-  const [fallback, setFallback] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-    const timeout = window.setTimeout(() => setFallback(true), 1500);
-    return () => window.clearTimeout(timeout);
-  }, []);
+  useEffect(() => setMounted(true), []);
   if (!mounted || reduced) return <StaggerContext.Provider value={false}><div className={className}>{children}</div></StaggerContext.Provider>;
   return <StaggerContext.Provider value><motion.div
     className={className}
     initial="hidden"
-    animate={fallback ? "show" : undefined}
     whileInView="show"
     viewport={{ once: true, margin: "-10%" }}
     variants={{ hidden, show: { transition: { staggerChildren: 0.08 } } }}

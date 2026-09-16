@@ -29,12 +29,7 @@ function units(children: ReactNode): ReactNode[] {
 export function SplitText({ as: Tag = "div", className = "", children, delay = 0, stagger = 0.04, immediate = false }: SplitTextProps) {
   const reduced = useReducedMotion();
   const [mounted, setMounted] = useState(false);
-  const [fallback, setFallback] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-    const timeout = window.setTimeout(() => setFallback(true), 1500);
-    return () => window.clearTimeout(timeout);
-  }, []);
+  useEffect(() => setMounted(true), []);
   const parts = units(children);
   if (!mounted || reduced) return <Tag className={className}>{parts.map((part, index) => <span className="mr-[.24em] inline-block overflow-hidden align-bottom" key={`${index}-${typeof part === "string" ? part : "node"}`}>{isValidElement(part) ? cloneElement(part) : part}</span>)}</Tag>;
   return <Tag className={className}>{parts.map((part, index) => {
@@ -43,7 +38,7 @@ export function SplitText({ as: Tag = "div", className = "", children, delay = 0
       <motion.span
         className="inline-block"
         initial={{ y: "110%" }}
-        animate={immediate || fallback ? { y: 0 } : undefined}
+        animate={immediate ? { y: 0 } : undefined}
         whileInView={immediate ? undefined : { y: 0 }}
         transition={{ duration: 0.9, delay: delay + index * stagger, ease: [0.22, 1, 0.36, 1] }}
         viewport={{ once: true }}
