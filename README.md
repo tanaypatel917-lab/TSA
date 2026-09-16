@@ -30,6 +30,27 @@ env:
   NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
 ```
 
+## Learning memory (optional)
+
+When accounts are enabled, AI Compass can also remember what each learner
+finishes (lessons, activities, quiz results, daily goals) via
+[Mem0](https://mem0.ai). Memories are per-account, only recorded while signed
+in, and can be searched or deleted from the **Account** page under "Learning
+memory". The Mem0 API key never reaches the browser — the app talks to a
+Supabase Edge Function (`supabase/functions/mem0`) that verifies the user's
+JWT and proxies to Mem0.
+
+Setup:
+
+1. Install the [Supabase CLI](https://supabase.com/docs/guides/cli) and link
+   your project: `supabase link --project-ref <your-project-ref>`.
+2. Create an API key at [app.mem0.ai](https://app.mem0.ai) and store it as a
+   function secret: `supabase secrets set MEM0_API_KEY=<key>`.
+3. Deploy the function: `supabase functions deploy mem0`.
+4. Set `NEXT_PUBLIC_MEM0_ENABLED=true` in `.env.local`. For GitHub Pages, add
+   `NEXT_PUBLIC_MEM0_ENABLED` as a repository **Variable** (value `true`) —
+   `deploy.yml` passes it to the build alongside the Supabase variables.
+
 ## Testing
 
 Unit tests for the progress engine run with `npm test` (Vitest). Browser tests

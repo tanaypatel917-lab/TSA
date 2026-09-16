@@ -4,9 +4,11 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { evaluateBadges } from "@/engine/badges";
 import { mergeProgress } from "@/engine/merge";
 import { apply, initialState, normalizeState, type ProgressEvent, type ProgressState } from "@/engine/progress";
+import { describeEvent } from "@/engine/memoryEvents";
 import { levelFor } from "@/engine/levels";
 import { exportProgress, importProgress, isProgressState, loadProgress, saveProgress } from "@/engine/storage";
 import { modules } from "@/content";
+import { addMemory, deleteAllMemories, memoryConfigured } from "@/lib/memory";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "./AuthProvider";
 
@@ -153,7 +155,13 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       }
       return { ...result.state, badges };
     });
-  }, []);
+    if (memoryConfigured && userId) {
+      const messages = describeEvent(event, modules);
+      if (messages) {
+        void addMemory(messages, { source: "ai-compass", eventType: event.type, day: event.day }).catch(() => undefined);
+      }
+    }
+  }, [userId]);
 
   const reset = useCallback(() => {
     setState(initialState);
@@ -176,6 +184,9 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     }
     setLastSyncedAt(new Date().toISOString());
     setSyncStatus("synced");
+    if (memoryConfigured) {
+      void deleteAllMemories().catch(() => undefined);
+    }
     return { error: null };
   }, [userId]);
 
