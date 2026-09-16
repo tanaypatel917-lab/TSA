@@ -32,3 +32,33 @@ activity components render the activity kinds defined in `src/content/types.ts`.
 
 Progress logic is framework-free in `src/engine/`, while routes and interactive
 components live under `src/app/` and `src/components/`.
+
+## Deploy
+
+The site deploys to GitHub Pages via `.github/workflows/deploy.yml` on every
+push to `main` (or manually via workflow dispatch). One-time setup: in the
+repo go to **Settings → Pages** and set **Source** to "GitHub Actions".
+
+`NEXT_PUBLIC_BASE_PATH` controls the base path baked into the static export.
+It defaults to empty for local/dev builds; the workflow sets it to `/TSA`. If
+you fork the repo under a different name, change the value in the workflow to
+`/<your-repo-name>`.
+
+To check a Pages-style build locally:
+
+```bash
+NEXT_PUBLIC_BASE_PATH=/TSA npm run build
+mkdir -p /tmp/site && ln -sfn "$PWD/out" /tmp/site/TSA
+npx serve /tmp/site   # open http://localhost:3000/TSA/
+```
+
+The base-path build expects to be mounted at `/TSA`, so it must be served from
+a parent directory (as above); a plain `npm run build` serves fine from `out/`.
+
+### PWA / offline
+
+The app ships a web app manifest (`src/app/manifest.ts`) and a hand-written
+service worker (`public/sw.js`) that precaches the app shell and serves pages
+stale-while-revalidate, including offline navigation fallback. The service
+worker only registers in production builds (`NODE_ENV === "production"`), so
+`npm run dev` is unaffected.
