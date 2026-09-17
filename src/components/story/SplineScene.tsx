@@ -18,7 +18,11 @@ export function SplineScene({
 }) {
   return (
     <div className={cn("absolute inset-0 h-full w-full", className)}>
-      <Spline scene={scene} onLoad={onLoad} />
+      <Spline
+        scene={scene}
+        onLoad={onLoad}
+        className="absolute inset-0 h-full w-full"
+      />
     </div>
   );
 }
