@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
-const SCRAMBLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+const SCRAMBLE_CHARS = "abcdefghijklmnopqrstuvwxyz0123456789";
 const ACCENT = "#b02a08";
 const LIME = "#c8f560";
 const ORANGE = "#ff4f1f";
@@ -52,14 +52,20 @@ export function ToyWord({
   function playReduced() {
     gsap.fromTo(
       buttonRef.current,
-      { color: LIME },
-      { color: ACCENT, duration: 0.18, repeat: 1, yoyo: true, onComplete: finish }
+      { color: ACCENT },
+      { color: LIME, duration: 0.18, repeat: 1, yoyo: true, onComplete: finish }
     );
   }
 
   function playScramble() {
     const started = performance.now();
     const letters = word.split("");
+    letterRefs.current.forEach((letter) => {
+      if (letter) {
+        letter.style.width = `${letter.getBoundingClientRect().width}px`;
+        letter.style.textAlign = "center";
+      }
+    });
     gsap.to(buttonRef.current, { color: LIME, duration: 0.12 });
     scrambleTimerRef.current = window.setInterval(() => {
       const elapsed = performance.now() - started;
@@ -76,6 +82,12 @@ export function ToyWord({
           window.clearInterval(scrambleTimerRef.current);
           scrambleTimerRef.current = null;
         }
+        letterRefs.current.forEach((letter) => {
+          if (letter) {
+            letter.style.width = "";
+            letter.style.textAlign = "";
+          }
+        });
         gsap.to(buttonRef.current, { color: ACCENT, duration: 0.2, onComplete: finish });
       }
     }, 40);
@@ -101,7 +113,7 @@ export function ToyWord({
 
   function playFlip() {
     gsap.to(letterRefs.current, {
-      rotationX: 360,
+      rotationX: "+=360",
       duration: 0.9,
       stagger: 0.05,
       ease: "back.out(1.4)",
@@ -134,7 +146,7 @@ export function ToyWord({
       type="button"
       aria-label={`Play with the word ${word}`}
       onClick={play}
-      className="inline-flex cursor-pointer border-0 bg-transparent p-0 font-inherit text-accent underline decoration-dotted decoration-2 underline-offset-8 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4 focus-visible:ring-offset-dark"
+      className="inline-flex cursor-pointer border-b-[3px] border-dotted border-current bg-transparent p-0 pb-[.04em] font-inherit text-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4 focus-visible:ring-offset-dark"
     >
       <span aria-hidden="true">
         {word.split("").map((letter, index) => (
