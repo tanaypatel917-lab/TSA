@@ -16,6 +16,7 @@ const SPLINE_CAMERA_NAMES = ["Camera", "PerspectiveCamera"] as const;
 const SPLINE_NEEDLE_NAMES = ["Needle", "Compass needle"] as const;
 const SPLINE_CAMERA_DOLLY = 140;
 const SPLINE_CAMERA_TILT = 0.08;
+const SPLINE_LOAD_TIMEOUT_MS = 12000;
 
 const chapters = [
   {
@@ -61,6 +62,21 @@ export function ScrollStory() {
   const appRef = useRef<Application | null>(null);
   const splineStartRef = useRef({ z: 0, x: 0 });
   const [reduced, setReduced] = useState(false);
+  const [splineFailed, setSplineFailed] = useState(false);
+  const splineLoadedRef = useRef(false);
+  const useSpline = Boolean(SCENE) && !splineFailed;
+
+  useEffect(() => {
+    if (!SCENE) return;
+    if (!("gpu" in navigator)) {
+      setSplineFailed(true);
+      return;
+    }
+    const timer = window.setTimeout(() => {
+      if (!splineLoadedRef.current) setSplineFailed(true);
+    }, SPLINE_LOAD_TIMEOUT_MS);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -111,7 +127,7 @@ export function ScrollStory() {
         );
       }
 
-      if (SCENE) {
+      if (useSpline) {
         timeline.eventCallback("onUpdate", () => {
           const app = appRef.current;
           if (!app) return;
@@ -156,10 +172,11 @@ export function ScrollStory() {
     }, storyRef);
 
     return () => context.revert();
-  }, [reduced]);
+  }, [reduced, useSpline]);
 
   const handleSplineLoad = (app: Application) => {
     appRef.current = app;
+    splineLoadedRef.current = true;
     const camera = SPLINE_CAMERA_NAMES.map((name) =>
       app.findObjectByName(name)
     ).find((object) => object);
@@ -172,8 +189,12 @@ export function ScrollStory() {
     ScrollTrigger.refresh();
   };
 
-  const visual = SCENE ? (
-    <SplineScene scene={SCENE} onLoad={handleSplineLoad} className="h-full w-full" />
+  const visual = useSpline ? (
+    <SplineScene
+      scene={SCENE}
+      onLoad={handleSplineLoad}
+      className="h-full w-full"
+    />
   ) : (
     <ContourLandscape />
   );
