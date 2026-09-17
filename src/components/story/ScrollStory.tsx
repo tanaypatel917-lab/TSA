@@ -20,16 +20,25 @@ const SPLINE_LOAD_TIMEOUT_MS = 12000;
 
 const chapters = [
   {
+    kind: "intro",
+    eyebrow: "AI Compass · 2026–27",
+    title: "AI COMPASS",
+    body: "Scroll to enter.",
+  },
+  {
+    kind: "chapter",
     eyebrow: "01 Understand",
     title: "See how the machine actually thinks.",
     body: "Data in, patterns out. Learn what a model is, what it isn't, and why it sounds so sure.",
   },
   {
+    kind: "chapter",
     eyebrow: "02 Practice",
     title: "Ask better, get better.",
     body: "Prompting, checking, citing. Hands-on tools you'll actually use for homework and beyond.",
   },
   {
+    kind: "chapter",
     eyebrow: "03 Decide",
     title: "Use it. Don't let it use you.",
     body: "Bias, privacy, honesty. Make calls you can defend to your teacher and yourself.",
@@ -47,13 +56,30 @@ function Chapter({
     <div className={cn("chapter", className)}>
       <div className="shell w-full pb-20 sm:pb-0">
         <p className="eyebrow text-paper/60">{chapter.eyebrow}</p>
-        <h2 className="mt-5 max-w-4xl font-display text-[clamp(2.5rem,7vw,7rem)] leading-[.95]">
+        <h2 className={cn(
+          "mt-5 max-w-4xl font-display leading-[.95]",
+          chapter.kind === "intro"
+            ? "text-[clamp(4rem,16vw,15rem)] uppercase tracking-[-.04em] text-paper"
+            : "text-[clamp(2.5rem,7vw,7rem)]"
+        )}>
           {chapter.title}
         </h2>
-        <p className="mt-7 max-w-md text-paper/70">{chapter.body}</p>
+        <p className={cn(
+          "mt-7 max-w-md text-paper/70",
+          chapter.kind === "intro" && "story-scroll-cue font-mono text-xs uppercase tracking-[.18em]"
+        )}>
+          {chapter.kind === "intro" && <span className="mr-2 text-accent">↓</span>}
+          {chapter.body}
+        </p>
       </div>
     </div>
   );
+}
+
+function splineCameraTilt(startX: number, progress: number) {
+  const landing = Math.min(1, Math.max(0, (progress - 0.85) / 0.15));
+  const easedLanding = landing * landing * (3 - 2 * landing);
+  return startX - progress * SPLINE_CAMERA_TILT + easedLanding * 0.25;
 }
 
 export function ScrollStory() {
@@ -102,7 +128,7 @@ export function ScrollStory() {
       const chapterNodes = gsap.utils.toArray<HTMLElement>(".chapter");
 
       chapterNodes.forEach((chapter, index) => {
-        const start = index / 3;
+        const start = index / 4;
         timeline.fromTo(
           chapter,
           { autoAlpha: index === 0 ? 1 : 0, y: index === 0 ? 0 : 40 },
@@ -113,10 +139,11 @@ export function ScrollStory() {
           timeline.to(
             chapter,
             { autoAlpha: 0, y: -40, duration: 0.1 },
-            (index + 1) / 3 - 0.12
+            (index + 1) / 4 - 0.12
           );
         }
       });
+      timeline.to(".story-scroll-cue", { autoAlpha: 0, duration: 0.03 }, 0.05);
 
       if (visualRef.current) {
         timeline.fromTo(
@@ -124,6 +151,11 @@ export function ScrollStory() {
           { scale: 1.1 },
           { scale: 1, duration: 1 },
           0
+        );
+        timeline.to(
+          visualRef.current,
+          { yPercent: -12, opacity: 0.35, duration: 0.12 },
+          0.88
         );
       }
 
@@ -139,7 +171,7 @@ export function ScrollStory() {
             camera.position.z =
               splineStartRef.current.z - progress * SPLINE_CAMERA_DOLLY;
             camera.rotation.x =
-              splineStartRef.current.x - progress * SPLINE_CAMERA_TILT;
+              splineCameraTilt(splineStartRef.current.x, progress);
           }
           const needle = SPLINE_NEEDLE_NAMES.map((name) =>
             app.findObjectByName(name)
@@ -216,8 +248,8 @@ export function ScrollStory() {
 
   return (
     <section className="relative bg-dark text-paper">
-      <div ref={storyRef} className="story h-[400vh]">
-        <div className="story-stage sticky top-0 h-screen overflow-hidden">
+      <div ref={storyRef} className="story h-[500vh]">
+        <div className="story-stage sticky top-0 box-border h-screen overflow-hidden pt-20">
           <div ref={visualRef} className="story-visual absolute inset-0">
             {visual}
           </div>

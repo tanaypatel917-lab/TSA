@@ -6,7 +6,6 @@ import { modules } from "@/content";
 import { ONBOARDING_STATEMENTS } from "@/content/onboarding";
 import { todayKey } from "@/engine/dates";
 import { useProgress } from "@/state/ProgressProvider";
-import { Hero, LearningPath } from "@/components/Hero";
 
 const GOALS = [
   { value: 1 as const, label: "Casual", detail: "1 activity a day" },
@@ -55,15 +54,16 @@ export function Onboarding() {
       correct: skipped ? 0 : correct,
       skipped
     });
-    if (skipped) return;
+    if (skipped) {
+      router.push("/dashboard");
+      return;
+    }
     const chosen = modules.find((item) => item.id === moduleChoice) ?? modules[0];
     router.push(`/modules/${chosen.slug}/lessons/${chosen.lessons[0].id}`);
   }
 
   return (
-    <>
-      <Hero />
-      <section id="calibrate" className="shell py-24 sm:py-32">
+    <section id="calibrate" className="shell py-24 sm:py-32">
         <div className="mx-auto max-w-2xl border border-line bg-paper p-7 sm:p-10">
           {step === 0 ? (
             <div>
@@ -126,7 +126,5 @@ export function Onboarding() {
           )}
         </div>
       </section>
-      <LearningPath />
-    </>
   );
 }

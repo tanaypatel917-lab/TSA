@@ -8,7 +8,10 @@ const CARDINALS: Array<[string, number]> = [["N", 0], ["E", 90], ["S", 180], ["W
 
 function polar(r: number, deg: number): [number, number] {
   const a = ((deg - 90) * Math.PI) / 180;
-  return [250 + r * Math.cos(a), 250 + r * Math.sin(a)];
+  return [
+    Number((250 + r * Math.cos(a)).toFixed(6)),
+    Number((250 + r * Math.sin(a)).toFixed(6))
+  ];
 }
 
 export function HeroDial() {
