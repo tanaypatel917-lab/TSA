@@ -17,6 +17,7 @@ const SPLINE_NEEDLE_NAMES = ["Needle", "Compass needle"] as const;
 const SPLINE_CAMERA_DOLLY = 140;
 const SPLINE_CAMERA_TILT = 0.08;
 const SPLINE_LOAD_TIMEOUT_MS = 12000;
+type SplineStatus = "checking" | "ok" | "failed";
 
 const chapters = [
   {
@@ -59,10 +60,15 @@ function Chapter({
         <h2 className={cn(
           "mt-5 max-w-4xl font-display leading-[.95]",
           chapter.kind === "intro"
-            ? "text-[clamp(4rem,16vw,15rem)] uppercase tracking-[-.04em] text-paper"
+            ? "text-[clamp(4rem,16vw,15rem)] uppercase leading-[.82] tracking-[-.05em] text-paper"
             : "text-[clamp(2.5rem,7vw,7rem)]"
         )}>
-          {chapter.title}
+          {chapter.kind === "intro" ? (
+            <>
+              <span className="block">AI</span>
+              <span className="text-outline-paper block">COMPASS</span>
+            </>
+          ) : chapter.title}
         </h2>
         <p className={cn(
           "mt-7 max-w-md text-paper/70",
@@ -88,21 +94,50 @@ export function ScrollStory() {
   const appRef = useRef<Application | null>(null);
   const splineStartRef = useRef({ z: 0, x: 0 });
   const [reduced, setReduced] = useState(false);
-  const [splineFailed, setSplineFailed] = useState(false);
+  const [splineStatus, setSplineStatus] = useState<SplineStatus>(SCENE ? "checking" : "failed");
   const splineLoadedRef = useRef(false);
-  const useSpline = Boolean(SCENE) && !splineFailed;
+  const useSpline = splineStatus === "ok";
 
   useEffect(() => {
-    if (!SCENE) return;
-    if (!("gpu" in navigator)) {
-      setSplineFailed(true);
+    const root = document.documentElement;
+    root.dataset.storyActive = "1";
+    return () => {
+      delete root.dataset.storyActive;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!SCENE) {
+      setSplineStatus("failed");
       return;
     }
+    const gpu = (navigator as Navigator & {
+      gpu?: { requestAdapter(): Promise<unknown | null> };
+    }).gpu;
+    if (!gpu) {
+      setSplineStatus("failed");
+      return;
+    }
+    let cancelled = false;
+    gpu.requestAdapter()
+      .then((adapter) => {
+        if (!cancelled) setSplineStatus(adapter ? "ok" : "failed");
+      })
+      .catch(() => {
+        if (!cancelled) setSplineStatus("failed");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (splineStatus !== "ok") return;
     const timer = window.setTimeout(() => {
-      if (!splineLoadedRef.current) setSplineFailed(true);
+      if (!splineLoadedRef.current) setSplineStatus("failed");
     }, SPLINE_LOAD_TIMEOUT_MS);
     return () => window.clearTimeout(timer);
-  }, []);
+  }, [splineStatus]);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -123,23 +158,26 @@ export function ScrollStory() {
           start: "top top",
           end: "bottom bottom",
           scrub: 1,
+          onToggle: ({ isActive }) => {
+            document.documentElement.dataset.storyActive = isActive ? "1" : "0";
+          },
         },
       });
       const chapterNodes = gsap.utils.toArray<HTMLElement>(".chapter");
 
       chapterNodes.forEach((chapter, index) => {
-        const start = index / 4;
+        const start = index === 0 ? 0 : index / 4 - 0.07;
         timeline.fromTo(
           chapter,
           { autoAlpha: index === 0 ? 1 : 0, y: index === 0 ? 0 : 40 },
-          { autoAlpha: 1, y: 0, duration: 0.22 },
+          { autoAlpha: 1, y: 0, duration: 0.07 },
           start
         );
         if (index < chapterNodes.length - 1) {
           timeline.to(
             chapter,
-            { autoAlpha: 0, y: -40, duration: 0.1 },
-            (index + 1) / 4 - 0.12
+            { autoAlpha: 0, y: -40, duration: 0.07 },
+            (index + 1) / 4 - 0.08
           );
         }
       });
