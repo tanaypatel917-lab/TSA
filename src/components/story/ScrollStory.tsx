@@ -90,8 +90,8 @@ export function ScrollStory() {
         if (index < chapterNodes.length - 1) {
           timeline.to(
             chapter,
-            { autoAlpha: 0, y: -40, duration: 0.2 },
-            (index + 1) / 3 - 0.06
+            { autoAlpha: 0, y: -40, duration: 0.1 },
+            (index + 1) / 3 - 0.12
           );
         }
       });
