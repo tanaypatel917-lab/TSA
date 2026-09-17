@@ -9,20 +9,36 @@ import { cn } from "@/lib/utils";
 import { ContourLandscape } from "./ContourLandscape";
 import { SplineScene } from "./SplineScene";
 
-const SCENE = process.env.NEXT_PUBLIC_SPLINE_SCENE;
+const SCENE =
+  process.env.NEXT_PUBLIC_SPLINE_SCENE ||
+  "https://prod.spline.design/fmshl7XbfaLR3tSa/scene.splinecode";
+const SPLINE_CAMERA_NAMES = ["Camera", "PerspectiveCamera"] as const;
+const SPLINE_NEEDLE_NAMES = ["Needle", "Compass needle"] as const;
+const SPLINE_CAMERA_DOLLY = 140;
+const SPLINE_CAMERA_TILT = 0.08;
+const SPLINE_LOAD_TIMEOUT_MS = 12000;
 
 const chapters = [
   {
+    kind: "intro",
+    eyebrow: "AI Compass · 2026–27",
+    title: "AI COMPASS",
+    body: "Scroll to enter.",
+  },
+  {
+    kind: "chapter",
     eyebrow: "01 Understand",
     title: "See how the machine actually thinks.",
     body: "Data in, patterns out. Learn what a model is, what it isn't, and why it sounds so sure.",
   },
   {
+    kind: "chapter",
     eyebrow: "02 Practice",
     title: "Ask better, get better.",
     body: "Prompting, checking, citing. Hands-on tools you'll actually use for homework and beyond.",
   },
   {
+    kind: "chapter",
     eyebrow: "03 Decide",
     title: "Use it. Don't let it use you.",
     body: "Bias, privacy, honesty. Make calls you can defend to your teacher and yourself.",
@@ -40,13 +56,30 @@ function Chapter({
     <div className={cn("chapter", className)}>
       <div className="shell w-full pb-20 sm:pb-0">
         <p className="eyebrow text-paper/60">{chapter.eyebrow}</p>
-        <h2 className="mt-5 max-w-4xl font-display text-[clamp(2.5rem,7vw,7rem)] leading-[.95]">
+        <h2 className={cn(
+          "mt-5 max-w-4xl font-display leading-[.95]",
+          chapter.kind === "intro"
+            ? "text-[clamp(4rem,16vw,15rem)] uppercase tracking-[-.04em] text-paper"
+            : "text-[clamp(2.5rem,7vw,7rem)]"
+        )}>
           {chapter.title}
         </h2>
-        <p className="mt-7 max-w-md text-paper/70">{chapter.body}</p>
+        <p className={cn(
+          "mt-7 max-w-md text-paper/70",
+          chapter.kind === "intro" && "story-scroll-cue font-mono text-xs uppercase tracking-[.18em]"
+        )}>
+          {chapter.kind === "intro" && <span className="mr-2 text-accent">↓</span>}
+          {chapter.body}
+        </p>
       </div>
     </div>
   );
+}
+
+function splineCameraTilt(startX: number, progress: number) {
+  const landing = Math.min(1, Math.max(0, (progress - 0.85) / 0.15));
+  const easedLanding = landing * landing * (3 - 2 * landing);
+  return startX - progress * SPLINE_CAMERA_TILT + easedLanding * 0.25;
 }
 
 export function ScrollStory() {
@@ -55,6 +88,21 @@ export function ScrollStory() {
   const appRef = useRef<Application | null>(null);
   const splineStartRef = useRef({ z: 0, x: 0 });
   const [reduced, setReduced] = useState(false);
+  const [splineFailed, setSplineFailed] = useState(false);
+  const splineLoadedRef = useRef(false);
+  const useSpline = Boolean(SCENE) && !splineFailed;
+
+  useEffect(() => {
+    if (!SCENE) return;
+    if (!("gpu" in navigator)) {
+      setSplineFailed(true);
+      return;
+    }
+    const timer = window.setTimeout(() => {
+      if (!splineLoadedRef.current) setSplineFailed(true);
+    }, SPLINE_LOAD_TIMEOUT_MS);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -80,7 +128,7 @@ export function ScrollStory() {
       const chapterNodes = gsap.utils.toArray<HTMLElement>(".chapter");
 
       chapterNodes.forEach((chapter, index) => {
-        const start = index / 3;
+        const start = index / 4;
         timeline.fromTo(
           chapter,
           { autoAlpha: index === 0 ? 1 : 0, y: index === 0 ? 0 : 40 },
@@ -91,10 +139,11 @@ export function ScrollStory() {
           timeline.to(
             chapter,
             { autoAlpha: 0, y: -40, duration: 0.1 },
-            (index + 1) / 3 - 0.12
+            (index + 1) / 4 - 0.12
           );
         }
       });
+      timeline.to(".story-scroll-cue", { autoAlpha: 0, duration: 0.03 }, 0.05);
 
       if (visualRef.current) {
         timeline.fromTo(
@@ -103,20 +152,31 @@ export function ScrollStory() {
           { scale: 1, duration: 1 },
           0
         );
+        timeline.to(
+          visualRef.current,
+          { yPercent: -12, opacity: 0.35, duration: 0.12 },
+          0.88
+        );
       }
 
-      if (SCENE) {
+      if (useSpline) {
         timeline.eventCallback("onUpdate", () => {
           const app = appRef.current;
           if (!app) return;
           const progress = timeline.progress();
-          const camera = app.findObjectByName("Camera");
+          const camera = SPLINE_CAMERA_NAMES.map((name) =>
+            app.findObjectByName(name)
+          ).find((object) => object);
           if (camera) {
-            camera.position.z = splineStartRef.current.z - progress * 600;
-            camera.rotation.x = splineStartRef.current.x - progress * 0.25;
+            camera.position.z =
+              splineStartRef.current.z - progress * SPLINE_CAMERA_DOLLY;
+            camera.rotation.x =
+              splineCameraTilt(splineStartRef.current.x, progress);
           }
-          const needle = app.findObjectByName("Needle");
-          if (needle) needle.rotation.y = progress * Math.PI * 2;
+          const needle = SPLINE_NEEDLE_NAMES.map((name) =>
+            app.findObjectByName(name)
+          ).find((object) => object);
+          if (needle) needle.rotation.y = progress * Math.PI * 0.65;
         });
       } else {
         const stage = visualRef.current?.querySelector(".contour-stage");
@@ -144,11 +204,14 @@ export function ScrollStory() {
     }, storyRef);
 
     return () => context.revert();
-  }, [reduced]);
+  }, [reduced, useSpline]);
 
   const handleSplineLoad = (app: Application) => {
     appRef.current = app;
-    const camera = app.findObjectByName("Camera");
+    splineLoadedRef.current = true;
+    const camera = SPLINE_CAMERA_NAMES.map((name) =>
+      app.findObjectByName(name)
+    ).find((object) => object);
     if (camera) {
       splineStartRef.current = {
         z: camera.position.z,
@@ -158,8 +221,12 @@ export function ScrollStory() {
     ScrollTrigger.refresh();
   };
 
-  const visual = SCENE ? (
-    <SplineScene scene={SCENE} onLoad={handleSplineLoad} className="h-full w-full" />
+  const visual = useSpline ? (
+    <SplineScene
+      scene={SCENE}
+      onLoad={handleSplineLoad}
+      className="h-full w-full"
+    />
   ) : (
     <ContourLandscape />
   );
@@ -181,8 +248,8 @@ export function ScrollStory() {
 
   return (
     <section className="relative bg-dark text-paper">
-      <div ref={storyRef} className="story h-[400vh]">
-        <div className="story-stage sticky top-0 h-screen overflow-hidden">
+      <div ref={storyRef} className="story h-[500vh]">
+        <div className="story-stage sticky top-0 box-border h-screen overflow-hidden pt-20">
           <div ref={visualRef} className="story-visual absolute inset-0">
             {visual}
           </div>

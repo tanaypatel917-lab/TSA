@@ -9,19 +9,19 @@ if (!foundations) throw new Error("ai-foundations module missing");
 const esc = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 test("golden path: lesson, badge, quiz, persistence, export, reset", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/dashboard/");
   await page.getByRole("button", { name: /Skip for now/ }).click();
   await page.goto("/modules/");
 
   await page.getByRole("link", { name: new RegExp(esc(foundations.title)) }).first().click();
   await page.getByRole("link", { name: new RegExp(esc(foundations.lessons[0].title)) }).click();
-  await page.getByRole("button", { name: /Mark complete/ }).click();
+  await page.getByRole("button", { name: /Mark complete/ }).first().click();
 
   const toast = page.locator('[aria-live="polite"]');
   await expect(toast).toContainText("New badge unlocked");
   await expect(toast).toContainText("First Steps");
 
-  await page.goto("/");
+  await page.goto("/dashboard/");
   await expect(page.getByText("10 XP", { exact: true })).toBeVisible();
 
   await page.goto(`/modules/${foundations.slug}/quiz/`);
@@ -35,7 +35,7 @@ test("golden path: lesson, badge, quiz, persistence, export, reset", async ({ pa
   await result.scrollIntoViewIfNeeded();
   await expect(result).toHaveText(/^100%$/);
 
-  await page.goto("/");
+  await page.goto("/dashboard/");
   await expect(page.getByText("60 XP", { exact: true })).toBeVisible();
   const expectedPercent = Math.round(((1 + 1) / (foundations.lessons.length + 2)) * 100);
   const foundationsLink = page.getByRole("link", { name: new RegExp(esc(foundations.title)) }).first();

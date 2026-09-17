@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@splinetool/react-spline": "2.2.6",
-    "@splinetool/runtime": "1.10.29",
+    "@splinetool/runtime": "2.0.54",
     "@supabase/supabase-js": "2.115.0",
     "@tailwindcss/forms": "0.5.10",
     "clsx": "2.1.1",

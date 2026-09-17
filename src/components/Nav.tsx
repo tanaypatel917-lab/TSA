@@ -8,7 +8,7 @@ import { useAuth } from "@/state/AuthProvider";
 import { useProgress } from "@/state/ProgressProvider";
 import { SoundToggle } from "@/components/SoundToggle";
 
-const links = [["Dashboard", "/"], ["Modules", "/modules"], ["Badges", "/badges"], ["Glossary", "/glossary"], ["About", "/about"], ["Account", "/account"]];
+const links = [["Dashboard", "/dashboard"], ["Modules", "/modules"], ["Badges", "/badges"], ["Glossary", "/glossary"], ["About", "/about"], ["Account", "/account"]];
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
