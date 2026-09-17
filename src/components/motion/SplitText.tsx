@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useInView, useReducedMotion } from "framer-motion";
-import { Children, cloneElement, isValidElement, useEffect, useRef, useState, type ElementType, type ReactNode } from "react";
+import { Children, Fragment, cloneElement, isValidElement, useEffect, useRef, useState, type ElementType, type ReactNode } from "react";
 
 type SplitTextProps = {
   as?: ElementType;
@@ -33,10 +33,10 @@ export function SplitText({ as: Tag = "div", className = "", children, delay = 0
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, margin: "-10%" });
   const parts = units(children);
-  if (!mounted || reduced) return <Tag ref={ref} className={className}>{parts.map((part, index) => <span className="ml-[-.08em] mr-[.16em] inline-block overflow-hidden align-bottom px-[.08em] pb-[.15em] -mb-[.15em]" key={`${index}-${typeof part === "string" ? part : "node"}`}>{isValidElement(part) ? cloneElement(part) : part}</span>)}</Tag>;
+  if (!mounted || reduced) return <Tag ref={ref} className={className}>{parts.map((part, index) => <Fragment key={`${index}-${typeof part === "string" ? part : "node"}`}><span className="ml-[-.08em] inline-block overflow-hidden align-bottom px-[.08em] pb-[.15em] -mb-[.15em]">{isValidElement(part) ? cloneElement(part) : part}</span>{index < parts.length - 1 ? " " : null}</Fragment>)}</Tag>;
   return <Tag ref={ref} className={className}>{parts.map((part, index) => {
     const child = isValidElement(part) ? cloneElement(part) : part;
-    return <span className="ml-[-.08em] mr-[.16em] inline-block overflow-hidden align-bottom px-[.08em] pb-[.15em] -mb-[.15em]" key={`${index}-${typeof part === "string" ? part : "node"}`}>
+    return <Fragment key={`${index}-${typeof part === "string" ? part : "node"}`}><span className="ml-[-.08em] inline-block overflow-hidden align-bottom px-[.08em] pb-[.15em] -mb-[.15em]">
       <motion.span
         className="inline-block"
         initial={{ y: "130%" }}
@@ -45,6 +45,6 @@ export function SplitText({ as: Tag = "div", className = "", children, delay = 0
       >
         {child}
       </motion.span>
-    </span>;
+    </span>{index < parts.length - 1 ? " " : null}</Fragment>;
   })}</Tag>;
 }
