@@ -56,6 +56,6 @@ test("@a11y / started dashboard has no serious violations", async ({ page }) => 
       })
     }
   );
-  await page.goto("/");
+  await page.goto("/dashboard/");
   await expectNoSeriousViolations(page);
 });
