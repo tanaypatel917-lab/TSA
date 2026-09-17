@@ -9,7 +9,13 @@ import { cn } from "@/lib/utils";
 import { ContourLandscape } from "./ContourLandscape";
 import { SplineScene } from "./SplineScene";
 
-const SCENE = process.env.NEXT_PUBLIC_SPLINE_SCENE;
+const SCENE =
+  process.env.NEXT_PUBLIC_SPLINE_SCENE ||
+  "https://prod.spline.design/fmshl7XbfaLR3tSa/scene.splinecode";
+const SPLINE_CAMERA_NAMES = ["Camera", "PerspectiveCamera"] as const;
+const SPLINE_NEEDLE_NAMES = ["Needle", "Compass needle"] as const;
+const SPLINE_CAMERA_DOLLY = 140;
+const SPLINE_CAMERA_TILT = 0.08;
 
 const chapters = [
   {
@@ -110,13 +116,19 @@ export function ScrollStory() {
           const app = appRef.current;
           if (!app) return;
           const progress = timeline.progress();
-          const camera = app.findObjectByName("Camera");
+          const camera = SPLINE_CAMERA_NAMES.map((name) =>
+            app.findObjectByName(name)
+          ).find((object) => object);
           if (camera) {
-            camera.position.z = splineStartRef.current.z - progress * 600;
-            camera.rotation.x = splineStartRef.current.x - progress * 0.25;
+            camera.position.z =
+              splineStartRef.current.z - progress * SPLINE_CAMERA_DOLLY;
+            camera.rotation.x =
+              splineStartRef.current.x - progress * SPLINE_CAMERA_TILT;
           }
-          const needle = app.findObjectByName("Needle");
-          if (needle) needle.rotation.y = progress * Math.PI * 2;
+          const needle = SPLINE_NEEDLE_NAMES.map((name) =>
+            app.findObjectByName(name)
+          ).find((object) => object);
+          if (needle) needle.rotation.y = progress * Math.PI * 0.65;
         });
       } else {
         const stage = visualRef.current?.querySelector(".contour-stage");
@@ -148,7 +160,9 @@ export function ScrollStory() {
 
   const handleSplineLoad = (app: Application) => {
     appRef.current = app;
-    const camera = app.findObjectByName("Camera");
+    const camera = SPLINE_CAMERA_NAMES.map((name) =>
+      app.findObjectByName(name)
+    ).find((object) => object);
     if (camera) {
       splineStartRef.current = {
         z: camera.position.z,
