@@ -7,7 +7,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { cn } from "@/lib/utils";
 import { ContourLandscape } from "./ContourLandscape";
+import { LivingGradient } from "./LivingGradient";
 import { SplineScene } from "./SplineScene";
+import { ToyWord } from "./ToyWord";
 
 const SCENE =
   process.env.NEXT_PUBLIC_SPLINE_SCENE ||
@@ -18,33 +20,41 @@ const SPLINE_CAMERA_DOLLY = 140;
 const SPLINE_CAMERA_TILT = 0.08;
 const SPLINE_LOAD_TIMEOUT_MS = 12000;
 type SplineStatus = "checking" | "ok" | "failed";
+type Toy = "scramble" | "stack" | "flip";
+type TitlePart = string | { word: string; toy: Toy };
+type Chapter = {
+  kind: "intro" | "chapter";
+  eyebrow: string;
+  parts: readonly TitlePart[];
+  body: string;
+};
 
-const chapters = [
+const chapters: readonly Chapter[] = [
   {
     kind: "intro",
     eyebrow: "AI Compass · 2026–27",
-    title: "AI COMPASS",
+    parts: ["AI COMPASS"],
     body: "Scroll to enter.",
   },
   {
     kind: "chapter",
     eyebrow: "01 Understand",
-    title: "See how the machine actually thinks.",
+    parts: ["See how the machine actually ", { word: "thinks", toy: "scramble" }, "."],
     body: "Data in, patterns out. Learn what a model is, what it isn't, and why it sounds so sure.",
   },
   {
     kind: "chapter",
     eyebrow: "02 Practice",
-    title: "Ask better, get better.",
+    parts: ["Ask ", { word: "better", toy: "stack" }, ", get better."],
     body: "Prompting, checking, citing. Hands-on tools you'll actually use for homework and beyond.",
   },
   {
     kind: "chapter",
     eyebrow: "03 Decide",
-    title: "Use it. Don't let it use you.",
+    parts: ["Use it. Don't let it ", { word: "use", toy: "flip" }, " you."],
     body: "Bias, privacy, honesty. Make calls you can defend to your teacher and yourself.",
   },
-] as const;
+];
 
 function Chapter({
   chapter,
@@ -68,7 +78,15 @@ function Chapter({
               <span className="block">AI</span>
               <span className="text-outline-paper block">COMPASS</span>
             </>
-          ) : chapter.title}
+          ) : (
+            chapter.parts.map((part, index) =>
+              typeof part === "string" ? (
+                part
+              ) : (
+                <ToyWord key={`${part.word}-${index}`} word={part.word} toy={part.toy} />
+              )
+            )
+          )}
         </h2>
         <p className={cn(
           "mt-7 max-w-md text-paper/70",
@@ -273,7 +291,11 @@ export function ScrollStory() {
     return (
       <section className="relative bg-dark text-paper">
         <div className="relative">
-          <div className="relative h-[60vh] overflow-hidden">{visual}</div>
+          <div className="relative h-[60vh] overflow-hidden bg-ink">
+            <div className="absolute inset-0 -z-20 bg-ink" />
+            <LivingGradient />
+            <div className="relative z-0 h-full">{visual}</div>
+          </div>
           <div className="relative">
             {chapters.map((chapter) => (
               <Chapter key={chapter.eyebrow} chapter={chapter} className="relative py-24" />
@@ -287,8 +309,10 @@ export function ScrollStory() {
   return (
     <section className="relative bg-dark text-paper">
       <div ref={storyRef} className="story h-[500vh]">
-        <div className="story-stage sticky top-0 box-border h-screen overflow-hidden pt-20">
-          <div ref={visualRef} className="story-visual absolute inset-0">
+        <div className="story-stage sticky top-0 box-border h-screen overflow-hidden bg-ink pt-20">
+          <div className="absolute inset-0 -z-20 bg-ink" />
+          <LivingGradient />
+          <div ref={visualRef} className="story-visual absolute inset-0 z-0">
             {visual}
           </div>
           {chapters.map((chapter) => (
