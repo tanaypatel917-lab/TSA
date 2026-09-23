@@ -83,6 +83,5 @@ at a missing lesson, or a source is missing those labels.
 
 Progress logic is framework-free in `src/engine/`, while routes and interactive
 components live under `src/app/` and `src/components/`. Progress is stored under
-`wordplay:progress:v1`; progress saved under the earlier key is moved there on
-the next visit. Prompt drafts use the separate
+`wordplay:progress:v1`. Prompt drafts use the separate
 `wordplay:drafts:v1` namespace and are not included in progress exports.

@@ -1,7 +1,6 @@
 import { initialState, type ProgressState } from "./progress";
 
 export const PROGRESS_KEY = "wordplay:progress:v1";
-const LEGACY_KEY = "ai-compass:progress:v1";
 
 function valid(value: unknown): value is ProgressState {
   if (!value || typeof value !== "object") return false;
@@ -20,7 +19,7 @@ function valid(value: unknown): value is ProgressState {
 export function loadProgress(): ProgressState {
   if (typeof window === "undefined") return initialState;
   try {
-    const raw = window.localStorage.getItem(PROGRESS_KEY) ?? window.localStorage.getItem(LEGACY_KEY);
+    const raw = window.localStorage.getItem(PROGRESS_KEY);
     if (!raw) return initialState;
     const parsed: unknown = JSON.parse(raw);
     return valid(parsed) ? parsed : initialState;
@@ -30,9 +29,7 @@ export function loadProgress(): ProgressState {
 }
 
 export function saveProgress(state: ProgressState): void {
-  if (typeof window === "undefined") return;
-  window.localStorage.setItem(PROGRESS_KEY, JSON.stringify(state));
-  window.localStorage.removeItem(LEGACY_KEY);
+  if (typeof window !== "undefined") window.localStorage.setItem(PROGRESS_KEY, JSON.stringify(state));
 }
 
 export function exportProgress(state: ProgressState): string {

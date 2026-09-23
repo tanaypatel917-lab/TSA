@@ -4,14 +4,13 @@ import { initialState } from "./progress";
 
 afterEach(() => { vi.unstubAllGlobals(); });
 
-describe("progress key migration", () => {
-  it("loads progress saved under the earlier key and moves it to the Wordplay key", () => {
-    const values = new Map([["ai-compass:progress:v1", JSON.stringify({ ...initialState, xp: 30 })]]);
+describe("progress storage", () => {
+  it("saves and loads progress under the Wordplay key", () => {
+    const values = new Map<string, string>();
     vi.stubGlobal("window", { localStorage: { getItem: (key: string) => values.get(key) ?? null, setItem: (key: string, value: string) => { values.set(key, value); }, removeItem: (key: string) => { values.delete(key); } } });
-    const loaded = loadProgress();
-    expect(loaded.xp).toBe(30);
-    saveProgress(loaded);
-    expect(JSON.parse(values.get(PROGRESS_KEY) ?? "{}").xp).toBe(30);
+    expect(loadProgress()).toEqual(initialState);
+    saveProgress({ ...initialState, xp: 30 });
+    expect(loadProgress().xp).toBe(30);
     expect([...values.keys()]).toEqual([PROGRESS_KEY]);
   });
 });
