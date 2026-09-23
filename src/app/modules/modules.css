@@ -1,0 +1,78 @@
+.spine { padding-block: 64px 56px; border-bottom: 1px solid var(--ink); background: var(--ink); color: var(--paper); }
+.spine :focus-visible { outline-color: var(--citron); }
+.spine h2 { font-size: clamp(34px, 3.6vw, 54px); line-height: 1.02; letter-spacing: -.03em; }
+.spine-intro { max-width: 56ch; margin-top: 12px; line-height: 1.6; color: rgba(249, 242, 233, .8); }
+.spine-track { display: grid; grid-template-columns: var(--columns); gap: 10px; margin: 36px 0 0; padding: 0; list-style: none; }
+.spine-chapter { min-width: 0; }
+.spine-label { margin-bottom: 10px; overflow: hidden; font-size: 13px; font-weight: 700; color: var(--rose); text-overflow: ellipsis; white-space: nowrap; }
+.spine-label span { color: rgba(249, 242, 233, .6); font-variant-numeric: tabular-nums; }
+.spine-lessons { display: grid; grid-template-columns: var(--columns); gap: 4px; margin: 0; padding: 0; list-style: none; }
+.spine-block { display: block; height: 64px; border: 1px solid rgba(249, 242, 233, .38); border-radius: 3px; transition: transform 200ms var(--ease-out), background-color 160ms ease, border-color 160ms ease; }
+.spine-block[data-read="true"] { border-color: var(--rose); background: var(--rose); }
+.spine-block:active { transform: scale(.96); }
+.spine-caption { min-height: 1.6em; margin-top: 18px; font-size: 15px; color: rgba(249, 242, 233, .8); }
+.spine-caption strong { color: var(--paper); }
+
+.program-route > li { position: relative; }
+.program-route > li::before { content: ""; position: absolute; z-index: 0; left: 22.5px; top: 0; bottom: 0; width: 3px; background: var(--line); }
+.program-route > li:first-child::before { top: 50%; }
+.program-route > li:last-child::before { bottom: 50%; }
+.program-route > li[data-done="true"]::before { background: var(--ink); }
+.program-route .step-number { position: relative; z-index: 1; display: grid; place-items: center; width: 48px; height: 48px; border: 2px solid var(--ink); border-radius: 50%; background: var(--paper); font-size: 17px; }
+.program-route > li[data-done="true"] .step-number { background: var(--ink); color: var(--paper); }
+.program-route > li[data-next="true"] .step-number { background: var(--citron); box-shadow: 0 0 0 6px rgba(216, 233, 107, .55); }
+.chapter-terms { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
+.chapter-terms h3 { font-size: 18px; }
+.chapter-terms ul, .outline-terms ul { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 0; padding: 0; list-style: none; }
+.chapter-terms a, .outline-terms a { display: inline-block; padding: 4px 9px; border: 1px solid var(--ink); border-radius: 4px; font-size: 13px; font-weight: 600; text-decoration: none; transition: background-color 160ms ease; }
+
+.reading-progress { position: fixed; z-index: 30; top: 0; left: 0; width: 100%; height: 4px; background: var(--rose); transform: scaleX(0); transform-origin: 0 50%; pointer-events: none; }
+@supports (animation-timeline: scroll()) {
+  html[data-motion="full"] .reading-progress { animation: reading-progress linear both; animation-timeline: scroll(root block); }
+}
+@keyframes reading-progress { to { transform: scaleX(1); } }
+.lesson-reading { position: relative; }
+.term-trigger { padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: inherit; text-decoration: underline dotted var(--rose); text-decoration-thickness: 2px; text-underline-offset: 5px; cursor: help; }
+.term-trigger[data-open="true"] { text-decoration-style: solid; text-decoration-color: var(--ink); }
+.term-trigger:focus-visible { outline-offset: 3px; }
+.term-card { position: absolute; z-index: 25; display: grid; gap: 6px; padding: 16px 18px; border: 1.5px solid var(--ink); border-radius: 4px; background: var(--ink); color: var(--paper); box-shadow: 6px 6px 0 var(--rose); font-size: 15px; line-height: 1.55; pointer-events: none; animation: term-in 180ms var(--ease-out); }
+.term-card strong { font-family: var(--font-display), sans-serif; font-size: 20px; font-weight: 600; line-height: 1.1; color: var(--rose); }
+@keyframes term-in { from { opacity: 0; transform: translateY(-4px); } }
+.outline-terms { margin-top: 30px; padding-top: 18px; border-top: 1px solid var(--line); }
+.outline-terms p { font-size: 13px; font-weight: 700; }
+
+.sorting-message { animation: sorting-in 420ms var(--ease-out); transition: transform 360ms var(--ease-out); }
+.sorting-message[data-sent="spam"] { transform: translateX(-10px) rotate(-1.4deg); }
+.sorting-message[data-sent="not-spam"] { transform: translateX(10px) rotate(1.4deg); }
+.sorting-message mark { padding: 0 .12em; border-radius: 3px; background: var(--citron); color: var(--ink); }
+@keyframes sorting-in { from { opacity: 0; transform: translateY(14px); } }
+.clue-report { margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--line); }
+.clue-report h3 { font-size: 26px; line-height: 1.15; }
+.clue-report table { width: 100%; margin-top: 14px; border-collapse: collapse; font-size: 15px; }
+.clue-report th, .clue-report td { padding: 10px 8px 10px 0; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+.clue-report thead th { font-size: 13px; font-weight: 700; color: var(--muted); }
+.clue-report tbody th { font-weight: 600; }
+.clue-count { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.clue-count::before { content: ""; width: calc(var(--n) * 16px); height: 12px; border-radius: 2px; background: var(--rose); box-shadow: inset 0 0 0 1px var(--ink); }
+.clue-count[data-kind="not-spam"]::before { background: var(--citron); }
+.answer-strip { display: flex; flex-wrap: wrap; gap: 6px; margin: 18px 0 0; padding: 0; list-style: none; }
+.answer-strip li { display: grid; gap: 2px; min-width: 64px; padding: 8px 10px; border: 1.5px solid var(--ink); border-radius: 4px; font-size: 12px; }
+.answer-strip li[data-correct="true"] { background: var(--citron); }
+.answer-strip li[data-correct="false"] { border-style: dashed; background: #f4d9df; }
+.answer-strip strong { font-size: 14px; }
+
+@media (hover: hover) and (pointer: fine) {
+  .spine-block:hover { border-color: var(--citron); background: var(--citron); transform: translateY(-6px); }
+  .chapter-terms a:hover, .outline-terms a:hover { background: var(--rose); }
+}
+@media (max-width: 767px) {
+  .spine { padding-block: 44px 40px; }
+  .spine-track { grid-template-columns: 1fr; gap: 18px; margin-top: 28px; }
+  .spine-block { height: 48px; }
+  .program-route > li::before { left: 24.5px; }
+  .program-route > li:first-child::before { top: 36px; }
+  .program-route > li:last-child::before { bottom: calc(100% - 36px); }
+  .program-route .step-number { width: 36px; height: 36px; font-size: 14px; }
+  .clue-report th, .clue-report td { padding-right: 4px; font-size: 14px; }
+  .clue-count::before { width: calc(var(--n) * 9px); }
+}

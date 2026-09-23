@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Download Clash Display from Fontshare
+        run: |
+          curl -fsSL -o clash-display.zip "https://api.fontshare.com/v2/fonts/download/clash-display"
+          unzip -q -j clash-display.zip "*/ClashDisplay-Variable.woff2" -d clash-display
+          mv clash-display/ClashDisplay-Variable.woff2 public/fonts/clash-display-variable.woff2
+      - run: npx tsc --noEmit
+      - run: npm run lint
+      - run: npx vitest run
+      - run: npm run build

@@ -1,0 +1,25 @@
+.device-data { padding-block: 72px 76px; border-block: 1px solid var(--ink); background: var(--citron); }
+.device-data h2 { max-width: 16ch; font-size: clamp(38px, 4.4vw, 64px); line-height: 1.02; letter-spacing: -.03em; }
+.device-intro { max-width: 52ch; margin-top: 14px; font-size: 18px; line-height: 1.6; }
+.device-rows { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 36px 0 0; padding: 0; list-style: none; }
+.device-rows li { display: grid; grid-template-rows: auto 1fr auto; gap: 16px; padding: 22px 24px; border: 1.5px solid var(--ink); border-radius: 4px; background: var(--paper); box-shadow: 5px 5px 0 var(--ink); }
+.device-rows li[data-empty="true"] { border-style: dashed; background: transparent; box-shadow: none; }
+.device-rows h3 { font-size: 24px; line-height: 1.1; }
+.device-rows li > div > p { margin-top: 8px; font-size: 15px; line-height: 1.55; color: var(--muted); }
+.device-summary { align-self: end; }
+.device-summary strong { display: block; font-family: var(--font-display), sans-serif; font-size: 22px; font-weight: 600; line-height: 1.2; }
+.device-summary span { display: block; margin-top: 4px; font-size: 13px; color: var(--muted); }
+.device-rows code { justify-self: start; padding: 3px 8px; border-radius: 3px; background: var(--ink); color: var(--paper); font-size: 12px; }
+.device-raw { margin-top: 26px; }
+.device-raw summary { width: fit-content; padding-block: 6px; font-weight: 700; text-decoration: underline; }
+.device-raw pre { max-height: 320px; margin: 12px 0 0; padding: 18px 20px; overflow: auto; border: 1px solid var(--ink); border-radius: 4px; background: var(--ink); color: var(--paper); font-size: 13px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
+.device-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; margin-top: 26px; }
+.device-actions p { flex-basis: 100%; font-weight: 600; }
+.device-message { min-height: 1.5em; margin-top: 14px; font-size: 15px; font-weight: 600; }
+@media (max-width: 767px) {
+  .device-data { padding-block: 48px 52px; }
+  .device-intro { font-size: 16px; }
+  .device-rows { grid-template-columns: 1fr; }
+  .device-rows li { padding: 18px; }
+  .device-actions > button { width: 100%; }
+}

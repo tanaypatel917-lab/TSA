@@ -1,0 +1,9 @@
+node_modules
+.next
+out
+*.tsbuildinfo
+.env*
+!.env.example
+/public/fonts/clash-display-variable.woff2
+.DS_Store
+.playwright-mcp/
