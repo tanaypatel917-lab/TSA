@@ -152,7 +152,7 @@ test("redesigned pages fit a 390px screen without horizontal scrolling", async (
   const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
   await context.addInitScript((key) => localStorage.setItem(key, "seen"), introKey);
   const page = await context.newPage();
-  for (const path of ["/modules/", "/modules/ai-in-the-real-world/", "/badges/", "/glossary/", "/about/", "/references/", "/modules/capstone/activity/", "/modules/ai-in-the-real-world/activity/"]) {
+  for (const path of ["/play/", "/modules/", "/modules/ai-in-the-real-world/", "/badges/", "/glossary/", "/about/", "/references/", "/modules/capstone/activity/", "/modules/ai-in-the-real-world/activity/"]) {
     await page.goto(path);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), path).toBe(true);

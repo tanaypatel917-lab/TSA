@@ -787,3 +787,26 @@ body:has(.intro-experience) .site-footer { display: none; }
 .badge-patch[data-closest="true"] { border-style: solid; border-color: var(--ink); }
 .badge-progress { margin-top: 14px; font-size: 13px; font-weight: 600; line-height: 1.4; color: var(--ink); }
 .badge-meter { display: block; height: 4px; margin-bottom: 8px; border-bottom: 1px dashed rgba(53, 27, 43, .4); background: linear-gradient(var(--ink), var(--ink)) 0 0 / calc(var(--value) * 100%) 100% no-repeat; }
+
+.world-map { position: relative; aspect-ratio: 1; }
+.world-map svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.map-island { fill: var(--paper); stroke: var(--rose); stroke-width: 70; }
+.map-path { stroke: #e2cfbb; stroke-width: 90; stroke-linecap: round; }
+.map-spawn { fill: none; stroke: var(--citron); stroke-width: 44; }
+.map-tree { opacity: .9; }
+.map-word { stroke: var(--ink); stroke-width: 18; }
+.map-station { stroke: var(--ink); stroke-width: 34; transition: r 200ms var(--ease-out); }
+.map-station[data-stamped="true"] { stroke: var(--citron); stroke-width: 70; }
+.map-player { fill: var(--ink); stroke: var(--paper); stroke-width: 34; stroke-linejoin: round; }
+
+.home-world { background: var(--ink); color: var(--paper); overflow: hidden; }
+.home-world-inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .9fr); gap: clamp(32px, 6vw, 96px); align-items: center; padding-block: clamp(64px, 9vw, 120px); }
+.home-world .section-index { color: var(--citron); }
+.home-world h2 { font-size: clamp(48px, 6.4vw, 96px); line-height: 1; }
+.home-world-copy > p:not(.section-index) { max-width: 460px; margin: 26px 0 34px; font-size: 18px; line-height: 1.65; color: rgba(249, 242, 233, .86); }
+.home-world .button-primary { background: var(--citron); color: var(--ink); border-color: var(--citron); box-shadow: 3px 3px 0 var(--rose), 4px 4px 0 var(--paper); }
+.home-world-map { justify-self: center; width: min(460px, 100%); transform: rotate(-6deg); }
+@media (max-width: 767px) {
+  .home-world-inner { grid-template-columns: 1fr; }
+  .home-world-map { width: min(300px, 80%); }
+}

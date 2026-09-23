@@ -32,6 +32,21 @@ value disables scene loading. See `.env.example`. Reduced motion and narrow
 screens use an editorial typographic question mark, not a rendered scene poster.
 No local PNG poster is supplied. A failed scene never prevents learning.
 
+## Game mode: Wordplay World
+
+`/play/` is a drivable 3D island built at runtime in the same Spline scene as the
+intro. Arrow keys, WASD or the on-screen pad move the question mark; driving
+through one of the 20 glossary words collects it (+2 XP) and each of the five
+chapter stations asks a quiz question that stamps it when answered correctly
+(+10 XP). Stamping every station earns World Explorer and collecting every word
+earns Word Collector. Movement, collisions and layout live in `src/engine/world.ts`
+and `src/content/world.ts`; the scene is `src/components/world/WorldScene.ts`.
+If the scene contains objects named `Wordplay.World.Kit.Landmark.<stack|brackets|scale|globe|star>`,
+`Wordplay.World.Kit.Word.<1-3>` or `Wordplay.World.Kit.Tree.<1-3>`, they are
+cloned in place of the built-in shapes. Reduced motion, narrow screens, no WebGL
+or a failed load open the same game as an interactive map with station and word
+lists, so every learning action works without 3D.
+
 ## Deploying to GitHub Pages
 
 Pushing to `main` runs `.github/workflows/deploy.yml`. It downloads Clash

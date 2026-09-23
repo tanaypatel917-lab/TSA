@@ -28,3 +28,20 @@ describe("progress engine", () => {
     expect(reset.state.streak.count).toBe(1);
   });
 });
+
+describe("Wordplay World progress", () => {
+  it("awards word and station XP once and keeps them in the world record", () => {
+    const word = apply(initialState, { type: "word-collected", term: "Token", day: "2027-01-01" }, [foundations]);
+    const again = apply(word.state, { type: "word-collected", term: "Token", day: "2027-01-01" }, [foundations]);
+    const stamp = apply(again.state, { type: "station-stamped", moduleId: "foundations", day: "2027-01-01" }, [foundations]);
+    expect([word.xpGained, again.xpGained, stamp.xpGained]).toEqual([2, 0, 10]);
+    expect(stamp.state.world).toEqual({ words: ["Token"], stamps: ["foundations"] });
+    expect(initialState.world).toEqual({ words: [], stamps: [] });
+  });
+
+  it("accepts saved progress from before the world existed", () => {
+    const { world: _unused, ...older } = initialState;
+    const result = apply(older, { type: "word-collected", term: "Model", day: "2027-01-01" }, [foundations]);
+    expect(result.state.world?.words).toEqual(["Model"]);
+  });
+});

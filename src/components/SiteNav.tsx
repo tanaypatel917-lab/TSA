@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { nextLearningTask, useProgress } from "@/state/ProgressProvider";
 
-const links = [{ href: "/modules", label: "Explore" }, { href: "/learn", label: "My learning" }, { href: "/glossary", label: "Glossary" }, { href: "/badges", label: "Badges" }, { href: "/about", label: "About" }, { href: "/references", label: "References" }];
+const links = [{ href: "/modules", label: "Explore" }, { href: "/learn", label: "My learning" }, { href: "/play", label: "Play" }, { href: "/glossary", label: "Glossary" }, { href: "/badges", label: "Badges" }, { href: "/about", label: "About" }, { href: "/references", label: "References" }];
 
 export function SiteNav() {
   const path = usePathname();

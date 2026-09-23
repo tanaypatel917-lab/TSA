@@ -9,7 +9,16 @@ export type ProgressState = {
   badges: string[];
   streak: { count: number; lastDay: string };
   startedAt: string | null;
+  world?: WorldProgress;
 };
+
+export type WorldProgress = { words: string[]; stamps: string[] };
+
+export const WORLD_XP = { word: 2, stamp: 10 };
+
+export function worldOf(state: ProgressState): WorldProgress {
+  return state.world ?? { words: [], stamps: [] };
+}
 
 export const initialState: ProgressState = {
   version: 1,
@@ -19,13 +28,16 @@ export const initialState: ProgressState = {
   quizBest: {},
   badges: [],
   streak: { count: 0, lastDay: "" },
-  startedAt: null
+  startedAt: null,
+  world: { words: [], stamps: [] }
 };
 
 export type ProgressEvent =
   | { type: "lesson-completed"; moduleId: string; lessonId: string; day: string }
   | { type: "activity-completed"; moduleId: string; day: string }
-  | { type: "quiz-completed"; moduleId: string; scorePct: number; day: string };
+  | { type: "quiz-completed"; moduleId: string; scorePct: number; day: string }
+  | { type: "word-collected"; term: string; day: string }
+  | { type: "station-stamped"; moduleId: string; day: string };
 
 function dayAfter(previous: string, day: string): boolean {
   const previousDate = new Date(`${previous}T12:00:00`);
@@ -53,8 +65,10 @@ export function apply(state: ProgressState, event: ProgressEvent, moduleList: Mo
     completedActivities: [...state.completedActivities],
     quizBest: { ...state.quizBest },
     badges: [...state.badges],
-    streak: { ...state.streak }
+    streak: { ...state.streak },
+    world: { words: [...worldOf(state).words], stamps: [...worldOf(state).stamps] }
   };
+  const world = next.world as WorldProgress;
   let xpGained = 0;
   if (!next.startedAt) next.startedAt = new Date(`${event.day}T12:00:00`).toISOString();
   const streak = updateStreak(next.streak, event.day);
@@ -70,6 +84,16 @@ export function apply(state: ProgressState, event: ProgressEvent, moduleList: Mo
     if (!next.completedActivities.includes(event.moduleId)) {
       next.completedActivities.push(event.moduleId);
       xpGained += 25;
+    }
+  } else if (event.type === "word-collected") {
+    if (!world.words.includes(event.term)) {
+      world.words.push(event.term);
+      xpGained += WORLD_XP.word;
+    }
+  } else if (event.type === "station-stamped") {
+    if (!world.stamps.includes(event.moduleId)) {
+      world.stamps.push(event.moduleId);
+      xpGained += WORLD_XP.stamp;
     }
   } else {
     const score = Math.max(0, Math.min(100, event.scorePct));

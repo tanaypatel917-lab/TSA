@@ -1,6 +1,7 @@
 import type { Module } from "@/content/types";
 import { chapterProgress, chapterSteps } from "./chapters";
-import type { ProgressState } from "./progress";
+import { glossary } from "@/content/glossary";
+import { worldOf, type ProgressState } from "./progress";
 
 export const BADGES = [
   { id: "first-steps", name: "First Steps", description: "Complete your first lesson.", mark: "1st" },
@@ -15,6 +16,8 @@ export const BADGES = [
   { id: "myth-buster", name: "Myth Buster", description: "Score at least 90% on foundations.", mark: "?!" },
   { id: "streak-3", name: "Three-Day Spark", description: "Build a three-day streak.", mark: "3" },
   { id: "streak-7", name: "Week of Wonder", description: "Build a seven-day streak.", mark: "7" },
+  { id: "world-explorer", name: "World Explorer", description: "Stamp all five stations in Wordplay World.", mark: "@" },
+  { id: "word-collector", name: "Word Collector", description: "Collect every word in Wordplay World.", mark: "Aa" },
   { id: "ai-ally", name: "AI Ally", description: "Complete every module.", mark: "AI" }
 ] as const;
 
@@ -41,6 +44,14 @@ export function badgeProgress(id: string, state: ProgressState, modules: Module[
     const days = Math.min(state.streak.count, goal);
     return measure(days / goal, `${days} of ${goal} days in a row`);
   }
+  if (id === "world-explorer") {
+    const done = modules.filter((module) => worldOf(state).stamps.includes(module.id)).length;
+    return measure(done / modules.length, `${done} of ${modules.length} stations stamped`);
+  }
+  if (id === "word-collector") {
+    const done = glossary.filter((entry) => worldOf(state).words.includes(entry.term)).length;
+    return measure(done / glossary.length, `${done} of ${glossary.length} words collected`);
+  }
   if (id === "ai-ally") {
     const done = modules.filter((module) => chapterProgress(state, module).complete).length;
     return measure(done / modules.length, `${done} of ${modules.length} chapters complete`);
@@ -63,6 +74,9 @@ export function evaluateBadges(state: ProgressState, modules: Module[]): string[
       earned.add(`module-${currentModule.id}`);
     }
   }
+  const world = worldOf(state);
+  if (modules.every((module) => world.stamps.includes(module.id))) earned.add("world-explorer");
+  if (glossary.every((entry) => world.words.includes(entry.term))) earned.add("word-collector");
   const allComplete = modules.every((module) => earned.has(`module-${module.id}`));
   if (allComplete) earned.add("ai-ally");
   return [...earned];

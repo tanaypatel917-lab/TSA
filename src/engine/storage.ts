@@ -13,7 +13,8 @@ function valid(value: unknown): value is ProgressState {
     && Object.values(candidate.quizBest).every((score) => nonnegative(score) && score <= 100)
     && strings(candidate.badges) && !!candidate.streak && !Array.isArray(candidate.streak)
     && nonnegative(candidate.streak.count) && typeof candidate.streak.lastDay === "string"
-    && (candidate.startedAt === null || typeof candidate.startedAt === "string");
+    && (candidate.startedAt === null || typeof candidate.startedAt === "string")
+    && (candidate.world === undefined || (!!candidate.world && strings(candidate.world.words) && strings(candidate.world.stamps)));
 }
 
 export function loadProgress(): ProgressState {
