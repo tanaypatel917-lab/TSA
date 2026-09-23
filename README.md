@@ -36,16 +36,20 @@ No local PNG poster is supplied. A failed scene never prevents learning.
 
 `/play/` is a drivable 3D island built at runtime in the same Spline scene as the
 intro. Arrow keys, WASD or the on-screen pad move the question mark; driving
-through one of the 20 glossary words collects it (+2 XP) and each of the five
-chapter stations asks a quiz question that stamps it when answered correctly
-(+10 XP). Stamping every station earns World Explorer and collecting every word
-earns Word Collector. Movement, collisions and layout live in `src/engine/world.ts`
-and `src/content/world.ts`; the scene is `src/components/world/WorldScene.ts`.
+through one of the 20 glossary words collects it (+2 XP). Each of the five chapter
+stations starts a mission (`src/content/missions.ts`): pick up message crates,
+read them and drive them through the right one of two gates before the 75-second
+clock or three mistakes end the run. Correct answers in a row build a ×4 combo;
+one star stamps the station (+10 XP) and a first perfect run adds +5 XP. Relaxed
+mode removes the clock. The rules are pure functions in `src/engine/mission.ts`.
+Stamping every station earns World Explorer and collecting every word earns Word
+Collector. Movement, collisions and layout live in `src/engine/world.ts` and
+`src/content/world.ts`; the scene is `src/components/world/WorldScene.ts`.
 If the scene contains objects named `Wordplay.World.Kit.Landmark.<stack|brackets|scale|globe|star>`,
 `Wordplay.World.Kit.Word.<1-3>` or `Wordplay.World.Kit.Tree.<1-3>`, they are
 cloned in place of the built-in shapes. Reduced motion, narrow screens, no WebGL
-or a failed load open the same game as an interactive map with station and word
-lists, so every learning action works without 3D.
+or a failed load open the same game as an interactive map, where missions become a
+quick sort with the same scoring, so every learning action works without 3D.
 
 ## Deploying to GitHub Pages
 

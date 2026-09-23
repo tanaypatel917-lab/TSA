@@ -1,28 +1,40 @@
 import type { Application, SPEObject } from "@splinetool/runtime";
 import { introPalette } from "@/content/intro";
-import { WORLD, stations, trees, wordTokens, type Station } from "@/content/world";
-import { MOVE, type Mover } from "@/engine/world";
+import { WORLD, gateSpots, stations, trees, tufts, wordTokens, type Station } from "@/content/world";
+import { MOVE, type Mover, type Point } from "@/engine/world";
 
 type Vector = [number, number, number];
-export type WorldFrame = { mover: Mover; time: number; collected: ReadonlySet<string>; stamped: ReadonlySet<string>; near: string | null };
+export type SceneMission = { colors: [string, string]; carrying: boolean } | null;
+export type WorldFrame = { mover: Mover; time: number; collected: ReadonlySet<string>; stamped: ReadonlySet<string>; near: string | null; mission: SceneMission; crates: readonly Point[] };
 
-const { ink, rose, paper, citron } = introPalette;
+const { ink, rose, paper, citron, plum, berry } = introPalette;
 const STAGE_POSITION: Vector = [0, 118, 36];
 const STAGE_ROTATION: Vector = [-0.2286, -0.4092, -0.0923];
 const TILT = 0.95;
 const ZOOM = 0.24;
 const PLAYER_SCALE = 0.95;
 const PLAYER_Y = 330;
+const CARRY_Y = 610;
 const PATH = "#EAD9C6";
+const PUFF = "#E9D3C8";
 const degrees = (vector: Vector) => vector.map((angle) => (angle * 180) / Math.PI) as Vector;
 
 type Token = { term: string; object: SPEObject; phase: number; shown: boolean };
 type Marker = { object: SPEObject; shown: boolean };
+type Gate = { group: SPEObject; tinted: SPEObject[]; pad: SPEObject };
+type Particle = { object: SPEObject; x: number; y: number; z: number; vx: number; vy: number; vz: number; born: number; life: number; size: number; active: boolean };
+export type MissionParts = { gates: Gate[]; crates: SPEObject[]; carried: SPEObject; sparks: Particle[]; puffs: Particle[] };
 
 export class WorldScene {
   private zoom = NaN;
   private written = { x: NaN, z: NaN, y: NaN };
   private pose = { yaw: 0, roll: 0, pitch: 0 };
+  private missionKey = "";
+  private shownCrates = 0;
+  private carriedShown = false;
+  private lastTime = NaN;
+  private lastPuff = 0;
+  private cursor = 0;
 
   constructor(
     private readonly app: Application,
@@ -30,7 +42,8 @@ export class WorldScene {
     private readonly player: SPEObject,
     private readonly tokens: Token[],
     private readonly halos: Map<string, Marker>,
-    private readonly rings: Map<string, Marker>
+    private readonly rings: Map<string, Marker>,
+    private readonly parts: MissionParts
   ) {}
 
   get objectCount() {
@@ -41,8 +54,23 @@ export class WorldScene {
     this.zoom = NaN;
   }
 
-  update({ mover, time, collected, stamped, near }: WorldFrame) {
+  burst(x: number, z: number, color: string, count = 10) {
+    const now = this.lastTime || 0;
+    for (let index = 0; index < count; index += 1) {
+      const spark = this.parts.sparks[this.cursor];
+      this.cursor = (this.cursor + 1) % this.parts.sparks.length;
+      const angle = (index / count) * Math.PI * 2 + Math.random() * 0.5;
+      const speed = 420 + Math.random() * 380;
+      Object.assign(spark, { x, y: 150, z, vx: Math.cos(angle) * speed, vy: 520 + Math.random() * 420, vz: Math.sin(angle) * speed, born: now, life: 0.75 + Math.random() * 0.3, size: 0.8 + Math.random() * 0.6, active: true });
+      spark.object.color = color;
+      spark.object.visible = true;
+    }
+  }
+
+  update({ mover, time, collected, stamped, near, mission, crates }: WorldFrame) {
     if (this.zoom !== ZOOM) { this.app.setZoom(ZOOM); this.zoom = ZOOM; }
+    const dt = Number.isNaN(this.lastTime) ? 0 : Math.min(0.05, time - this.lastTime);
+    this.lastTime = time;
     const { written } = this;
     if (mover.x !== written.x || mover.z !== written.z) {
       this.map.position.x = written.x = -mover.x;
@@ -60,7 +88,7 @@ export class WorldScene {
     const y = PLAYER_Y + Math.abs(Math.sin(time * 9)) * 14 * pace + Math.sin(time * 1.6) * 6;
     if (Math.abs(y - written.y) > 0.05) this.player.position.y = written.y = y;
     for (const token of this.tokens) {
-      const shown = !collected.has(token.term);
+      const shown = !mission && !collected.has(token.term);
       if (shown !== token.shown) { token.object.visible = token.shown = shown; }
       if (!shown) continue;
       token.object.position.y = 150 + Math.sin(time * 2.2 + token.phase) * 22;
@@ -72,18 +100,122 @@ export class WorldScene {
       if (shown) halo.object.position.y = 470 + Math.sin(time * 2 + id.length) * 12;
     }
     for (const [id, ring] of this.rings) {
-      const shown = near === id;
+      const shown = !mission && near === id;
       if (shown !== ring.shown) { ring.object.visible = ring.shown = shown; }
     }
+    this.updateMission(mission, crates, time, y);
+    this.updateParticles(dt, time, mover, pace);
     this.app.requestRender();
   }
+
+  private updateMission(mission: SceneMission, crates: readonly Point[], time: number, playerY: number) {
+    const { gates, crates: pool, carried } = this.parts;
+    const key = mission ? mission.colors.join() : "";
+    if (key !== this.missionKey) {
+      this.missionKey = key;
+      gates.forEach((gate, index) => {
+        gate.group.visible = !!mission;
+        if (mission) for (const part of gate.tinted) part.color = mission.colors[index];
+      });
+    }
+    if (mission) {
+      const pulse = mission.carrying ? 1 + Math.sin(time * 7) * 0.07 : 1;
+      for (const gate of gates) { gate.pad.scale.x = pulse; gate.pad.scale.z = pulse; }
+    }
+    const count = mission ? Math.min(crates.length, pool.length) : 0;
+    pool.forEach((crate, index) => {
+      const shown = index < count;
+      if (index >= this.shownCrates && shown) crate.visible = true;
+      if (index < this.shownCrates && !shown) crate.visible = false;
+      if (!shown) return;
+      crate.position.x = crates[index].x;
+      crate.position.z = crates[index].z;
+      crate.position.y = 140 + Math.sin(time * 2.6 + index * 1.7) * 18;
+      crate.rotation.y = time * 0.9 + index;
+    });
+    this.shownCrates = count;
+    const carrying = !!mission?.carrying;
+    if (carrying !== this.carriedShown) { carried.visible = this.carriedShown = carrying; }
+    if (carrying) {
+      carried.position.y = CARRY_Y + (playerY - PLAYER_Y) + Math.sin(time * 5) * 10;
+      carried.rotation.y = time * 1.6;
+    }
+  }
+
+  private updateParticles(dt: number, time: number, mover: Mover, pace: number) {
+    for (const spark of this.parts.sparks) {
+      if (!spark.active) continue;
+      const age = time - spark.born;
+      if (age > spark.life) { spark.active = false; spark.object.visible = false; continue; }
+      spark.vy -= 1500 * dt;
+      spark.x += spark.vx * dt;
+      spark.y = Math.max(20, spark.y + spark.vy * dt);
+      spark.z += spark.vz * dt;
+      const scale = spark.size * (1 - age / spark.life);
+      spark.object.position.x = spark.x;
+      spark.object.position.y = spark.y;
+      spark.object.position.z = spark.z;
+      spark.object.rotation.x = age * 9;
+      spark.object.rotation.z = age * 7;
+      spark.object.scale.x = spark.object.scale.y = spark.object.scale.z = Math.max(0.01, scale);
+    }
+    if (pace > 0.55 && time - this.lastPuff > 0.07) {
+      this.lastPuff = time;
+      const puff = this.parts.puffs.find((item) => !item.active);
+      if (puff) {
+        Object.assign(puff, { x: mover.x - Math.sin(mover.heading) * 60, y: 26, z: mover.z - Math.cos(mover.heading) * 60, born: time, life: 0.55, size: 0.7 + pace * 0.5, active: true });
+        puff.object.position.x = puff.x;
+        puff.object.position.y = puff.y;
+        puff.object.position.z = puff.z;
+        puff.object.visible = true;
+      }
+    }
+    for (const puff of this.parts.puffs) {
+      if (!puff.active) continue;
+      const age = time - puff.born;
+      if (age > puff.life) { puff.active = false; puff.object.visible = false; continue; }
+      const scale = puff.size * (1 - age / puff.life);
+      puff.object.position.y = puff.y + age * 60;
+      puff.object.scale.x = puff.object.scale.y = puff.object.scale.z = Math.max(0.01, scale);
+    }
+  }
+}
+
+async function buildCrate(app: Application, name: string, parent: SPEObject, position: Vector) {
+  const group = await app.createObject("Group", { name, parent, position, visible: false });
+  const part = (type: string, suffix: string, options: Record<string, unknown>) => app.createObject(type, { name: `${name}.${suffix}`, parent: group, castShadow: false, receiveShadow: false, ...options });
+  await part("Cube", "Box", { width: 170, height: 170, depth: 170, cornerRadius: 36, material: { color: paper, roughness: 0.45 } });
+  await part("Cube", "Band", { width: 180, height: 38, depth: 180, cornerRadius: 14, material: { color: ink, roughness: 0.5 } });
+  await part("Sphere", "Seal", { width: 60, height: 60, depth: 60, position: [0, 116, 0], material: { color: rose, roughness: 0.35 } });
+  return group;
+}
+
+async function buildMissionParts(app: Application, map: SPEObject, tilt: SPEObject): Promise<MissionParts> {
+  const gates = await Promise.all(gateSpots.map(async (spot, index) => {
+    const group = await app.createObject("Group", { name: `Wordplay.World.Gate.${index}`, parent: map, position: [spot.x, 0, spot.z], visible: false });
+    const part = (type: string, suffix: string, options: Record<string, unknown>) => app.createObject(type, { name: `Wordplay.World.Gate.${index}.${suffix}`, parent: group, castShadow: false, receiveShadow: false, ...options });
+    const pad = await part("Cylinder", "Pad", { width: 520, depth: 520, height: 12, radiusTop: 260, radiusBottom: 260, position: [0, 6, 0], material: { color: citron, roughness: 0.6 } });
+    for (const side of [-1, 1]) await part("Cylinder", `Pillar.${side}`, { width: 66, depth: 66, height: 360, radiusTop: 30, radiusBottom: 36, position: [side * 205, 180, 0], material: { color: ink, roughness: 0.5 } });
+    const beam = await part("Cube", "Beam", { width: 500, height: 72, depth: 72, cornerRadius: 22, position: [0, 390, 0], material: { color: citron, roughness: 0.45 } });
+    const cap = await part("Sphere", "Cap", { width: 120, height: 120, depth: 120, position: [0, 490, 0], material: { color: citron, roughness: 0.35 } });
+    return { group, pad, tinted: [pad, beam, cap] };
+  }));
+  const crates = await Promise.all([0, 1, 2].map((index) => buildCrate(app, `Wordplay.World.Crate.${index}`, map, [0, 110, 0])));
+  const carried = await buildCrate(app, "Wordplay.World.Carried", tilt, [0, CARRY_Y, 0]);
+  const particle = async (type: string, name: string, options: Record<string, unknown>): Promise<Particle> => ({
+    object: await app.createObject(type, { name, parent: map, visible: false, castShadow: false, receiveShadow: false, ...options }),
+    x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, born: 0, life: 1, size: 1, active: false
+  });
+  const sparks = await Promise.all(Array.from({ length: 18 }, (_, index) => particle("Cube", `Wordplay.World.Spark.${index}`, { width: 48, height: 48, depth: 48, cornerRadius: 10, material: { color: citron, roughness: 0.4 } })));
+  const puffs = await Promise.all(Array.from({ length: 12 }, (_, index) => particle("Sphere", `Wordplay.World.Puff.${index}`, { width: 70, height: 70, depth: 70, material: { color: PUFF, roughness: 0.9 } })));
+  return { gates, crates, carried, sparks, puffs };
 }
 
 export const KIT = "Wordplay.World.Kit";
 type Make = (type: string, name: string, options: Record<string, unknown>) => Promise<SPEObject>;
 
 async function fromKit(app: Application, part: string, name: string, parent: SPEObject, position: Vector) {
-  const source = app.findObjectByName(`${KIT}.${part}`);
+  const source = app.findObjectByName(KIT) && app.findObjectByName(`${KIT}.${part}`);
   if (!source) return null;
   const copy = await app.cloneObject(source, { name, parent, position });
   copy.visible = true;
@@ -138,7 +270,9 @@ export async function createWorldScene(app: Application, subject: string) {
   const map = await app.createObject("Group", { name: "Wordplay.World.Map", parent: tilt });
   const make = (type: string, name: string, options: Record<string, unknown>, parent = map) => app.createObject(type, { name: `Wordplay.World.${name}`, parent, castShadow: false, receiveShadow: false, ...options });
   const island = WORLD.radius + 160;
-  await make("Cylinder", "Island", { width: island * 2, depth: island * 2, height: 90, radiusTop: island, radiusBottom: island - 60, position: [0, -45, 0], material: { color: paper, roughness: 0.9 } });
+  await make("Cylinder", "Island", { width: island * 2, depth: island * 2, height: 40, radiusTop: island, radiusBottom: island, position: [0, -20, 0], material: { color: paper, roughness: 0.9 } });
+  await make("Cylinder", "Cliff", { width: island * 2, depth: island * 2, height: 280, radiusTop: island - 6, radiusBottom: island - 260, position: [0, -180, 0], material: { color: plum, roughness: 0.8 } });
+  await make("Cylinder", "Cliff.Band", { width: island * 2 + 10, depth: island * 2 + 10, height: 26, radiusTop: island + 2, radiusBottom: island - 8, position: [0, -52, 0], material: { color: berry, roughness: 0.7 } });
   await make("Torus", "Coast", { width: island * 2, height: island * 2, depth: 34, position: [0, 0, 0], rotation: [90, 0, 0], material: { color: rose, roughness: 0.6 } });
   await make("Torus", "Spawn", { width: 500, height: 500, depth: 20, position: [0, 4, 0], rotation: [90, 0, 0], material: { color: citron, roughness: 0.6 } });
   for (const station of stations) {
@@ -156,9 +290,14 @@ export async function createWorldScene(app: Application, subject: string) {
   }
   await Promise.all(trees.map(async (tree, index) => {
     if (await fromKit(app, `Tree.${(index % 3) + 1}`, `Wordplay.World.Tree.${index}`, map, [tree.x, 0, tree.z])) return;
-    await make("Cylinder", `Tree.${index}.Trunk`, { width: 28, depth: 28, height: 50, radiusTop: 14, radiusBottom: 14, position: [tree.x, 25, tree.z], material: { color: ink, roughness: 0.8 } });
-    await make("Cylinder", `Tree.${index}.Crown`, { width: 150, depth: 150, height: tree.height, radiusTop: 2, radiusBottom: 75, position: [tree.x, 50 + tree.height / 2, tree.z], material: { color: tree.color, roughness: 0.7 } });
+    const style = index % 3;
+    const trunk = style === 1 ? 110 : 50;
+    await make("Cylinder", `Tree.${index}.Trunk`, { width: 30, depth: 30, height: trunk, radiusTop: 13, radiusBottom: 16, position: [tree.x, trunk / 2, tree.z], material: { color: ink, roughness: 0.8 } });
+    if (style === 0) await make("Cylinder", `Tree.${index}.Crown`, { width: 160, depth: 160, height: tree.height, radiusTop: 2, radiusBottom: 80, position: [tree.x, trunk + tree.height / 2, tree.z], material: { color: tree.color, roughness: 0.7 } });
+    else if (style === 1) await make("Sphere", `Tree.${index}.Crown`, { width: 190, height: 180, depth: 190, position: [tree.x, trunk + 80, tree.z], material: { color: tree.color, roughness: 0.65 } });
+    else for (const [level, width] of [[0, 180], [1, 130]]) await make("Cylinder", `Tree.${index}.Crown.${level}`, { width, depth: width, height: 130, radiusTop: 2, radiusBottom: width / 2, position: [tree.x, trunk + 60 + level * 80, tree.z], material: { color: tree.color, roughness: 0.7 } });
   }));
+  await Promise.all(tufts.map((tuft, index) => make("Sphere", `Tuft.${index}`, { width: tuft.size, height: tuft.size * 0.42, depth: tuft.size * 0.8, position: [tuft.x, 6, tuft.z], material: { color: tuft.color, roughness: 0.9 } })));
   const tokens: Token[] = await Promise.all(wordTokens.map(async (token, index) => ({
     term: token.term,
     phase: index * 0.7,
@@ -170,5 +309,6 @@ export async function createWorldScene(app: Application, subject: string) {
   player.scale.x = player.scale.y = player.scale.z = PLAYER_SCALE;
   root.visible = false;
   await app.createObject("PointLight", { name: "Wordplay.World.Lamp", parent: tilt, position: [260, 760, 420], color: paper, intensity: 0.9, distance: 2600 });
-  return new WorldScene(app, map, player, tokens, halos, rings);
+  const parts = await buildMissionParts(app, map, tilt);
+  return new WorldScene(app, map, player, tokens, halos, rings, parts);
 }

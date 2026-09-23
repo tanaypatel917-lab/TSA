@@ -12,9 +12,9 @@ export type ProgressState = {
   world?: WorldProgress;
 };
 
-export type WorldProgress = { words: string[]; stamps: string[] };
+export type WorldProgress = { words: string[]; stamps: string[]; best?: Record<string, number>; stars?: Record<string, number> };
 
-export const WORLD_XP = { word: 2, stamp: 10 };
+export const WORLD_XP = { word: 2, stamp: 10, perfect: 5 };
 
 export function worldOf(state: ProgressState): WorldProgress {
   return state.world ?? { words: [], stamps: [] };
@@ -37,7 +37,8 @@ export type ProgressEvent =
   | { type: "activity-completed"; moduleId: string; day: string }
   | { type: "quiz-completed"; moduleId: string; scorePct: number; day: string }
   | { type: "word-collected"; term: string; day: string }
-  | { type: "station-stamped"; moduleId: string; day: string };
+  | { type: "station-stamped"; moduleId: string; day: string }
+  | { type: "mission-finished"; moduleId: string; score: number; stars: number; day: string };
 
 function dayAfter(previous: string, day: string): boolean {
   const previousDate = new Date(`${previous}T12:00:00`);
@@ -66,7 +67,7 @@ export function apply(state: ProgressState, event: ProgressEvent, moduleList: Mo
     quizBest: { ...state.quizBest },
     badges: [...state.badges],
     streak: { ...state.streak },
-    world: { words: [...worldOf(state).words], stamps: [...worldOf(state).stamps] }
+    world: { words: [...worldOf(state).words], stamps: [...worldOf(state).stamps], best: { ...worldOf(state).best }, stars: { ...worldOf(state).stars } }
   };
   const world = next.world as WorldProgress;
   let xpGained = 0;
@@ -90,6 +91,17 @@ export function apply(state: ProgressState, event: ProgressEvent, moduleList: Mo
       world.words.push(event.term);
       xpGained += WORLD_XP.word;
     }
+  } else if (event.type === "mission-finished") {
+    const best = world.best as Record<string, number>;
+    const starred = world.stars as Record<string, number>;
+    const previousStars = starred[event.moduleId] ?? 0;
+    best[event.moduleId] = Math.max(best[event.moduleId] ?? 0, Math.max(0, Math.round(event.score)));
+    starred[event.moduleId] = Math.max(previousStars, event.stars);
+    if (event.stars >= 1 && !world.stamps.includes(event.moduleId)) {
+      world.stamps.push(event.moduleId);
+      xpGained += WORLD_XP.stamp;
+    }
+    if (event.stars >= 3 && previousStars < 3) xpGained += WORLD_XP.perfect;
   } else if (event.type === "station-stamped") {
     if (!world.stamps.includes(event.moduleId)) {
       world.stamps.push(event.moduleId);

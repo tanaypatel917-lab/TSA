@@ -7,6 +7,7 @@ function valid(value: unknown): value is ProgressState {
   const candidate = value as Partial<ProgressState>;
   const strings = (items: unknown): items is string[] => Array.isArray(items) && items.every((item) => typeof item === "string");
   const nonnegative = (number: unknown): number is number => typeof number === "number" && Number.isFinite(number) && number >= 0;
+  const scores = (record: unknown) => record === undefined || (!!record && typeof record === "object" && !Array.isArray(record) && Object.values(record).every(nonnegative));
   return candidate.version === 1 && nonnegative(candidate.xp)
     && strings(candidate.completedLessons) && strings(candidate.completedActivities)
     && !!candidate.quizBest && typeof candidate.quizBest === "object" && !Array.isArray(candidate.quizBest)
@@ -14,7 +15,7 @@ function valid(value: unknown): value is ProgressState {
     && strings(candidate.badges) && !!candidate.streak && !Array.isArray(candidate.streak)
     && nonnegative(candidate.streak.count) && typeof candidate.streak.lastDay === "string"
     && (candidate.startedAt === null || typeof candidate.startedAt === "string")
-    && (candidate.world === undefined || (!!candidate.world && strings(candidate.world.words) && strings(candidate.world.stamps)));
+    && (candidate.world === undefined || (!!candidate.world && strings(candidate.world.words) && strings(candidate.world.stamps) && scores(candidate.world.best) && scores(candidate.world.stars)));
 }
 
 export function loadProgress(): ProgressState {

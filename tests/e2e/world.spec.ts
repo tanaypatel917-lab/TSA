@@ -1,6 +1,8 @@
 import { expect, test, type Page } from "@playwright/test";
 import { modules } from "../../src/content";
 import { glossary } from "../../src/content/glossary";
+import { missions } from "../../src/content/missions";
+import { RUN } from "../../src/engine/mission";
 import { initialState, WORLD_XP, type ProgressState } from "../../src/engine/progress";
 
 const progressKey = "wordplay:progress:v1";
@@ -51,31 +53,62 @@ test("collecting a word shows its definition, awards XP once, and saves it", asy
   await expect(page.locator(".word-card").getByRole("button", { name: /Collect/ })).toHaveCount(0);
 });
 
-test("a station check stamps the station on a correct answer and returns focus", async ({ page }) => {
+async function playMission(page: Page, moduleId: string, answer: (gate: string, gates: string[]) => string) {
+  const mission = missions.find((item) => item.moduleId === moduleId)!;
+  const dialog = page.getByRole("dialog");
+  for (let turn = 0; turn < RUN.count; turn += 1) {
+    const card = dialog.locator(".map-mission-card .carry-text");
+    if (!(await card.isVisible().catch(() => false))) break;
+    const text = await card.innerText();
+    const item = mission.items.find((entry) => entry.text === text);
+    if (!item) break;
+    const label = mission.gates.find((gate) => gate.id === answer(item.gate, mission.gates.map((each) => each.id)))!.label;
+    await dialog.getByRole("button", { name: label, exact: true }).click();
+    await expect(dialog.locator(".map-mission-feedback")).not.toHaveText("Choose the gate where this crate belongs.");
+  }
+}
+
+test("a mission briefing explains the rules and a perfect relaxed run stamps the station", async ({ page }) => {
   await seed(page);
   await page.goto("/play/");
-  const foundations = modules[0];
   const opener = page.locator(".world-station-list").getByRole("button", { name: /AI Foundations/ });
   await opener.click();
-  const dialog = page.getByRole("dialog", { name: "How does it learn?" });
-  await expect(dialog).toBeVisible();
-  await expect(dialog.getByRole("heading", { level: 2 })).toBeFocused();
-  const [first, second] = foundations.quiz;
-  const wrong = first.choices.findIndex((_, index) => index !== first.answerIndex);
-  await dialog.getByRole("button", { name: first.choices[wrong] }).click();
-  await expect(dialog.getByRole("status")).toContainText("Not quite.");
-  await dialog.getByRole("button", { name: "Try another question" }).click();
-  await expect(dialog).toContainText(second.prompt);
-  await dialog.getByRole("button", { name: second.choices[second.answerIndex] }).click();
-  await expect(dialog.getByRole("status")).toContainText(`Station stamped · +${WORLD_XP.stamp} XP`);
-  await expect(dialog.locator(".station-stamp")).toHaveText("Stamped");
-  await page.keyboard.press("Escape");
-  await expect(dialog).toHaveCount(0);
+  const briefing = page.getByRole("dialog", { name: "Train the spam filter" });
+  await expect(briefing.getByRole("heading", { level: 2 })).toBeFocused();
+  await expect(briefing.locator(".mission-gates")).toContainText("Spam");
+  await expect(briefing.locator(".mission-gates")).toContainText("Inbox");
+  await briefing.getByRole("checkbox", { name: /Relaxed mode/ }).check();
+  await briefing.getByRole("button", { name: /Start mission/ }).click();
+  await expect(page.locator(".mission-hud-clock")).toHaveAttribute("aria-label", "Relaxed mode, no clock");
+  await playMission(page, "foundations", (gate) => gate);
+  const results = page.getByRole("dialog", { name: "Perfect run." });
+  await expect(results).toBeVisible();
+  await expect(results.getByRole("img", { name: "3 of 3 stars" })).toBeVisible();
+  await expect(results).toContainText(`Station stamped · +${WORLD_XP.stamp} XP`);
+  await expect(results).toContainText(`First perfect run · +${WORLD_XP.perfect} XP`);
+  await expect(results.locator(".results-list li")).toHaveCount(RUN.count);
+  await results.getByRole("button", { name: "Back to the world" }).click();
   await expect(opener).toBeFocused();
-  await expect(opener).toContainText("Stamped");
+  await expect(opener.getByRole("img", { name: "3 of 3 stars" })).toBeVisible();
   const state = await saved(page);
   expect(state.world?.stamps).toEqual(["foundations"]);
-  expect(state.xp).toBe(WORLD_XP.stamp);
+  expect(state.world?.stars).toEqual({ foundations: 3 });
+  expect(state.world?.best?.foundations).toBe(100 + 200 + 300 + 400 * (RUN.count - 3));
+  expect(state.xp).toBe(WORLD_XP.stamp + WORLD_XP.perfect);
+});
+
+test("three wrong gates end a timed run without a stamp and explain each answer", async ({ page }) => {
+  await seed(page);
+  await page.goto("/play/");
+  await page.locator(".world-station-list").getByRole("button", { name: /AI Tools/ }).click();
+  await page.getByRole("dialog").getByRole("button", { name: /Start mission/ }).click();
+  await expect(page.locator(".mission-hud-clock")).toHaveAttribute("aria-label", /seconds left/);
+  await playMission(page, "tools", (gate, gates) => gates.find((each) => each !== gate)!);
+  const results = page.getByRole("dialog", { name: "Keep practicing." });
+  await expect(results).toContainText("Three mistakes. Run over.");
+  await expect(results.locator('.results-list li[data-ok="false"]')).toHaveCount(RUN.lives);
+  await expect(results).toContainText("Sort at least");
+  expect((await saved(page)).world?.stamps).toEqual([]);
 });
 
 test("the last stamp and the last word unlock the two world badges", async ({ page }) => {
@@ -86,8 +119,9 @@ test("the last stamp and the last word unlock the two world badges", async ({ pa
   await expect(page.locator(".word-card h2")).toHaveText(words[0]);
   await page.locator(".word-card").getByRole("button", { name: /Collect/ }).click();
   await page.locator(".world-station-list").getByRole("button", { name: /AI Foundations/ }).click();
-  const question = modules[0].quiz[0];
-  await page.getByRole("dialog").getByRole("button", { name: question.choices[question.answerIndex] }).click();
+  await page.getByRole("dialog").getByRole("checkbox", { name: /Relaxed mode/ }).check();
+  await page.getByRole("dialog").getByRole("button", { name: /Start mission/ }).click();
+  await playMission(page, "foundations", (gate) => gate);
   await page.getByRole("button", { name: "Back to the world" }).click();
   await expect.poll(async () => (await saved(page)).badges).toEqual(expect.arrayContaining(["world-explorer", "word-collector"]));
   await page.goto("/badges/");

@@ -6,7 +6,7 @@ import "./about.css";
 
 export const metadata: Metadata = { title: "About | Wordplay" };
 
-const xp = [["+10", "for each lesson you read"], ["+25", "for each activity you finish"], ["+50", "at most per quiz, from your best score"], ["+5", "for coming back on consecutive days"], ["+2", "for each new word you collect in Wordplay World"], ["+10", "for each station check you pass in Wordplay World"]];
+const xp = [["+10", "for each lesson you read"], ["+25", "for each activity you finish"], ["+50", "at most per quiz, from your best score"], ["+5", "for coming back on consecutive days"], ["+2", "for each new word you collect in Wordplay World"], ["+10", "for the first star in each Wordplay World mission"], ["+5", "for your first perfect run of a mission"]];
 const principles = [["Questions before answers.", "Every chapter opens with a question, because a good question is what makes an AI tool useful."], ["Local by default.", "Progress, drafts, and answers stay on this device unless you export them."], ["People decide.", "Lessons treat AI as a tool to direct and check. You stay responsible for the result."]];
 const access = ["Every page works with a keyboard, and a skip link jumps straight to the main content.", "The Motion setting in the footer, or your system preference, swaps 3D and animation for still typography.", "Quiz and activity feedback is written in words, never shown by color alone.", "Quizzes have no timer, and you can retry any of them.", "Body text keeps a contrast ratio of at least 4.5:1 against its background."];
 

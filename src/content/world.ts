@@ -1,4 +1,4 @@
-import { scatter, type Circle } from "@/engine/world";
+import { scatter, type Circle, type Point } from "@/engine/world";
 import { glossary } from "./glossary";
 import { introPalette } from "./intro";
 
@@ -40,3 +40,15 @@ export const trees: Tree[] = scatter(18, WORLD.radius + 60, [...stationClearance
   color: [rose, citron, plum, berry][index % 4],
   height: 150 + (index % 3) * 45
 }));
+
+export const GATE_REACH = 250;
+export const CRATE_REACH = 150;
+export const gateSpots: Point[] = [{ x: -660, z: 160 }, { x: 660, z: 160 }];
+export const crateSpots: Point[] = scatter(14, WORLD.radius - 250, [...stationClearance, { ...spawn, r: 420 }, ...gateSpots.map((gate) => ({ ...gate, r: 420 }))], 0.9, 560);
+
+export const tufts = scatter(12, WORLD.radius, [...stationClearance, spawn, ...pathClearance, ...gateSpots.map((gate) => ({ ...gate, r: 330 }))], 3.1, 500).flatMap((point, index) => [0, 1, 2].map((part) => ({
+  x: point.x + [0, 70, -55][part],
+  z: point.z + [0, 30, 45][part],
+  size: [120, 86, 70][part],
+  color: index % 2 ? "#E4EBB4" : "#F0D9DD"
+})));

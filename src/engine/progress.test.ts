@@ -35,7 +35,7 @@ describe("Wordplay World progress", () => {
     const again = apply(word.state, { type: "word-collected", term: "Token", day: "2027-01-01" }, [foundations]);
     const stamp = apply(again.state, { type: "station-stamped", moduleId: "foundations", day: "2027-01-01" }, [foundations]);
     expect([word.xpGained, again.xpGained, stamp.xpGained]).toEqual([2, 0, 10]);
-    expect(stamp.state.world).toEqual({ words: ["Token"], stamps: ["foundations"] });
+    expect(stamp.state.world).toMatchObject({ words: ["Token"], stamps: ["foundations"] });
     expect(initialState.world).toEqual({ words: [], stamps: [] });
   });
 
@@ -43,5 +43,19 @@ describe("Wordplay World progress", () => {
     const { world: _unused, ...older } = initialState;
     const result = apply(older, { type: "word-collected", term: "Model", day: "2027-01-01" }, [foundations]);
     expect(result.state.world?.words).toEqual(["Model"]);
+  });
+});
+
+describe("mission results", () => {
+  it("keeps the best score and stars, stamps on one star, and adds a first perfect bonus once", () => {
+    const miss = apply(initialState, { type: "mission-finished", moduleId: "tools", score: 300, stars: 0, day: "2027-01-01" }, [foundations]);
+    expect([miss.xpGained, miss.state.world?.stamps]).toEqual([0, []]);
+    const star = apply(miss.state, { type: "mission-finished", moduleId: "tools", score: 900, stars: 1, day: "2027-01-01" }, [foundations]);
+    expect([star.xpGained, star.state.world?.stamps]).toEqual([10, ["tools"]]);
+    const perfect = apply(star.state, { type: "mission-finished", moduleId: "tools", score: 2400, stars: 3, day: "2027-01-01" }, [foundations]);
+    const again = apply(perfect.state, { type: "mission-finished", moduleId: "tools", score: 1200, stars: 3, day: "2027-01-01" }, [foundations]);
+    expect([perfect.xpGained, again.xpGained]).toEqual([5, 0]);
+    expect(again.state.world?.best).toEqual({ tools: 2400 });
+    expect(again.state.world?.stars).toEqual({ tools: 3 });
   });
 });
