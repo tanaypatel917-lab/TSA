@@ -92,7 +92,8 @@ test("lessons cite their sources and References numbers every source with a secu
   const hrefs = await page.locator(".reference-title a").evaluateAll((links) => links.map((link) => link.getAttribute("href") ?? ""));
   expect(hrefs.every((href) => href.startsWith("https://"))).toBe(true);
   await expect(page.locator("#ref-dastin-2018")).toContainText("Used in Training data and bias.");
-  await expect(page.getByRole("heading", { name: "Typefaces, 3D, and software" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Credits and copyright" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Copyright checklist" })).toBeVisible();
 });
 
 test("badges describe earned and locked states in words", async ({ page }) => {

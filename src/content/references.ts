@@ -114,8 +114,17 @@ export const creditGroups: { id: string; title: string; credits: Credit[] }[] = 
     id: "visuals",
     title: "3D and imagery",
     credits: [
-      { name: "Spline", url: "https://spline.design/", detail: "The question-mark sculpture was built in Spline for Wordplay and runs on the Spline runtime. The Built with Spline mark stays visible." },
-      { name: "Original typography", detail: "Every other visual is an original type composition made for Wordplay. The site uses no stock photography or generated images." }
+      { name: "Spline", url: "https://spline.design/", detail: "The question-mark sculpture was modeled in Spline for Wordplay. The intro scene and the Wordplay World island, stations, crates and gates are built from Spline shapes when the page loads. Used under the Spline Terms of Service; the Built with Spline mark stays visible." },
+      { name: "Original typography and diagrams", detail: "Every other visual is an original type composition or diagram made for Wordplay. The site uses no stock photography, icon libraries or AI-generated images." }
+    ]
+  },
+  {
+    id: "content",
+    title: "Writing",
+    credits: [
+      { name: "Lessons, quizzes and activities", detail: "Written for Wordplay in our own words. Facts are paraphrased and cited to the sources listed above; nothing is copied from them." },
+      { name: "Wordplay World missions", detail: "Crate messages are written for Wordplay or adapted from the site’s own activities." },
+      { name: "Glossary", detail: "Twenty definitions written for Wordplay at a grade 9 reading level." }
     ]
   },
   {
@@ -123,9 +132,11 @@ export const creditGroups: { id: string; title: string; credits: Credit[] }[] = 
     title: "Software",
     credits: [
       { name: "Next.js", url: "https://nextjs.org/", detail: "Vercel. MIT License." },
-      { name: "React", url: "https://react.dev/", detail: "Meta. MIT License." },
+      { name: "React and React DOM", url: "https://react.dev/", detail: "Meta. MIT License." },
+      { name: "Spline runtime", url: "https://spline.design/terms", detail: "Spline, Inc. Loads and animates the 3D scenes. The package declares no open-source license, so it is used under the Spline Terms of Service." },
       { name: "TypeScript", url: "https://www.typescriptlang.org/", detail: "Microsoft. Apache License 2.0." },
-      { name: "Tailwind CSS", url: "https://tailwindcss.com/", detail: "Tailwind Labs. MIT License." },
+      { name: "Tailwind CSS and Tailwind Forms", url: "https://tailwindcss.com/", detail: "Tailwind Labs. MIT License." },
+      { name: "PostCSS, Autoprefixer and ESLint", url: "https://postcss.org/", detail: "Build and code-quality tools. MIT License." },
       { name: "Vitest", url: "https://vitest.dev/", detail: "Unit tests. MIT License." },
       { name: "Playwright", url: "https://playwright.dev/", detail: "Microsoft. Browser tests. Apache License 2.0." }
     ]
@@ -136,7 +147,10 @@ export const creditGroups: { id: string; title: string; credits: Credit[] }[] = 
     credits: [
       { name: "F\u00e9lix P\u00e9ault portfolio", url: "https://www.awwwards.com/sites/felix-peault-portfolio", detail: "Awwwards Site of the Day. Studied for poster layouts and variable type." },
       { name: "Erika Moreira portfolio", url: "https://www.awwwards.com/sites/erika-moreira-portfolio", detail: "Awwwards Site of the Day. Studied for kinetic headlines and copy-led hierarchy." },
-      { name: "ToyFight", url: "https://www.awwwards.com/sites/toyfight-1", detail: "Awwwards Site of the Day. Studied for playful motion. No code or artwork was copied from any of these sites." }
+      { name: "ToyFight", url: "https://www.awwwards.com/sites/toyfight-1", detail: "Awwwards Site of the Day. Studied for playful motion." },
+      { name: "Lando Norris by OFF+BRAND", url: "https://www.awwwards.com/sites/lando-norris", detail: "Awwwards Site of the Year 2025. Studied for game energy and bold two-color contrast." },
+      { name: "Bruno Simon portfolio", url: "https://thefwa.com/news/fwa-of-the-year-2025-peoples-choice-award-winners-announced", detail: "FWA of the Year 2025. Studied for exploring a site by driving through a 3D world." },
+      { name: "MicrobeXplorer", url: "https://microbexplorer.dtu.dk/", detail: "Lovie Awards Gold winner for schools and education, built for high school students. Studied for explorable science. No code or artwork was copied from any of these sites." }
     ]
   }
 ];
@@ -154,3 +168,11 @@ export function formatCitation(reference: Pick<Reference, "authors" | "date" | "
 export function referencesForLesson(moduleId: string, lessonId: string) {
   return allReferences.filter((reference) => reference.lessons.includes(`${moduleId}/${lessonId}`));
 }
+
+export const copyrightChecklist: { item: string; answer: string }[] = [
+  { item: "Is all written content original?", answer: "Yes. Lessons, quizzes, activities, missions and definitions are written for Wordplay; facts are cited, not copied." },
+  { item: "Does the site use images, photos, video, audio or icons made by others?", answer: "No. Every visual is original type, diagrams or 3D built in Spline for this site." },
+  { item: "Are third-party fonts and code licensed for this use?", answer: "Yes. Each one is listed below with its license, and the font license files ship with the site." },
+  { item: "Is the site built from a template or theme?", answer: "No. The design and code are custom; frameworks are listed under Software." },
+  { item: "Were other websites copied?", answer: "No. Award-winning sites were studied for ideas only and are credited under Design inspiration." }
+];

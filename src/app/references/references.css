@@ -106,7 +106,7 @@
 .specimen[data-face="body"] .specimen-sample { max-width: 30ch; font-family: var(--font-body), sans-serif; font-size: 19px; font-weight: 400; line-height: 1.55; letter-spacing: 0; }
 .specimen figcaption { display: grid; gap: 4px; margin-top: auto; padding-top: 28px; font-size: 14px; line-height: 1.5; }
 .specimen figcaption a { font-size: 18px; font-weight: 700; text-decoration: underline; }
-.credit-columns { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; margin-top: 56px; }
+.credit-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 64px; margin-top: 56px; }
 .credit-group h3 { font-size: 24px; }
 .credit-list { margin: 14px 0 0; }
 .credit-list > div { padding-block: 12px; border-top: 1px solid var(--line); }
@@ -189,4 +189,15 @@
   .credits { padding: 14pt 0 0; border-color: #000; }
   .credit-columns { display: block; margin-top: 8pt; }
   .credit-group + .credit-group { margin-top: 10pt; }
+}
+
+.copyright-check { margin-top: 48px; padding: clamp(22px, 3vw, 36px); border: 2px solid var(--ink); background: var(--paper); box-shadow: 8px 8px 0 var(--citron); }
+.copyright-check h3 { font-size: clamp(26px, 2.6vw, 34px); }
+.copyright-check dl { display: grid; margin-top: 18px; }
+.copyright-check dl > div { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 8px 32px; padding: 14px 0; border-top: 1px solid var(--line); }
+.copyright-check dt { font-weight: 700; line-height: 1.45; }
+.copyright-check dd { display: flex; gap: 12px; margin: 0; line-height: 1.55; }
+.copyright-check dd span { display: grid; flex: none; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: var(--citron); font-size: 14px; font-weight: 700; }
+@media (max-width: 767px) {
+  .copyright-check dl > div { grid-template-columns: 1fr; }
 }

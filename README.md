@@ -51,6 +51,15 @@ cloned in place of the built-in shapes. Reduced motion, narrow screens, no WebGL
 or a failed load open the same game as an interactive map, where missions become a
 quick sort with the same scoring, so every learning action works without 3D.
 
+## Judges' tour and documentation
+
+The homepage and About page start an eight-stop site tour (`src/content/tour.ts`,
+`src/components/TourGuide.tsx`). The current stop is kept in `sessionStorage`
+under `wordplay:tour:v1`, so the tour survives reloads and page changes. About
+explains how the site was built, and References holds the sources, credits,
+licenses and a copyright checklist (`copyrightChecklist` in
+`src/content/references.ts`).
+
 ## Deploying to GitHub Pages
 
 Pushing to `main` runs `.github/workflows/deploy.yml`. It downloads Clash
