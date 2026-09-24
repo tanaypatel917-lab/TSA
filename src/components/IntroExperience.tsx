@@ -287,12 +287,14 @@ export function IntroExperience() {
       if (!current) return;
       const input = live.current;
       const width = window.innerWidth;
+      const heading = page.current?.querySelector(".finale-copy h2");
+      const finaleTop = heading ? heading.getBoundingClientRect().top / viewport : undefined;
       current.update({
         t: position.t, act: position.act, local: position.local, time: time / 1000, dt,
         aspect: width / viewport, compact: width < 1024 || width / viewport < 1.15,
         pointer: smoothPointer, spin: spin.spin, dataset: input.dataset, parts: input.parts,
         claimChecked: input.claimChecked, claimAt: input.claimAt, breakAt: input.breakAt, celebrateAt: input.celebrateAt,
-        exit: input.exitAt ? clamp((time / 1000 - input.exitAt) / 0.75) : 0
+        exit: input.exitAt ? clamp((time / 1000 - input.exitAt) / 0.75) : 0, finaleTop
       });
     };
     frame = requestAnimationFrame(tick);

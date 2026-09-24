@@ -20,6 +20,7 @@ export type IntroSceneInput = {
   breakAt: number;
   celebrateAt: number;
   exit: number;
+  finaleTop?: number;
 };
 
 type Kind = "question" | "ring" | "token" | "slab" | "bar" | "dot" | "star";
@@ -57,6 +58,9 @@ const STAGE_POSITION: Vector = [0, 118, 36];
 const STAGE_ROTATION: Vector = [-0.2286, -0.4092, -0.0923];
 const ZOOM = 0.64;
 const UNITS_TALL = 820;
+const FINALE_SCALE = 0.62;
+const FINALE_RADIUS = 140;
+const FINALE_GAP = 34;
 const HIDDEN = 0.001;
 const TAU = Math.PI * 2;
 const TOKENS = 24;
@@ -188,6 +192,11 @@ export class IntroScene {
       frame.y = (0.5 - (input.compact ? cy : fy)) * UNITS_TALL;
       frame.k = input.compact ? 0.72 : 1;
     });
+    if (input.finaleTop === undefined || !Number.isFinite(input.finaleTop)) return;
+    const finale = this.frames[this.frames.length - 1];
+    finale.k *= FINALE_SCALE;
+    const reach = FINALE_RADIUS * finale.k;
+    finale.y = Math.min((0.5 - input.finaleTop) * UNITS_TALL + FINALE_GAP + reach, UNITS_TALL / 2 - reach - 20);
   }
 
   private prepare(input: IntroSceneInput) {
@@ -283,7 +292,7 @@ export class IntroScene {
         const ex = this.explode(local, input);
         return set(out, x, y, 0, ex * 0.5 * Math.sin(time * 2.2) + p.y * 0.08, 0.3 + p.x * 0.3 + ex * 1.4, ex * 0.35, 0.9 * k, clay);
       }
-      default: return set(out, x, y, 0, 0.04 + p.y * 0.06, p.x * 0.2, 0, 0.44 * k, clay);
+      default: return set(out, x, y, 0, 0.04 + p.y * 0.06, -0.4 + Math.sin(time * 0.45) * 0.18 + p.x * 0.25, 0, 0.44 * k, clay);
     }
   }
 
