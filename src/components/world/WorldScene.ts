@@ -1,5 +1,6 @@
 import type { Application, SPEObject } from "@splinetool/runtime";
 import { introPalette } from "@/content/intro";
+import { hideKit } from "@/content/visuals";
 import { WORLD, gateSpots, stations, trees, tufts, wordTokens, type Station } from "@/content/world";
 import { MOVE, type Mover, type Point } from "@/engine/world";
 
@@ -310,5 +311,6 @@ export async function createWorldScene(app: Application, subject: string) {
   root.visible = false;
   await app.createObject("PointLight", { name: "Wordplay.World.Lamp", parent: tilt, position: [260, 760, 420], color: paper, intensity: 0.9, distance: 2600 });
   const parts = await buildMissionParts(app, map, tilt);
+  hideKit(app);
   return new WorldScene(app, map, player, tokens, halos, rings, parts);
 }

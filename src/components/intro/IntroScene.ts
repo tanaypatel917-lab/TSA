@@ -1,5 +1,6 @@
 import type { Application, SPEObject } from "@splinetool/runtime";
 import { introActs, introPalette, introPromptParts, introWallColors, type IntroDataset, type IntroPartId } from "@/content/intro";
+import { hideKit } from "@/content/visuals";
 import { clamp, damp, easeInOutCubic, easeOutCubic, hexToRgb, lerp, pseudoRandom, rgbToHex, smoothstep, wallColorIndex } from "@/engine/introStory";
 
 export type IntroSceneInput = {
@@ -535,6 +536,7 @@ export class IntroScene {
 export async function createIntroScene(app: Application, subject: string) {
   const root = app.findObjectByName(subject);
   if (!root) throw new Error(`The scene is missing ${subject}.`);
+  hideKit(app);
   const ground = app.findObjectByName("Wordplay.Studio.PaperGround");
   if (ground) ground.visible = false;
   const stage = await app.createObject("Group", { name: "Wordplay.Intro.Stage", position: STAGE_POSITION, rotation: STAGE_ROTATION.map((angle) => (angle * 180) / Math.PI) as Vector });

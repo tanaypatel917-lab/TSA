@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Application } from "@splinetool/runtime";
-import type { SceneAsset } from "@/content/visuals";
+import { hideKit, type SceneAsset } from "@/content/visuals";
 import { useMotionPreference } from "./MotionPreferences";
 
 type SceneState = "idle" | "loading" | "ready" | "error";
@@ -80,6 +80,7 @@ export function SceneViewport({ asset }: { asset: SceneAsset }) {
           setState("error");
           return;
         }
+        hideKit(app);
         setSubject("verified");
         app.setBackgroundColor("transparent");
         size();

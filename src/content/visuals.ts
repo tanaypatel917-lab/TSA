@@ -7,6 +7,13 @@ export type SceneAsset = {
   subject: string;
 };
 
+export const KIT_NAME = "Wordplay.World.Kit";
+
+export function hideKit(app: { findObjectByName: (name: string) => { visible: boolean } | undefined }) {
+  const kit = app.findObjectByName(KIT_NAME);
+  if (kit) kit.visible = false;
+}
+
 export const questionScene: SceneAsset = {
   url: process.env.NEXT_PUBLIC_SPLINE_SCENE_URL !== undefined ? process.env.NEXT_PUBLIC_SPLINE_SCENE_URL : "https://prod.spline.design/OLChWT-UUYLcWrKA/scene.splinecode",
   role: "decorative",
