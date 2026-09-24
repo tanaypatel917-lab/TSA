@@ -51,6 +51,15 @@ cloned in place of the built-in shapes. Reduced motion, narrow screens, no WebGL
 or a failed load open the same game as an interactive map, where missions become a
 quick sort with the same scoring, so every learning action works without 3D.
 
+## Hands-on lesson tools
+
+`src/content/figures.ts` places interactive figures between lesson paragraphs:
+a system diagram, a keyword-rule spam filter, a simplified tokenizer, the
+next-word predictor, a fruit-sorter bias lab (a real nearest-average model trained
+in the browser), a hallucination spotter, a prompt builder, an ask-three-times
+variability demo and a privacy redactor. Their logic lives in `src/engine/labs.ts`
+and the components in `src/components/labs/`.
+
 ## Homepage demo
 
 The hero runs a live next-word predictor (`src/engine/predictor.ts`): a trigram
