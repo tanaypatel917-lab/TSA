@@ -55,11 +55,13 @@ html[data-intro-page="true"][data-motion="full"] { scroll-behavior: smooth; }
 .intro-progress span { display: block; height: 100%; background: var(--sky); transform: scaleX(0); transform-origin: left center; transition: background-color 400ms ease; }
 .intro-experience[data-tone="light"] .intro-progress { background: rgba(28, 42, 67, .14); }
 .intro-experience[data-tone="light"] .intro-progress span { background: var(--ink); }
-.intro-topbar { position: fixed; z-index: 7; top: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 22px clamp(20px, 4vw, 58px); color: var(--paper); pointer-events: none; transition: color 400ms ease; }
+.intro-topbar { position: fixed; z-index: 7; top: 0; left: 0; right: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 20px; padding: 22px clamp(20px, 4vw, 58px); color: var(--paper); pointer-events: none; transition: color 400ms ease; }
 .intro-topbar > * { pointer-events: auto; }
 .intro-experience[data-tone="light"] .intro-topbar { color: var(--ink); }
 .intro-topbar .wordmark { font-size: 29px; text-decoration: none; }
-.intro-topbar > span { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.intro-topbar .intro-skip { justify-self: end; }
+.intro-topbar .wordmark { justify-self: start; }
+.intro-topbar > span { text-align: center; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
 .intro-skip { font-size: 14px; font-weight: 700; text-decoration: underline; text-underline-offset: 5px; }
 
 .intro-index { position: fixed; z-index: 7; top: 50%; right: clamp(14px, 1.6vw, 28px); color: var(--paper); transform: translateY(-50%); transition: color 400ms ease; }
@@ -165,7 +167,7 @@ html[data-intro-page="true"][data-motion="full"] { scroll-behavior: smooth; }
 }
 
 @media (max-width: 767px) {
-  .intro-topbar { padding: 16px 20px; }
+  .intro-topbar { display: flex; justify-content: space-between; padding: 16px 20px; }
   .intro-topbar > span { display: none; }
   .intro-act,
   .intro-act.is-start,
