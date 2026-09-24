@@ -41,7 +41,12 @@ stations starts a mission (`src/content/missions.ts`): pick up message crates,
 read them and drive them through the right one of two gates before the 75-second
 clock or three mistakes end the run. Correct answers in a row build a ×4 combo;
 one star stamps the station (+10 XP) and a first perfect run adds +5 XP. Relaxed
-mode removes the clock. The rules are pure functions in `src/engine/mission.ts`.
+mode removes the clock and Expert mode (50 seconds, two lives, four crates at once, ×1.5
+points) raises the stakes. The central plaza starts a daily challenge: one mission
+picked by date with the same crates for everyone that day. Every run is saved to a
+local top-five board (`src/engine/scores.ts`, key `wordplay:scores:v1`), and
+synthesized sound effects (`src/components/world/sound.ts`) can be switched off.
+The rules are pure functions in `src/engine/mission.ts`.
 Stamping every station earns World Explorer and collecting every word earns Word
 Collector. Movement, collisions and layout live in `src/engine/world.ts` and
 `src/content/world.ts`; the scene is `src/components/world/WorldScene.ts`.

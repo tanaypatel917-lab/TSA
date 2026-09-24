@@ -5,12 +5,14 @@ import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, 
 import type { Application } from "@splinetool/runtime";
 import { modules } from "@/content";
 import { introPalette } from "@/content/intro";
-import { missionFor, type Mission } from "@/content/missions";
+import { missionFor, missions, type Mission } from "@/content/missions";
 import { moduleVisuals, questionScene } from "@/content/visuals";
 import { CRATE_REACH, GATE_REACH, WORLD, crateSpots, gateSpots, obstacles, stations, wordTokens, type WordToken } from "@/content/world";
 import { todayKey } from "@/engine/dates";
 import { termSlug } from "@/engine/glossary";
-import { deliver, pickUp, startRun, stars, tick as tickRun, type Run } from "@/engine/mission";
+import { dailyPick, daySeed, deliver, pickUp, startRun, stars, tick as tickRun, type Difficulty, type Run } from "@/engine/mission";
+import { boardKey, readBoard, recordScore, type ScoreEntry } from "@/engine/scores";
+import { play, setSound, soundOn } from "./sound";
 import { WORLD_XP, worldOf } from "@/engine/progress";
 import { MOVE_KEYS, distance, inputFrom, nearest, startMover, step, type Point } from "@/engine/world";
 import { useProgress } from "@/state/ProgressProvider";
@@ -25,7 +27,7 @@ import { createWorldScene, type WorldScene } from "./WorldScene";
 type SceneState = "idle" | "loading" | "ready" | "error";
 type Card = { token: WordToken; fresh: boolean };
 type Phase = "countdown" | "playing" | "over";
-type Results = { mission: Mission; run: Run; stars: number; best: boolean; stamped: boolean; perfect: boolean };
+type Results = { mission: Mission; run: Run; stars: number; best: boolean; stamped: boolean; perfect: boolean; daily: string | null; board: ScoreEntry[]; rank: number | null };
 type Popup = { id: number; text: string; tone: "good" | "bad" | "info" };
 
 const PAD: [string, string, Point][] = [["up", "Move up", { x: 0, z: -1 }], ["left", "Move left", { x: -1, z: 0 }], ["right", "Move right", { x: 1, z: 0 }], ["down", "Move down", { x: 0, z: 1 }]];
@@ -83,8 +85,11 @@ export function WorldGame() {
   const [near, setNear] = useState<string | null>(null);
   const [hud, setHud] = useState({ x: mover.current.x, z: mover.current.z, heading: mover.current.heading });
   const [size, setSize] = useState({ w: 1440, h: 824 });
-  const [briefing, setBriefing] = useState<string | null>(null);
-  const [relaxed, setRelaxed] = useState(false);
+  const [briefing, setBriefing] = useState<{ id: string; daily: boolean } | null>(null);
+  const [mode, setMode] = useState<Difficulty>("standard");
+  const [today, setToday] = useState<string | null>(null);
+  const [sound, setSoundState] = useState(true);
+  const dailyRun = useRef<string | null>(null);
   const [active, setActive] = useState<Mission | null>(null);
   const [runView, setRunView] = useState<Run | null>(null);
   const [mapRun, setMapRun] = useState<{ mission: Mission; run: Run } | null>(null);
@@ -101,12 +106,14 @@ export function WorldGame() {
   const drive = capable && choice === "drive" && sceneState !== "error";
   const displayState = !sceneUrl ? "disabled" : !device.checked ? "idle" : !capable ? "still" : sceneState;
   const dialogOpen = !!briefing || !!results || !!mapRun;
-  const live = useRef({ drive, paused: false, near: null as string | null, stamped });
-  live.current = { drive: drive && sceneState === "ready", paused: dialogOpen, near, stamped };
+  const dailyMission = today ? missions[dailyPick(today, missions.length)] : null;
+  const live = useRef({ drive, paused: false, near: null as string | null, stamped, dailyId: null as string | null });
+  live.current = { drive: drive && sceneState === "ready", paused: dialogOpen, near, stamped, dailyId: dailyMission?.moduleId ?? null };
   const progress = useRef(world);
   progress.current = world;
 
   useEffect(() => { got.current = new Set(world.words); }, [world.words]);
+  useEffect(() => { setToday(todayKey()); setSoundState(soundOn()); }, []);
 
   useEffect(() => {
     const wide = window.matchMedia("(min-width: 768px)");
@@ -146,11 +153,11 @@ export function WorldGame() {
     showCard({ token, fresh: true }, fromDrive);
   }, [dispatch, showCard]);
 
-  const openBriefing = useCallback((id: string) => {
+  const openBriefing = useCallback((id: string, daily = false) => {
     opener.current = document.activeElement instanceof HTMLElement && document.activeElement !== document.body ? document.activeElement : null;
     keys.current.clear();
     pad.current = { x: 0, z: 0 };
-    setBriefing(id);
+    setBriefing({ id, daily });
   }, []);
 
   const refocus = useCallback(() => {
@@ -162,7 +169,11 @@ export function WorldGame() {
     const earnedStars = stars(done);
     const before = progress.current;
     const wasStamped = before.stamps.includes(current.moduleId);
-    const record = { mission: current, run: done, stars: earnedStars, best: done.score > (before.best?.[current.moduleId] ?? 0) && done.score > 0, stamped: earnedStars >= 1 && !wasStamped, perfect: earnedStars === 3 && (before.stars?.[current.moduleId] ?? 0) < 3 };
+    const daily = dailyRun.current;
+    const day = todayKey();
+    const { board, rank } = recordScore(daily ? `daily:${daily}` : boardKey(current.moduleId, done.mode), { score: done.score, stars: earnedStars, day, at: Date.now() });
+    const record = { mission: current, run: done, stars: earnedStars, best: done.score > (before.best?.[current.moduleId] ?? 0) && done.score > 0, stamped: earnedStars >= 1 && !wasStamped, perfect: earnedStars === 3 && (before.stars?.[current.moduleId] ?? 0) < 3, daily, board, rank };
+    play(earnedStars ? "win" : "lose");
     dispatch({ type: "mission-finished", moduleId: current.moduleId, score: done.score, stars: earnedStars, day: todayKey() });
     setEarned((value) => value + (record.stamped ? WORLD_XP.stamp : 0) + (record.perfect ? WORLD_XP.perfect : 0));
     setResults(record);
@@ -178,9 +189,11 @@ export function WorldGame() {
     setBanner(null);
   }, []);
 
-  const start = useCallback((id: string) => {
+  const start = useCallback((id: string, daily = false) => {
     const current = missionFor(id);
-    const fresh = startRun(current, crateSpots, { seed: Date.now() % 9973, relaxed });
+    const day = todayKey();
+    dailyRun.current = daily ? day : null;
+    const fresh = startRun(current, crateSpots, { seed: daily ? daySeed(day) : Date.now() % 9973, mode: daily ? "standard" : mode });
     setBriefing(null);
     setResults(null);
     if (!drive) { setMapRun({ mission: current, run: fresh }); return; }
@@ -195,7 +208,7 @@ export function WorldGame() {
     setCountdown(3);
     setToast(null);
     window.requestAnimationFrame(() => stage.current?.focus());
-  }, [drive, relaxed]);
+  }, [drive, mode]);
 
   useEffect(() => {
     const down = (event: KeyboardEvent) => {
@@ -207,7 +220,7 @@ export function WorldGame() {
         event.preventDefault();
       } else if ((event.key === "Enter" || event.key === " " || event.code === "KeyE") && current.near && !mission.current && !interactive(event.target)) {
         event.preventDefault();
-        openBriefing(current.near);
+        openBriefing(current.near === "daily" ? current.dailyId ?? current.near : current.near, current.near === "daily");
       }
     };
     const up = (event: KeyboardEvent) => { keys.current.delete(event.code); };
@@ -304,7 +317,7 @@ export function WorldGame() {
       const keyed = inputFrom(keys.current);
       const input = locked ? { x: 0, z: 0 } : { x: keyed.x || pad.current.x, z: keyed.z || pad.current.z };
       mover.current = step(mover.current, input, dt, WORLD.radius, obstacles);
-      const station = activeMission ? null : nearest(mover.current, stations, WORLD.reach)?.moduleId ?? null;
+      const station = activeMission ? null : nearest(mover.current, stations, WORLD.reach)?.moduleId ?? (Math.hypot(mover.current.x, mover.current.z) < 270 ? "daily" : null);
       if (station !== current.near) setNear(station);
       if (!activeMission && !current.paused) {
         const token = nearest(mover.current, wordTokens.filter((item) => !got.current.has(item.term)), WORLD.pickup);
@@ -313,7 +326,7 @@ export function WorldGame() {
       if (activeMission && currentRun) {
         if (phase.current === "countdown") {
           const left = Math.max(0, Math.ceil((countdownEnd.current - now) / 1000));
-          if (left !== lastCount) { lastCount = left; setCountdown(left); }
+          if (left !== lastCount) { lastCount = left; setCountdown(left); play(left > 0 ? "tick" : "go"); }
           if (now >= countdownEnd.current) { phase.current = "playing"; window.setTimeout(() => setCountdown(null), 650); }
         } else if (phase.current === "playing") {
           currentRun = tickRun(currentRun, dt);
@@ -324,6 +337,7 @@ export function WorldGame() {
               currentRun = pickUp(currentRun, index, crateSpots);
               scene.current?.burst(crate.x, crate.z, introPalette.plum, 8);
               pop("Picked up", "info");
+              play("pickup");
             }
           } else {
             const gate = gateSpots.findIndex((spot) => distance(mover.current, spot) < GATE_REACH);
@@ -334,6 +348,7 @@ export function WorldGame() {
                 const item = activeMission.items[result.item];
                 const right = activeMission.gates.find((each) => each.id === item.gate)!;
                 scene.current?.burst(gateSpots[gate].x, gateSpots[gate].z, result.ok ? introPalette.citron : introPalette.rose, 16);
+                play(result.ok ? "good" : "bad");
                 if (result.ok) { pop(`+${result.points}${result.run.combo > 1 ? `  ×${result.run.combo}` : ""}`, "good"); say(`${right.label}. ${item.why}`, true); }
                 else { pop("Wrong gate", "bad"); say(`That one belongs in ${right.label}. ${item.why}`, false); setShake((value) => value + 1); }
               }
@@ -380,7 +395,8 @@ export function WorldGame() {
   const releasePad = () => { pad.current = { x: 0, z: 0 }; };
 
   const nearStation = near ? stations.find((station) => station.moduleId === near) : undefined;
-  const briefStation = briefing ? stations.find((station) => station.moduleId === briefing) : undefined;
+  const briefStation = briefing ? stations.find((station) => station.moduleId === briefing.id) : undefined;
+  const toggleSound = () => { const next = !sound; setSound(next); setSoundState(next); if (next) play("pickup"); };
   const carriedItem = active && runView?.carrying != null ? active.items[runView.carrying] : null;
   const reason = !sceneUrl ? "3D is switched off in this build, so the world opens as a map."
     : reduced ? "Reduced motion is on, so the world opens as a map."
@@ -424,7 +440,7 @@ export function WorldGame() {
       <div className="popups" aria-hidden="true">{popups.map((item) => <span key={item.id} data-tone={item.tone}>{item.text}</span>)}</div>
       {countdown !== null && <div className="countdown" aria-live="assertive" key={countdown}>{countdown > 0 ? countdown : "Go!"}</div>}
       {banner && <div className="countdown is-banner" aria-live="assertive">{banner}</div>}
-      <MissionHud mission={active} run={runView} onQuit={endDrive} />
+      <MissionHud mission={active} run={runView} onQuit={endDrive} sound={sound} onSound={toggleSound} />
       {toast && <p className="mission-toast" data-ok={toast.ok} role="status">{toast.text}</p>}
     </div>}
 
@@ -439,6 +455,7 @@ export function WorldGame() {
         </dl>
       </div>
       <div className="world-actions">
+        <button type="button" className="world-toggle" aria-pressed={sound} onClick={toggleSound}>{sound ? "Sound on" : "Sound off"}</button>
         {capable && sceneState !== "error" && <button type="button" className="world-toggle" aria-pressed={choice === "map"} onClick={() => setChoice((value) => value === "drive" ? "map" : "drive")}>{choice === "drive" ? "Map view" : "3D view"}</button>}
         {capable && sceneState === "error" && <button type="button" className="world-toggle" onClick={() => { setChoice("drive"); setAttempt((value) => value + 1); }}>Retry 3D</button>}
       </div>
@@ -448,6 +465,11 @@ export function WorldGame() {
     {drive && !active && <WorldMap variant="mini" collected={collected} stamped={stamped} player={hud} near={near} />}
 
     {!active && <p id="world-help" className="world-help">{drive ? <>Move with <kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> or <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>. Drive to a station and press <kbd>Enter</kbd> to start its mission. Collect words on the way.</> : <>{reason && <strong>{reason} </strong>}Choose a station to play its mission, or a word to read and collect it.</>}</p>}
+
+    {drive && near === "daily" && dailyMission && !active && !dialogOpen && <div className="world-prompt is-daily">
+      <p><span>Daily challenge · {today}</span> {dailyMission.title}</p>
+      <button type="button" className="button-primary" onClick={() => openBriefing(dailyMission.moduleId, true)}>Play the daily <kbd aria-hidden="true">Enter</kbd></button>
+    </div>}
 
     {drive && nearStation && !active && !dialogOpen && <div className="world-prompt">
       <p><span>Station {nearStation.number} · {moduleFor(nearStation.moduleId).title}</span> {missionFor(nearStation.moduleId).title}{world.stars?.[nearStation.moduleId] ? <Stars count={world.stars[nearStation.moduleId]} /> : null}</p>
@@ -472,6 +494,7 @@ export function WorldGame() {
     {!drive && <section className="world-lists" aria-label="Stations and words">
       <div>
         <h2>Missions</h2>
+        {dailyMission && <button type="button" className="world-daily" onClick={() => openBriefing(dailyMission.moduleId, true)}><span className="list-mark" aria-hidden="true">☀</span><span><strong>Daily challenge · {today}</strong> {dailyMission.title}</span><span className="list-state">Same crates for everyone today</span></button>}
         <ol className="world-station-list">{stations.map((station) => {
           const done = stamped.has(station.moduleId);
           const starsEarned = world.stars?.[station.moduleId] ?? 0;
@@ -487,8 +510,8 @@ export function WorldGame() {
       </div>
     </section>}
 
-    {briefing && briefStation && <MissionBriefing station={briefStation} module={moduleFor(briefing)} mission={missionFor(briefing)} stamped={stamped.has(briefing)} best={world.best?.[briefing]} bestStars={world.stars?.[briefing]} relaxed={relaxed} driving={drive} onRelaxed={setRelaxed} onStart={() => start(briefing)} onClose={() => { setBriefing(null); refocus(); }} />}
-    {mapRun && <MapMission mission={mapRun.mission} start={mapRun.run} onFinish={(done) => { const current = mapRun.mission; setMapRun(null); finish(current, done); }} onQuit={() => { setMapRun(null); refocus(); }} />}
-    {results && <MissionResults {...results} onAgain={() => start(results.mission.moduleId)} onClose={() => { setResults(null); refocus(); }} />}
+    {briefing && briefStation && <MissionBriefing station={briefStation} module={moduleFor(briefing.id)} mission={missionFor(briefing.id)} stamped={stamped.has(briefing.id)} bestStars={world.stars?.[briefing.id]} mode={mode} daily={briefing.daily ? today : null} board={readBoard(briefing.daily && today ? `daily:${today}` : boardKey(briefing.id, mode))} driving={drive} onMode={setMode} onStart={() => start(briefing.id, briefing.daily)} onClose={() => { setBriefing(null); refocus(); }} />}
+    {mapRun && <MapMission mission={mapRun.mission} start={mapRun.run} sound={sound} onSound={toggleSound} onFinish={(done) => { const current = mapRun.mission; setMapRun(null); finish(current, done); }} onQuit={() => { setMapRun(null); refocus(); }} />}
+    {results && <MissionResults {...results} onAgain={() => start(results.mission.moduleId, !!results.daily)} onClose={() => { setResults(null); refocus(); }} />}
   </section>;
 }

@@ -77,7 +77,7 @@ test("a mission briefing explains the rules and a perfect relaxed run stamps the
   await expect(briefing.getByRole("heading", { level: 2 })).toBeFocused();
   await expect(briefing.locator(".mission-gates")).toContainText("Spam");
   await expect(briefing.locator(".mission-gates")).toContainText("Inbox");
-  await briefing.getByRole("checkbox", { name: /Relaxed mode/ }).check();
+  await briefing.getByRole("radio", { name: /Relaxed/ }).check();
   await briefing.getByRole("button", { name: /Start mission/ }).click();
   await expect(page.locator(".mission-hud-clock")).toHaveAttribute("aria-label", "Relaxed mode, no clock");
   await playMission(page, "foundations", (gate) => gate);
@@ -105,7 +105,7 @@ test("three wrong gates end a timed run without a stamp and explain each answer"
   await expect(page.locator(".mission-hud-clock")).toHaveAttribute("aria-label", /seconds left/);
   await playMission(page, "tools", (gate, gates) => gates.find((each) => each !== gate)!);
   const results = page.getByRole("dialog", { name: "Keep practicing." });
-  await expect(results).toContainText("Three mistakes. Run over.");
+  await expect(results).toContainText("Out of lives. Run over.");
   await expect(results.locator('.results-list li[data-ok="false"]')).toHaveCount(RUN.lives);
   await expect(results).toContainText("Sort at least");
   expect((await saved(page)).world?.stamps).toEqual([]);
@@ -119,7 +119,7 @@ test("the last stamp and the last word unlock the two world badges", async ({ pa
   await expect(page.locator(".word-card h2")).toHaveText(words[0]);
   await page.locator(".word-card").getByRole("button", { name: /Collect/ }).click();
   await page.locator(".world-station-list").getByRole("button", { name: /AI Foundations/ }).click();
-  await page.getByRole("dialog").getByRole("checkbox", { name: /Relaxed mode/ }).check();
+  await page.getByRole("dialog").getByRole("radio", { name: /Relaxed/ }).check();
   await page.getByRole("dialog").getByRole("button", { name: /Start mission/ }).click();
   await playMission(page, "foundations", (gate) => gate);
   await page.getByRole("button", { name: "Back to the world" }).click();
@@ -137,4 +137,51 @@ test("the homepage teases game mode and About lists the world XP", async ({ page
   await page.goto("/about/");
   await expect(page.locator(".xp-list")).toContainText(`+${WORLD_XP.word} XP`);
   await expect(page.locator(".xp-list")).toContainText(`+${WORLD_XP.stamp} XP`);
+});
+
+test("expert mode is stricter, and every finished run lands on a local top-five board", async ({ page }) => {
+  await seed(page);
+  await page.goto("/play/");
+  await page.locator(".world-station-list").getByRole("button", { name: /AI Foundations/ }).click();
+  const briefing = page.getByRole("dialog", { name: "Train the spam filter" });
+  await expect(briefing.locator(".board-empty")).toBeVisible();
+  await briefing.getByRole("radio", { name: /Expert/ }).check();
+  await expect(briefing).toContainText("2 mistakes end the run, and so does the 50-second clock.");
+  await briefing.getByRole("button", { name: /Start mission/ }).click();
+  await expect(page.locator(".mission-hud")).toContainText("Mission · Expert");
+  await expect(page.locator(".mission-lives")).toHaveAttribute("aria-label", "2 of 2 lives left");
+  await playMission(page, "foundations", (gate, gates) => gates.find((each) => each !== gate)!);
+  const results = page.getByRole("dialog", { name: "Keep practicing." });
+  await expect(results.locator(".results-list li")).toHaveCount(2);
+  await expect(results.locator(".results-rank")).toHaveText("New #1 on your board!");
+  await expect(results.locator(".board li")).toHaveCount(1);
+  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("wordplay:scores:v1") ?? "{}"));
+  expect(Object.keys(saved)).toEqual(["foundations:expert"]);
+});
+
+test("the daily challenge uses the same mission all day and has its own board", async ({ page }) => {
+  await seed(page);
+  await page.goto("/play/");
+  const daily = page.getByRole("button", { name: /Daily challenge/ });
+  await expect(daily).toBeVisible();
+  const title = (await daily.innerText()).split("\n")[1] ?? "";
+  await daily.click();
+  const briefing = page.getByRole("dialog");
+  await expect(briefing).toContainText("Daily challenge ·");
+  await expect(briefing.getByRole("radio")).toHaveCount(0);
+  await expect(briefing.getByRole("heading", { level: 3 })).toHaveText("Your top runs today");
+  await briefing.getByRole("button", { name: /Start the daily/ }).click();
+  await expect(page.locator(".mission-hud-clock")).toHaveAttribute("aria-label", /seconds left/);
+  expect(title.length).toBeGreaterThan(0);
+});
+
+test("the sound setting is remembered on this device", async ({ page }) => {
+  await seed(page);
+  await page.goto("/play/");
+  await page.locator(".world-station-list").getByRole("button", { name: /AI Tools/ }).click();
+  await page.getByRole("dialog").getByRole("button", { name: /Start mission/ }).click();
+  const dialog = page.getByRole("dialog");
+  await dialog.getByRole("button", { name: "Sound on" }).click();
+  await expect(dialog.getByRole("button", { name: "Sound off" })).toHaveAttribute("aria-pressed", "false");
+  expect(await page.evaluate(() => localStorage.getItem("wordplay:sound:v1"))).toBe("off");
 });

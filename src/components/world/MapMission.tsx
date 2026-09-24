@@ -6,11 +6,12 @@ import { crateSpots } from "@/content/world";
 import { deliver, pickUp, tick, type Run } from "@/engine/mission";
 import { MissionHud } from "./MissionHud";
 import { WorldDialog } from "./WorldDialog";
+import { play } from "./sound";
 
-type Props = { mission: Mission; start: Run; onFinish: (run: Run) => void; onQuit: () => void };
+type Props = { mission: Mission; start: Run; onFinish: (run: Run) => void; onQuit: () => void; sound: boolean; onSound: () => void };
 type Feedback = { ok: boolean; text: string; key: number };
 
-export function MapMission({ mission, start, onFinish, onQuit }: Props) {
+export function MapMission({ mission, start, onFinish, onQuit, sound, onSound }: Props) {
   const [run, setRun] = useState(() => pickUp(start, 0, crateSpots));
   const [feedback, setFeedback] = useState<Feedback | null>(null);
   const finished = useRef(false);
@@ -33,6 +34,7 @@ export function MapMission({ mission, start, onFinish, onQuit }: Props) {
     const result = deliver(run, gate, mission);
     if (!result) return;
     const right = mission.gates.find((each) => each.id === mission.items[result.item].gate)!;
+    play(result.ok ? "good" : "bad");
     const previous = mission.items[result.item];
     setFeedback({ ok: result.ok, text: `${result.ok ? `Right, +${result.points}` : "Not quite"}: “${previous.text}” belongs in ${right.label}. ${previous.why}`, key: Date.now() });
     setRun(result.run.over ? result.run : pickUp(result.run, 0, crateSpots));
@@ -40,7 +42,7 @@ export function MapMission({ mission, start, onFinish, onQuit }: Props) {
 
   return <WorldDialog labelledBy="map-mission-title" module={mission.moduleId} onClose={onQuit} wide>
     <h2 id="map-mission-title" className="sr-only">{mission.title}</h2>
-    <MissionHud mission={mission} run={run} onQuit={onQuit} inline />
+    <MissionHud mission={mission} run={run} onQuit={onQuit} inline sound={sound} onSound={onSound} />
     <div className="map-mission-card" data-autofocus tabIndex={-1} aria-live="polite">
       {item ? <>{item.context && <p className="carry-context">{item.context}</p>}<p className="carry-text">{item.text}</p></> : <p className="carry-text">{run.over === "cleared" ? "All sorted." : run.over === "time" ? "Time’s up." : "Run over."}</p>}
     </div>

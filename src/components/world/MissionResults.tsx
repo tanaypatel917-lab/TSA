@@ -1,22 +1,23 @@
 "use client";
 
 import type { Mission } from "@/content/missions";
-import type { Run } from "@/engine/mission";
+import { MODES, type Run } from "@/engine/mission";
+import type { ScoreEntry } from "@/engine/scores";
 import { WORLD_XP } from "@/engine/progress";
-import { Stars } from "./MissionBriefing";
+import { Board, Stars } from "./MissionBriefing";
 import { WorldDialog } from "./WorldDialog";
 
-type Props = { mission: Mission; run: Run; stars: number; best: boolean; stamped: boolean; perfect: boolean; onAgain: () => void; onClose: () => void };
+type Props = { mission: Mission; run: Run; stars: number; best: boolean; stamped: boolean; perfect: boolean; daily: string | null; board: ScoreEntry[]; rank: number | null; onAgain: () => void; onClose: () => void };
 
-const endings = { cleared: "Every crate delivered.", time: "Time’s up.", mistakes: "Three mistakes. Run over." };
+const endings = { cleared: "Every crate delivered.", time: "Time’s up.", mistakes: "Out of lives. Run over." };
 const verdicts = ["Keep practicing.", "Station stamped.", "Sharp sorting.", "Perfect run."];
 
-export function MissionResults({ mission, run, stars, best, stamped, perfect, onAgain, onClose }: Props) {
+export function MissionResults({ mission, run, stars, best, stamped, perfect, daily, board, rank, onAgain, onClose }: Props) {
   const correct = run.results.filter((result) => result.ok).length;
   const gate = (id: string) => mission.gates.find((item) => item.id === id)!;
   return <WorldDialog labelledBy="results-title" module={mission.moduleId} onClose={onClose} wide>
     <header className="results-head">
-      <p className="results-kicker">{run.over ? endings[run.over] : ""}</p>
+      <p className="results-kicker">{daily ? `Daily challenge · ${daily} · ` : `${MODES[run.mode].label} · `}{run.over ? endings[run.over] : ""}</p>
       <Stars count={stars} />
       <h2 id="results-title" tabIndex={-1} data-autofocus>{stars ? verdicts[stars] : verdicts[0]}</h2>
       <dl className="results-figures">
@@ -25,8 +26,10 @@ export function MissionResults({ mission, run, stars, best, stamped, perfect, on
         <div><dt>Mistakes</dt><dd>{run.mistakes}</dd></div>
       </dl>
       {(stamped || perfect) && <p className="station-earned">{[stamped && `Station stamped · +${WORLD_XP.stamp} XP`, perfect && `First perfect run · +${WORLD_XP.perfect} XP`].filter(Boolean).join("  ·  ")}</p>}
+      {rank && <p className="results-rank">{rank === 1 ? "New #1 on your board!" : `#${rank} on your board`}</p>}
       {!stars && <p className="results-hint">Sort at least {Math.ceil(run.order.length * 0.6)} crates right to earn a star and stamp this station.</p>}
     </header>
+    <section className="mission-board" aria-label="Your top runs"><h3>{daily ? "Your top runs today" : `Your top ${MODES[run.mode].label.toLowerCase()} runs`}</h3><Board entries={board} highlight={rank} /></section>
     <ol className="results-list" aria-label="What you sorted">
       {run.results.map((result, index) => {
         const item = mission.items[result.item];

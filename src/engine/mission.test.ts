@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { missions } from "@/content/missions";
-import { RUN, deliver, pickUp, startRun, stars, tick, type Run } from "./mission";
+import { RUN, dailyPick, daySeed, deliver, pickUp, startRun, stars, tick, type Run } from "./mission";
 
 const mission = missions[0];
 const spots = Array.from({ length: 12 }, (_, index) => ({ x: index * 100, z: index * -50 }));
@@ -64,5 +64,26 @@ describe("mission runs", () => {
     expect([timed.over, timed.timeLeft]).toEqual(["time", 0]);
     const relaxed = tick(startRun(mission, spots, { seed: 5, relaxed: true }), RUN.seconds + 1);
     expect(relaxed.over).toBeNull();
+  });
+});
+
+describe("difficulty and daily runs", () => {
+  it("expert runs are shorter, stricter, busier and worth more", () => {
+    const expert = startRun(mission, spots, { seed: 2, mode: "expert" });
+    expect([expert.seconds, expert.lives, expert.field.length, expert.order.length, expert.relaxed]).toEqual([50, 2, 4, Math.min(10, mission.items.length), false]);
+    const picked = pickUp(expert, 0, spots);
+    const scored = deliver(picked, mission.items[picked.carrying!].gate, mission)!;
+    expect(scored.points).toBe(150);
+    let failing = expert;
+    for (let turn = 0; turn < 2; turn += 1) { const held = pickUp(failing, 0, spots); failing = deliver(held, mission.gates.find((gate) => gate.id !== mission.items[held.carrying!].gate)!.id, mission)!.run; }
+    expect(failing.over).toBe("mistakes");
+  });
+
+  it("the daily pick and crate order are the same all day and change between days", () => {
+    expect(dailyPick("2027-01-05", 5)).toBe(dailyPick("2027-01-05", 5));
+    expect(daySeed("2027-01-05")).not.toBe(daySeed("2027-01-06"));
+    const a = startRun(mission, spots, { seed: daySeed("2027-01-05"), mode: "standard" });
+    const b = startRun(mission, spots, { seed: daySeed("2027-01-05"), mode: "standard" });
+    expect(a.order).toEqual(b.order);
   });
 });
