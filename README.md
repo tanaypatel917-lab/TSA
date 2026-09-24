@@ -51,6 +51,13 @@ cloned in place of the built-in shapes. Reduced motion, narrow screens, no WebGL
 or a failed load open the same game as an interactive map, where missions become a
 quick sort with the same scoring, so every learning action works without 3D.
 
+## Homepage demo
+
+The hero runs a live next-word predictor (`src/engine/predictor.ts`): a trigram
+model with bigram and unigram backoff, trained in the browser on the sentences in
+`src/content/predictor.ts`. Learners pick a starter, add likely words, or let it
+write with a creativity (temperature) slider.
+
 ## Judges' tour and documentation
 
 The homepage and About page start an eight-stop site tour (`src/content/tour.ts`,

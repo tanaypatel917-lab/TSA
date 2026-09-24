@@ -3,7 +3,7 @@ import { BADGES } from "@/engine/badges";
 export type TourStop = { path: string; target: string; title: string; text: string };
 
 export const tourStops: TourStop[] = [
-  { path: "/", target: ".home-hero h1", title: "Welcome to Wordplay", text: "A hands-on AI literacy course for grades 9–12. Every chapter starts with a question, and the question mark is your guide." },
+  { path: "/", target: ".demo", title: "Welcome to Wordplay", text: "A hands-on AI literacy course for grades 9–12. Start with the live demo: a tiny language model guesses the next word, and you can watch its probabilities change." },
   { path: "/modules/", target: ".spine", title: "Five chapters, one course", text: "Foundations, Tools and Ethics cover the brief’s three required sections, Real world shows where AI matters, and the Capstone ties them together. Each block is a lesson, sized by reading time." },
   { path: "/modules/ai-foundations/lessons/what-is-ai/", target: ".lesson-reading", title: "Lessons that explain themselves", text: "Hover or tap an underlined term for its definition. Every lesson ends with key takeaways and the sources behind it." },
   { path: "/modules/ai-tools/activity/", target: ".prompt-lab", title: "Practice, not just reading", text: "Rewrite a weak prompt and a rubric checks it instantly, on your device. Every chapter has an activity and a five-question quiz." },

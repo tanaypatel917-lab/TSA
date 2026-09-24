@@ -11,7 +11,7 @@ test("the site tour walks judges through the best features and survives a reload
   const first = page.getByRole("complementary", { name: tourStops[0].title });
   await expect(first).toContainText(`Stop 1 of ${tourStops.length}`);
   await expect(first.getByRole("heading", { level: 2 })).toBeFocused();
-  await expect(page.locator(".home-hero h1")).toHaveAttribute("data-tour", "on");
+  await expect(page.locator(".demo")).toHaveAttribute("data-tour", "on");
   await first.getByRole("button", { name: /Next stop/ }).click();
   await expect(page).toHaveURL(/\/modules\/$/);
   const second = page.getByRole("complementary", { name: tourStops[1].title });
