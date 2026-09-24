@@ -52,7 +52,7 @@ type Item = {
 type Particle = { x: number; y: number; z: number; vx: number; vy: number; vz: number; rx: number; ry: number; rz: number; wx: number; wy: number; wz: number; age: number };
 type Frame = { x: number; y: number; k: number };
 
-const { ink, rose, paper, citron, plum, berry } = introPalette;
+const { ink, clay, paper, sky, slate, rust } = introPalette;
 const STAGE_POSITION: Vector = [0, 118, 36];
 const STAGE_ROTATION: Vector = [-0.2286, -0.4092, -0.0923];
 const ZOOM = 0.64;
@@ -63,13 +63,13 @@ const TOKENS = 24;
 const SHARDS = 8;
 const ANCHORS: [number, number, number, number][] = [[0.7, 0.5, 0.5, 0.3], [0.27, 0.5, 0.5, 0.3], [0.7, 0.5, 0.5, 0.28], [0.28, 0.52, 0.5, 0.3], [0.7, 0.48, 0.5, 0.3], [0.27, 0.52, 0.5, 0.3], [0.5, 0.275, 0.5, 0.24]];
 const LOOKS = [
-  { body: rose, dot: citron, light: rose, rings: [paper, rose, citron], tokens: [rose, citron, paper, plum] },
-  { body: rose, dot: citron, light: rose, rings: [paper, rose, citron], tokens: [rose, citron, paper, plum] },
-  { body: ink, dot: citron, light: paper, rings: [paper, ink, citron], tokens: [ink, paper, citron, plum] },
-  { body: ink, dot: rose, light: paper, rings: [ink, rose, paper], tokens: [ink, paper, rose, plum] },
-  { body: ink, dot: rose, light: rose, rings: [ink, rose, citron], tokens: [rose, berry, rose, plum] },
-  { body: rose, dot: citron, light: citron, rings: [paper, rose, citron], tokens: [rose, citron, paper, plum] },
-  { body: ink, dot: citron, light: paper, rings: [paper, ink, citron], tokens: [ink, paper, ink, paper] }
+  { body: clay, dot: sky, light: clay, rings: [paper, clay, sky], tokens: [clay, sky, paper, slate] },
+  { body: clay, dot: sky, light: clay, rings: [paper, clay, sky], tokens: [clay, sky, paper, slate] },
+  { body: ink, dot: sky, light: paper, rings: [paper, ink, sky], tokens: [ink, paper, sky, slate] },
+  { body: ink, dot: clay, light: paper, rings: [ink, clay, paper], tokens: [ink, paper, clay, slate] },
+  { body: ink, dot: clay, light: clay, rings: [ink, clay, sky], tokens: [clay, rust, clay, slate] },
+  { body: clay, dot: sky, light: sky, rings: [paper, clay, sky], tokens: [clay, sky, paper, slate] },
+  { body: ink, dot: sky, light: paper, rings: [paper, ink, sky], tokens: [ink, paper, ink, paper] }
 ];
 const TOKEN_PART = introPromptParts.flatMap((part, index) => Array.from({ length: part.tokens }, () => index));
 const RING_TILTS: Vector[] = [[1.2, 0.2, 0.9], [1.55, -0.45, 1.06], [1.85, 0.7, 1.22]];
@@ -115,7 +115,7 @@ function blend(out: Pose, from: Pose, to: Pose, amount: number) {
 }
 
 function emptyPose(): Pose {
-  return { x: 0, y: 0, z: 0, rx: 0, ry: 0, rz: 0, s: HIDDEN, color: rose };
+  return { x: 0, y: 0, z: 0, rx: 0, ry: 0, rz: 0, s: HIDDEN, color: clay };
 }
 
 function makeItem(object: SPEObject, kind: Kind, index: number): Item {
@@ -137,9 +137,9 @@ export class IntroScene {
   private spin = 0;
   private started = false;
   private zoom = NaN;
-  private readonly body = { rgb: [...rgb(rose)], hex: "" };
-  private readonly dot = { rgb: [...rgb(citron)], hex: "" };
-  private readonly glow = { rgb: [...rgb(rose)], hex: "", x: NaN, y: NaN };
+  private readonly body = { rgb: [...rgb(clay)], hex: "" };
+  private readonly dot = { rgb: [...rgb(sky)], hex: "" };
+  private readonly glow = { rgb: [...rgb(clay)], hex: "", x: NaN, y: NaN };
   private readonly tilted = { x: NaN, y: NaN };
 
   constructor(private readonly app: Application, private readonly stage: SPEObject, private readonly items: Item[], private readonly bodies: SPEObject[], private readonly dots: SPEObject[], private readonly light?: SPEObject) {}
@@ -272,18 +272,18 @@ export class IntroScene {
     const { x, y, k } = this.frames[act];
     const { time, pointer: p } = input;
     switch (act) {
-      case 0: return set(out, x, y, 0, 0.06 + p.y * 0.14, -0.38 + Math.sin(time * 0.55) * 0.1 + p.x * 0.35, Math.sin(time * 0.4) * 0.04, 1.02 * k, rose);
-      case 1: return set(out, x, y, 0, 0.08 + p.y * 0.1, 0.5 + local * 1.2 + p.x * 0.3, -0.06, 0.92 * k, rose);
-      case 2: return set(out, x - 175 * k, y - 40 * k, 150, 0.05 + p.y * 0.08, 0.35 + p.x * 0.25, 0, 0.72 * k, rose);
-      case 3: return set(out, x - 130 * k, y + 10 * k, 0, 0.05 + p.y * 0.08, 0.42 + p.x * 0.25, 0, 0.8 * k, rose);
+      case 0: return set(out, x, y, 0, 0.06 + p.y * 0.14, -0.38 + Math.sin(time * 0.55) * 0.1 + p.x * 0.35, Math.sin(time * 0.4) * 0.04, 1.02 * k, clay);
+      case 1: return set(out, x, y, 0, 0.08 + p.y * 0.1, 0.5 + local * 1.2 + p.x * 0.3, -0.06, 0.92 * k, clay);
+      case 2: return set(out, x - 175 * k, y - 40 * k, 150, 0.05 + p.y * 0.08, 0.35 + p.x * 0.25, 0, 0.72 * k, clay);
+      case 3: return set(out, x - 130 * k, y + 10 * k, 0, 0.05 + p.y * 0.08, 0.42 + p.x * 0.25, 0, 0.8 * k, clay);
       case 4: return input.claimChecked
-        ? set(out, x + 190 * k, y + 10 * k, -40, 0.04, Math.sin(time * 0.5) * 0.15, 0, 1.02 * k, rose)
-        : set(out, x + 190 * k, y + 10 * k, -40, 0.04 + p.y * 0.08, -0.55 + p.x * 0.2, 0, 0.8 * k, rose);
+        ? set(out, x + 190 * k, y + 10 * k, -40, 0.04, Math.sin(time * 0.5) * 0.15, 0, 1.02 * k, clay)
+        : set(out, x + 190 * k, y + 10 * k, -40, 0.04 + p.y * 0.08, -0.55 + p.x * 0.2, 0, 0.8 * k, clay);
       case 5: {
         const ex = this.explode(local, input);
-        return set(out, x, y, 0, ex * 0.5 * Math.sin(time * 2.2) + p.y * 0.08, 0.3 + p.x * 0.3 + ex * 1.4, ex * 0.35, 0.9 * k, rose);
+        return set(out, x, y, 0, ex * 0.5 * Math.sin(time * 2.2) + p.y * 0.08, 0.3 + p.x * 0.3 + ex * 1.4, ex * 0.35, 0.9 * k, clay);
       }
-      default: return set(out, x, y, 0, 0.04 + p.y * 0.06, p.x * 0.2, 0, 0.44 * k, rose);
+      default: return set(out, x, y, 0, 0.04 + p.y * 0.06, p.x * 0.2, 0, 0.44 * k, clay);
     }
   }
 
@@ -377,19 +377,19 @@ export class IntroScene {
     const { time } = input;
     const barX = x - 60 * k;
     const barY = y + 40 * k;
-    if (act !== 4) return set(out, barX, barY - 320 * k, 0, 0, 0, 0, HIDDEN, rose);
-    if (input.claimChecked) return set(out, barX, barY, 0, 0, 0, 0, HIDDEN, rose);
-    return set(out, barX, barY, 0, 0.04, -0.2 + Math.sin(time * 0.7) * 0.28, Math.sin(time * 1.2) * 0.04, 1.06 * k * (1 + Math.sin(time * 3) * 0.012), rose);
+    if (act !== 4) return set(out, barX, barY - 320 * k, 0, 0, 0, 0, HIDDEN, clay);
+    if (input.claimChecked) return set(out, barX, barY, 0, 0, 0, 0, HIDDEN, clay);
+    return set(out, barX, barY, 0, 0.04, -0.2 + Math.sin(time * 0.7) * 0.28, Math.sin(time * 1.2) * 0.04, 1.06 * k * (1 + Math.sin(time * 3) * 0.012), clay);
   }
 
   private dotPose(out: Pose, act: number, input: IntroSceneInput) {
     const { x, y, k } = this.frames[4];
     const dotX = x - 60 * k;
     const dotY = y - 125 * k;
-    if (act !== 4) return set(out, dotX, dotY - 320 * k, 0, 0, 0, 0, HIDDEN, rose);
+    if (act !== 4) return set(out, dotX, dotY - 320 * k, 0, 0, 0, 0, HIDDEN, clay);
     const particle = input.claimChecked ? this.particles[SHARDS] : undefined;
-    if (particle) return set(out, particle.x, particle.y, particle.z, particle.rx, particle.ry, particle.rz, 1.06 * k, rose);
-    return set(out, dotX, dotY + Math.sin(input.time * 0.7 + 1) * 3, 0, 0, 0, 0, 1.06 * k, rose);
+    if (particle) return set(out, particle.x, particle.y, particle.z, particle.rx, particle.ry, particle.rz, 1.06 * k, clay);
+    return set(out, dotX, dotY + Math.sin(input.time * 0.7 + 1) * 3, 0, 0, 0, 0, 1.06 * k, clay);
   }
 
   private starPose(out: Pose, act: number, local: number, input: IntroSceneInput) {
@@ -397,10 +397,10 @@ export class IntroScene {
     const { time } = input;
     const baseX = x + 210 * k;
     const baseY = y + 150 * k;
-    if (act !== 5) return set(out, baseX, baseY, -60, 0.3, 0.2, 0, HIDDEN, citron);
+    if (act !== 5) return set(out, baseX, baseY, -60, 0.3, 0.2, 0, HIDDEN, sky);
     const ex = this.explode(local, input);
     const push = 320 * k * ex;
-    return set(out, baseX + STAR_DIRECTION[0] * push, baseY + STAR_DIRECTION[1] * push, -60 + STAR_DIRECTION[2] * push, 0.3 + ex, 0.2 + Math.sin(time * 0.5) * 0.4, Math.sin(time * 0.6) * 0.5 + ex * 3, 0.85 * k, citron);
+    return set(out, baseX + STAR_DIRECTION[0] * push, baseY + STAR_DIRECTION[1] * push, -60 + STAR_DIRECTION[2] * push, 0.3 + ex, 0.2 + Math.sin(time * 0.5) * 0.4, Math.sin(time * 0.6) * 0.5 + ex * 3, 0.85 * k, sky);
   }
 
   private finish(item: Item, input: IntroSceneInput, act: number) {
@@ -547,11 +547,11 @@ export async function createIntroScene(app: Application, subject: string) {
   const create = (type: string, name: string, options: Record<string, unknown>) => app.createObject(type, { name, parent: stage, visible: false, scale: HIDDEN, castShadow: false, receiveShadow: false, ...options });
   const items = [makeItem(question, "question", 0)];
   for (let index = 0; index < 3; index += 1) items.push(makeItem(await create("Torus", `Wordplay.Intro.Ring.${index + 1}`, { width: 540, height: 540, depth: 13, material: { color: paper, roughness: 0.45 } }), "ring", index));
-  for (let index = 0; index < TOKENS; index += 1) items.push(makeItem(await create("Cube", `Wordplay.Intro.Token.${index + 1}`, { width: 44, height: 44, depth: 44, cornerRadius: 10, material: { color: rose, roughness: 0.6 } }), "token", index));
+  for (let index = 0; index < TOKENS; index += 1) items.push(makeItem(await create("Cube", `Wordplay.Intro.Token.${index + 1}`, { width: 44, height: 44, depth: 44, cornerRadius: 10, material: { color: clay, roughness: 0.6 } }), "token", index));
   for (const [index, part] of introPromptParts.entries()) items.push(makeItem(await create("Cube", `Wordplay.Intro.Part.${part.label}`, { width: 176, height: 36, depth: 100, cornerRadius: 12, material: { color: part.color, roughness: 0.5 } }), "slab", index));
-  items.push(makeItem(await create("Cylinder", "Wordplay.Intro.Claim.Bar", { width: 68, height: 230, depth: 68, radiusTop: 34, radiusBottom: 15, cornerRadius: 12, material: { color: rose, roughness: 0.25, metalness: 0.15 } }), "bar", 0));
-  items.push(makeItem(await create("Sphere", "Wordplay.Intro.Claim.Dot", { width: 62, height: 62, depth: 62, material: { color: rose, roughness: 0.25 } }), "dot", 0));
-  items.push(makeItem(await create("Star", "Wordplay.Intro.Star", { width: 170, height: 170, depth: 46, spikes: 6, innerRadiusPercent: 46, cornerRadius: 14, material: { color: citron, roughness: 0.55 } }), "star", 0));
-  const light = await app.createObject("PointLight", { name: "Wordplay.Intro.Rim", parent: stage, position: [300, 260, -380], color: rose, intensity: 1.2, distance: 1800 });
+  items.push(makeItem(await create("Cylinder", "Wordplay.Intro.Claim.Bar", { width: 68, height: 230, depth: 68, radiusTop: 34, radiusBottom: 15, cornerRadius: 12, material: { color: clay, roughness: 0.25, metalness: 0.15 } }), "bar", 0));
+  items.push(makeItem(await create("Sphere", "Wordplay.Intro.Claim.Dot", { width: 62, height: 62, depth: 62, material: { color: clay, roughness: 0.25 } }), "dot", 0));
+  items.push(makeItem(await create("Star", "Wordplay.Intro.Star", { width: 170, height: 170, depth: 46, spikes: 6, innerRadiusPercent: 46, cornerRadius: 14, material: { color: sky, roughness: 0.55 } }), "star", 0));
+  const light = await app.createObject("PointLight", { name: "Wordplay.Intro.Rim", parent: stage, position: [300, 260, -380], color: clay, intensity: 1.2, distance: 1800 });
   return new IntroScene(app, stage, items, bodies, dots, light);
 }

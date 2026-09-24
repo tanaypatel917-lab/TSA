@@ -6,13 +6,13 @@
 .flashcard-inner { position: relative; display: grid; min-height: 360px; transform-style: preserve-3d; transition: transform 620ms cubic-bezier(.77, 0, .175, 1); }
 .flashcard[data-revealed="true"] .flashcard-inner { transform: rotateY(180deg); }
 .flashcard-face { grid-area: 1 / 1; display: flex; flex-direction: column; justify-content: space-between; padding: 30px 34px; border: 1.5px solid var(--ink); border-radius: 4px; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-.flashcard-front { background: var(--rose); box-shadow: 8px 8px 0 var(--ink); }
-.flashcard-back { background: var(--ink); color: var(--paper); box-shadow: 8px 8px 0 var(--rose); transform: rotateY(180deg); }
+.flashcard-front { background: var(--clay); box-shadow: 8px 8px 0 var(--ink); }
+.flashcard-back { background: var(--ink); color: var(--paper); box-shadow: 8px 8px 0 var(--clay); transform: rotateY(180deg); }
 .flashcard-face > span { font-size: 14px; font-weight: 700; }
 .flashcard-front p { font-family: var(--font-display), sans-serif; font-size: clamp(48px, 6vw, 84px); font-weight: 650; line-height: 1; letter-spacing: -.04em; }
 .flashcard-back p { max-width: 30ch; font-family: var(--font-display), sans-serif; font-size: clamp(24px, 2.6vw, 34px); font-weight: 600; line-height: 1.25; }
 .study-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 28px; }
-.study-summary { max-width: 760px; padding: 34px 36px; border: 1px solid var(--ink); box-shadow: 8px 8px 0 var(--citron); }
+.study-summary { max-width: 760px; padding: 34px 36px; border: 1px solid var(--ink); box-shadow: 8px 8px 0 var(--sky); }
 .study-summary h2 { font-size: clamp(38px, 4.4vw, 60px); line-height: 1.04; }
 .study-summary h2:focus { outline: none; }
 .study-summary > p { margin-top: 14px; font-size: 18px; line-height: 1.6; }
@@ -21,7 +21,7 @@
   .flashcard-inner { min-height: 280px; }
   .flashcard-face { padding: 22px; }
   .flashcard-front { box-shadow: 5px 5px 0 var(--ink); }
-  .flashcard-back { box-shadow: 5px 5px 0 var(--rose); }
+  .flashcard-back { box-shadow: 5px 5px 0 var(--clay); }
   .study-actions > button { flex: 1 1 100%; }
-  .study-summary { padding: 24px; box-shadow: 5px 5px 0 var(--citron); }
+  .study-summary { padding: 24px; box-shadow: 5px 5px 0 var(--sky); }
 }

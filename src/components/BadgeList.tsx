@@ -3,7 +3,7 @@ import { modules } from "@/content";
 import { badgeProgress, type BADGES } from "@/engine/badges";
 import { useProgress } from "@/state/ProgressProvider";
 
-const tones = ["rose", "citron", "ink"] as const;
+const tones = ["clay", "sky", "ink"] as const;
 
 export function BadgeList({ badges }: { badges: typeof BADGES }) {
   const { state, hydrated } = useProgress();

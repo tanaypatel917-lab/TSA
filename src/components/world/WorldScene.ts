@@ -8,7 +8,7 @@ type Vector = [number, number, number];
 export type SceneMission = { colors: [string, string]; carrying: boolean } | null;
 export type WorldFrame = { mover: Mover; time: number; collected: ReadonlySet<string>; stamped: ReadonlySet<string>; near: string | null; mission: SceneMission; crates: readonly Point[] };
 
-const { ink, rose, paper, citron, plum, berry } = introPalette;
+const { ink, clay, paper, sky, slate, rust } = introPalette;
 const STAGE_POSITION: Vector = [0, 118, 36];
 const STAGE_ROTATION: Vector = [-0.2286, -0.4092, -0.0923];
 const TILT = 0.95;
@@ -187,7 +187,7 @@ async function buildCrate(app: Application, name: string, parent: SPEObject, pos
   const part = (type: string, suffix: string, options: Record<string, unknown>) => app.createObject(type, { name: `${name}.${suffix}`, parent: group, castShadow: false, receiveShadow: false, ...options });
   await part("Cube", "Box", { width: 170, height: 170, depth: 170, cornerRadius: 36, material: { color: paper, roughness: 0.45 } });
   await part("Cube", "Band", { width: 180, height: 38, depth: 180, cornerRadius: 14, material: { color: ink, roughness: 0.5 } });
-  await part("Sphere", "Seal", { width: 60, height: 60, depth: 60, position: [0, 116, 0], material: { color: rose, roughness: 0.35 } });
+  await part("Sphere", "Seal", { width: 60, height: 60, depth: 60, position: [0, 116, 0], material: { color: clay, roughness: 0.35 } });
   return group;
 }
 
@@ -195,10 +195,10 @@ async function buildMissionParts(app: Application, map: SPEObject, tilt: SPEObje
   const gates = await Promise.all(gateSpots.map(async (spot, index) => {
     const group = await app.createObject("Group", { name: `Wordplay.World.Gate.${index}`, parent: map, position: [spot.x, 0, spot.z], visible: false });
     const part = (type: string, suffix: string, options: Record<string, unknown>) => app.createObject(type, { name: `Wordplay.World.Gate.${index}.${suffix}`, parent: group, castShadow: false, receiveShadow: false, ...options });
-    const pad = await part("Cylinder", "Pad", { width: 520, depth: 520, height: 12, radiusTop: 260, radiusBottom: 260, position: [0, 6, 0], material: { color: citron, roughness: 0.6 } });
+    const pad = await part("Cylinder", "Pad", { width: 520, depth: 520, height: 12, radiusTop: 260, radiusBottom: 260, position: [0, 6, 0], material: { color: sky, roughness: 0.6 } });
     for (const side of [-1, 1]) await part("Cylinder", `Pillar.${side}`, { width: 66, depth: 66, height: 360, radiusTop: 30, radiusBottom: 36, position: [side * 205, 180, 0], material: { color: ink, roughness: 0.5 } });
-    const beam = await part("Cube", "Beam", { width: 500, height: 72, depth: 72, cornerRadius: 22, position: [0, 390, 0], material: { color: citron, roughness: 0.45 } });
-    const cap = await part("Sphere", "Cap", { width: 120, height: 120, depth: 120, position: [0, 490, 0], material: { color: citron, roughness: 0.35 } });
+    const beam = await part("Cube", "Beam", { width: 500, height: 72, depth: 72, cornerRadius: 22, position: [0, 390, 0], material: { color: sky, roughness: 0.45 } });
+    const cap = await part("Sphere", "Cap", { width: 120, height: 120, depth: 120, position: [0, 490, 0], material: { color: sky, roughness: 0.35 } });
     return { group, pad, tinted: [pad, beam, cap] };
   }));
   const crates = await Promise.all([0, 1, 2].map((index) => buildCrate(app, `Wordplay.World.Crate.${index}`, map, [0, 110, 0])));
@@ -207,7 +207,7 @@ async function buildMissionParts(app: Application, map: SPEObject, tilt: SPEObje
     object: await app.createObject(type, { name, parent: map, visible: false, castShadow: false, receiveShadow: false, ...options }),
     x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, born: 0, life: 1, size: 1, active: false
   });
-  const sparks = await Promise.all(Array.from({ length: 18 }, (_, index) => particle("Cube", `Wordplay.World.Spark.${index}`, { width: 48, height: 48, depth: 48, cornerRadius: 10, material: { color: citron, roughness: 0.4 } })));
+  const sparks = await Promise.all(Array.from({ length: 18 }, (_, index) => particle("Cube", `Wordplay.World.Spark.${index}`, { width: 48, height: 48, depth: 48, cornerRadius: 10, material: { color: sky, roughness: 0.4 } })));
   const puffs = await Promise.all(Array.from({ length: 12 }, (_, index) => particle("Sphere", `Wordplay.World.Puff.${index}`, { width: 70, height: 70, depth: 70, material: { color: PUFF, roughness: 0.9 } })));
   return { gates, crates, carried, sparks, puffs };
 }
@@ -228,8 +228,8 @@ async function buildStation(app: Application, parent: SPEObject, station: Statio
   const make: Make = (type, name, options) => app.createObject(type, { name: `Wordplay.World.${station.moduleId}.${name}`, parent: group, castShadow: false, receiveShadow: false, ...options });
   const crafted = await fromKit(app, `Landmark.${station.landmark}`, `Wordplay.World.${station.moduleId}.Landmark`, group, [0, 0, 0]);
   if (!crafted) await buildLandmark(make, station);
-  const halo = await make("Torus", "Halo", { width: 240, height: 240, depth: 24, position: [0, 470, 0], rotation: [90, 0, 0], visible: false, material: { color: station.pedestal === citron ? rose : citron, roughness: 0.35 } });
-  const ring = await make("Torus", "Reach", { width: WORLD.reach * 2, height: WORLD.reach * 2, depth: 16, position: [0, 6, 0], rotation: [90, 0, 0], visible: false, material: { color: station.pedestal === citron ? rose : citron, roughness: 0.6 } });
+  const halo = await make("Torus", "Halo", { width: 240, height: 240, depth: 24, position: [0, 470, 0], rotation: [90, 0, 0], visible: false, material: { color: station.pedestal === sky ? clay : sky, roughness: 0.35 } });
+  const ring = await make("Torus", "Reach", { width: WORLD.reach * 2, height: WORLD.reach * 2, depth: 16, position: [0, 6, 0], rotation: [90, 0, 0], visible: false, material: { color: station.pedestal === sky ? clay : sky, roughness: 0.6 } });
   return { halo, ring };
 }
 
@@ -239,7 +239,7 @@ async function buildLandmark(make: Make, station: Station) {
   await make("Cylinder", "Pedestal", { width: r * 2, depth: r * 2, height: top, radiusTop: r, radiusBottom: r, position: [0, top / 2, 0], material: { color: station.pedestal, roughness: 0.7 } });
   const color = { color: station.accent, roughness: 0.45 };
   if (station.landmark === "stack") {
-    const slabs: [number, number, string][] = [[300, 0, paper], [270, 12, station.accent], [240, -9, citron]];
+    const slabs: [number, number, string][] = [[300, 0, paper], [270, 12, station.accent], [240, -9, sky]];
     for (const [index, [width, turn, tone]] of slabs.entries()) await make("Cube", `Slab.${index}`, { width, height: 56, depth: width * 0.66, cornerRadius: 12, position: [0, top + 30 + index * 62, 0], rotation: [0, turn, 0], material: { color: tone, roughness: 0.55 } });
   } else if (station.landmark === "brackets") {
     for (const side of [-1, 1]) {
@@ -251,7 +251,7 @@ async function buildLandmark(make: Make, station: Station) {
     await make("Cube", "Beam", { width: 440, height: 24, depth: 24, cornerRadius: 8, position: [0, top + 320, 0], material: color });
     for (const side of [-1, 1]) {
       await make("Cylinder", `Cord.${side}`, { width: 8, depth: 8, height: 100, radiusTop: 4, radiusBottom: 4, position: [side * 200, top + 270, 0], material: color });
-      await make("Cylinder", `Pan.${side}`, { width: 170, depth: 170, height: 16, radiusTop: 85, radiusBottom: 70, position: [side * 200, top + 212, 0], material: { color: citron, roughness: 0.5 } });
+      await make("Cylinder", `Pan.${side}`, { width: 170, depth: 170, height: 16, radiusTop: 85, radiusBottom: 70, position: [side * 200, top + 212, 0], material: { color: sky, roughness: 0.5 } });
     }
   } else if (station.landmark === "globe") {
     await make("Sphere", "Globe", { width: 300, height: 300, depth: 300, position: [0, top + 180, 0], material: { color: paper, roughness: 0.5 } });
@@ -272,10 +272,10 @@ export async function createWorldScene(app: Application, subject: string) {
   const make = (type: string, name: string, options: Record<string, unknown>, parent = map) => app.createObject(type, { name: `Wordplay.World.${name}`, parent, castShadow: false, receiveShadow: false, ...options });
   const island = WORLD.radius + 160;
   await make("Cylinder", "Island", { width: island * 2, depth: island * 2, height: 40, radiusTop: island, radiusBottom: island, position: [0, -20, 0], material: { color: paper, roughness: 0.9 } });
-  await make("Cylinder", "Cliff", { width: island * 2, depth: island * 2, height: 280, radiusTop: island - 6, radiusBottom: island - 260, position: [0, -180, 0], material: { color: plum, roughness: 0.8 } });
-  await make("Cylinder", "Cliff.Band", { width: island * 2 + 10, depth: island * 2 + 10, height: 26, radiusTop: island + 2, radiusBottom: island - 8, position: [0, -52, 0], material: { color: berry, roughness: 0.7 } });
-  await make("Torus", "Coast", { width: island * 2, height: island * 2, depth: 34, position: [0, 0, 0], rotation: [90, 0, 0], material: { color: rose, roughness: 0.6 } });
-  await make("Torus", "Spawn", { width: 500, height: 500, depth: 20, position: [0, 4, 0], rotation: [90, 0, 0], material: { color: citron, roughness: 0.6 } });
+  await make("Cylinder", "Cliff", { width: island * 2, depth: island * 2, height: 280, radiusTop: island - 6, radiusBottom: island - 260, position: [0, -180, 0], material: { color: slate, roughness: 0.8 } });
+  await make("Cylinder", "Cliff.Band", { width: island * 2 + 10, depth: island * 2 + 10, height: 26, radiusTop: island + 2, radiusBottom: island - 8, position: [0, -52, 0], material: { color: rust, roughness: 0.7 } });
+  await make("Torus", "Coast", { width: island * 2, height: island * 2, depth: 34, position: [0, 0, 0], rotation: [90, 0, 0], material: { color: clay, roughness: 0.6 } });
+  await make("Torus", "Spawn", { width: 500, height: 500, depth: 20, position: [0, 4, 0], rotation: [90, 0, 0], material: { color: sky, roughness: 0.6 } });
   for (const station of stations) {
     const length = Math.hypot(station.x, station.z) - WORLD.pedestal - 250;
     const angle = Math.atan2(station.x, station.z);

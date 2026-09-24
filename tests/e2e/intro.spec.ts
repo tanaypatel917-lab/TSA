@@ -79,7 +79,7 @@ test("chapter index, color tone and still composition follow the scroll position
   await expect(index.getByRole("link", { name: "Proof", exact: true })).toHaveAttribute("aria-current", "step");
   await expect(page.locator(".intro-experience")).toHaveAttribute("data-tone", "light");
   await expect(page.locator(".intro-stage")).toHaveAttribute("data-act", "4");
-  await expect(page.locator(".intro-stage")).toHaveCSS("background-color", "rgb(249, 242, 233)");
+  await expect(page.locator(".intro-stage")).toHaveCSS("background-color", "rgb(246, 239, 229)");
 });
 
 test("the example, prompt, claim and practice scenes respond with text, not only visuals", async ({ page }) => {
@@ -178,6 +178,6 @@ test("without JavaScript every scene is readable on its own color field", async 
     await heading.scrollIntoViewIfNeeded();
     await expect(heading).toBeVisible();
   }
-  expect(await page.locator("#intro-act-2").evaluate((element) => getComputedStyle(element).backgroundColor)).toBe("rgb(239, 153, 172)");
+  expect(await page.locator("#intro-act-2").evaluate((element) => getComputedStyle(element).backgroundColor)).toBe("rgb(221, 137, 98)");
   await context.close();
 });

@@ -6,7 +6,7 @@ export type MissionGate = { id: string; label: string; color: string };
 export type MissionItem = { text: string; context?: string; gate: string; why: string };
 export type Mission = { moduleId: string; title: string; brief: string; gates: [MissionGate, MissionGate]; items: MissionItem[] };
 
-const { rose, citron } = introPalette;
+const { clay, sky } = introPalette;
 
 const spamWhy = { spam: "Prizes, urgency, secret deals, or a request for money or a password are classic spam clues.", "not-spam": "An ordinary, specific message about something real in your day." };
 const classifier = foundations.activity.kind === "classifier" ? foundations.activity.items : [];
@@ -17,14 +17,14 @@ export const missions: Mission[] = [
     moduleId: "foundations",
     title: "Train the spam filter",
     brief: "Every message you sort becomes training data. Drop each one in the right bin and the filter learns the right patterns.",
-    gates: [{ id: "spam", label: "Spam", color: rose }, { id: "not-spam", label: "Inbox", color: citron }],
+    gates: [{ id: "spam", label: "Spam", color: clay }, { id: "not-spam", label: "Inbox", color: sky }],
     items: classifier.map((item) => ({ text: item.text, gate: item.label, why: spamWhy[item.label] }))
   },
   {
     moduleId: "tools",
     title: "Tune the prompt",
     brief: "Each crate is a change to a prompt. Decide whether it sharpens the prompt or muddies it.",
-    gates: [{ id: "sharpens", label: "Sharpens it", color: citron }, { id: "muddies", label: "Muddies it", color: rose }],
+    gates: [{ id: "sharpens", label: "Sharpens it", color: sky }, { id: "muddies", label: "Muddies it", color: clay }],
     items: [
       { text: "Add the audience: “for a 9th-grade biology class.”", gate: "sharpens", why: "Naming the audience tells the tool how to pitch the answer." },
       { text: "Just say “make it good.”", gate: "muddies", why: "Vague praise words give the tool nothing to aim for." },
@@ -40,14 +40,14 @@ export const missions: Mission[] = [
     moduleId: "ethics",
     title: "Make the call",
     brief: "Each crate is a choice in a real situation. Is it responsible, or should you rethink it?",
-    gates: [{ id: "ok", label: "Responsible", color: citron }, { id: "rethink", label: "Rethink it", color: rose }],
+    gates: [{ id: "ok", label: "Responsible", color: sky }, { id: "rethink", label: "Rethink it", color: clay }],
     items: scenarios.flatMap((scenario) => scenario.options.map((option) => ({ text: option.text, context: scenario.situation, gate: option.ok ? "ok" : "rethink", why: option.feedback }))).slice(0, 10)
   },
   {
     moduleId: "real-world",
     title: "Keep a human in the loop",
     brief: "AI is great at some jobs. Others need a person to decide. Sort each task.",
-    gates: [{ id: "ai", label: "AI can help", color: citron }, { id: "human", label: "A person decides", color: rose }],
+    gates: [{ id: "ai", label: "AI can help", color: sky }, { id: "human", label: "A person decides", color: clay }],
     items: [
       { text: "Scanning thousands of river sensor readings to flag floods early.", gate: "ai", why: "Finding patterns in huge data sets is a strength, with experts checking the alerts." },
       { text: "Making the final call on a patient’s diagnosis.", gate: "human", why: "Tools can flag patterns, but a clinician is responsible for the diagnosis." },
@@ -63,7 +63,7 @@ export const missions: Mission[] = [
     moduleId: "capstone",
     title: "Plan the project",
     brief: "You are planning a school project with AI. Spot the good moves and the red flags.",
-    gates: [{ id: "good", label: "Good move", color: citron }, { id: "flag", label: "Red flag", color: rose }],
+    gates: [{ id: "good", label: "Good move", color: sky }, { id: "flag", label: "Red flag", color: clay }],
     items: [
       { text: "Cite the AI tool and say how you used it.", gate: "good", why: "Disclosure keeps authorship honest." },
       { text: "Copy an AI answer without checking a source.", gate: "flag", why: "AI can sound right and still be wrong." },

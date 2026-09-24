@@ -9,13 +9,13 @@ export type Tree = { x: number; z: number; color: string; height: number };
 
 export const WORLD = { radius: 2200, ring: 1300, pedestal: 230, reach: 440, pickup: 130 };
 
-const { ink, rose, citron, plum, berry } = introPalette;
+const { ink, clay, sky, slate, rust } = introPalette;
 const plan: [string, Landmark, string, string][] = [
-  ["foundations", "stack", ink, rose],
-  ["tools", "brackets", citron, ink],
-  ["ethics", "scale", rose, ink],
-  ["real-world", "globe", ink, citron],
-  ["capstone", "star", citron, rose]
+  ["foundations", "stack", ink, clay],
+  ["tools", "brackets", sky, ink],
+  ["ethics", "scale", clay, ink],
+  ["real-world", "globe", ink, sky],
+  ["capstone", "star", sky, clay]
 ];
 
 export const stations: Station[] = plan.map(([moduleId, landmark, pedestal, accent], index) => {
@@ -31,13 +31,13 @@ const pathClearance: Circle[] = stations.flatMap(({ x, z }) => Array.from({ leng
 
 export const wordTokens: WordToken[] = scatter(glossary.length, WORLD.radius, [...stationClearance, spawn]).map((point, index) => ({
   ...glossary[index],
-  color: [rose, citron, plum][index % 3],
+  color: [clay, sky, slate][index % 3],
   ...point
 }));
 
 export const trees: Tree[] = scatter(18, WORLD.radius + 60, [...stationClearance, spawn, ...pathClearance, ...wordTokens.map(({ x, z }) => ({ x, z, r: 200 }))], 1.9, 640).map((point, index) => ({
   ...point,
-  color: [rose, citron, plum, berry][index % 4],
+  color: [clay, sky, slate, rust][index % 4],
   height: 150 + (index % 3) * 45
 }));
 
@@ -50,5 +50,5 @@ export const tufts = scatter(12, WORLD.radius, [...stationClearance, spawn, ...p
   x: point.x + [0, 70, -55][part],
   z: point.z + [0, 30, 45][part],
   size: [120, 86, 70][part],
-  color: index % 2 ? "#E4EBB4" : "#F0D9DD"
+  color: index % 2 ? "#D9E6F2" : "#F2D8C8"
 })));

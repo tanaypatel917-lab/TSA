@@ -335,7 +335,7 @@ export function WorldGame() {
             if (index >= 0) {
               const crate = currentRun.field[index];
               currentRun = pickUp(currentRun, index, crateSpots);
-              scene.current?.burst(crate.x, crate.z, introPalette.plum, 8);
+              scene.current?.burst(crate.x, crate.z, introPalette.slate, 8);
               pop("Picked up", "info");
               play("pickup");
             }
@@ -347,7 +347,7 @@ export function WorldGame() {
                 currentRun = result.run;
                 const item = activeMission.items[result.item];
                 const right = activeMission.gates.find((each) => each.id === item.gate)!;
-                scene.current?.burst(gateSpots[gate].x, gateSpots[gate].z, result.ok ? introPalette.citron : introPalette.rose, 16);
+                scene.current?.burst(gateSpots[gate].x, gateSpots[gate].z, result.ok ? introPalette.sky : introPalette.clay, 16);
                 play(result.ok ? "good" : "bad");
                 if (result.ok) { pop(`+${result.points}${result.run.combo > 1 ? `  ×${result.run.combo}` : ""}`, "good"); say(`${right.label}. ${item.why}`, true); }
                 else { pop("Wrong gate", "bad"); say(`That one belongs in ${right.label}. ${item.why}`, false); setShake((value) => value + 1); }

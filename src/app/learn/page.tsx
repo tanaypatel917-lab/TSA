@@ -11,7 +11,7 @@ import { exportProgress } from "@/engine/storage";
 import { nextLearningTask, useProgress } from "@/state/ProgressProvider";
 import "./learn.css";
 
-const tones = ["rose", "citron", "ink"] as const;
+const tones = ["clay", "sky", "ink"] as const;
 
 export default function LearningPage() {
   const { state, hydrated, reset, importJson, storageError, importFeedback } = useProgress();

@@ -1,4 +1,4 @@
-.device-data { padding-block: 72px 76px; border-block: 1px solid var(--ink); background: var(--citron); }
+.device-data { padding-block: 72px 76px; border-block: 1px solid var(--ink); background: var(--sky); }
 .device-data h2 { max-width: 16ch; font-size: clamp(38px, 4.4vw, 64px); line-height: 1.02; letter-spacing: -.03em; }
 .device-intro { max-width: 52ch; margin-top: 14px; font-size: 18px; line-height: 1.6; }
 .device-rows { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 36px 0 0; padding: 0; list-style: none; }
@@ -24,7 +24,7 @@
   .device-actions > button { width: 100%; }
 }
 
-.about-built { border-block: 1px solid var(--ink); background: var(--citron); }
+.about-built { border-block: 1px solid var(--ink); background: var(--sky); }
 .about-built .shell { padding-block: clamp(56px, 8vw, 104px); }
 .built-head h2 { margin-top: 10px; font-size: clamp(44px, 6vw, 88px); line-height: 1; }
 .built-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin: 44px 0 0; padding: 0; list-style: none; border-top: 2px solid var(--ink); }
