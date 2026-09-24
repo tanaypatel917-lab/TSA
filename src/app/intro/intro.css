@@ -94,8 +94,8 @@ html[data-intro-page="true"][data-motion="full"] { scroll-behavior: smooth; }
 .hero-letters { display: block; }
 .hero-word { display: inline-block; white-space: nowrap; }
 .hero-letter { display: inline-block; font-weight: 650; }
-.hero-copy > p { max-width: 30ch; margin-top: 30px; font-size: 19px; line-height: 1.55; }
-.hero-copy .button-primary { margin-top: 30px; }
+.intro-experience .hero-copy > p { max-width: 30ch; margin-top: 30px; font-size: 19px; line-height: 1.55; }
+.intro-experience .hero-copy .button-primary { margin-top: 30px; }
 .intro-act[data-tone="dark"] .button-primary { border-color: var(--sky); background: var(--sky); color: var(--ink); box-shadow: 4px 4px 0 var(--clay); }
 .intro-act[data-tone="dark"] .button-primary:active:not(:disabled) { box-shadow: 0 0 0 var(--clay); transform: translate(4px, 4px); }
 
@@ -176,7 +176,7 @@ html[data-intro-page="true"][data-motion="full"] { scroll-behavior: smooth; }
   .act-copy h2 { font-size: 42px; }
   .act-copy > p { font-size: 16px; }
   .hero-title { font-size: 15vw; }
-  .hero-copy > p { font-size: 17px; }
+  .intro-experience .hero-copy > p { font-size: 17px; }
   .finale-copy h2 { font-size: 16vw; }
   .finale-actions > * { width: 100%; }
   .intro-marquee { top: 36vh; bottom: auto; }
