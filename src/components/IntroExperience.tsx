@@ -459,6 +459,7 @@ export function IntroExperience() {
       return <div className="act-copy hero-copy">
         <h1 id={titleId} ref={heroTitle} className="hero-title"><span className="sr-only">{item.title}</span><span className="hero-letters" aria-hidden="true">{heroWords.map((word, wordIndex) => <Fragment key={word}>{wordIndex > 0 && " "}<span className="hero-word">{[...word].map((letter, letterIndex) => <span className="hero-letter" key={letterIndex}>{letter}</span>)}</span></Fragment>)}</span></h1>
         <p className="act-reveal">{item.text}</p>
+        <nav className="hero-contents act-reveal" aria-label="In this introduction"><ol>{introActs.slice(1).map((scene, sceneIndex) => <li key={scene.id}><a href={`#intro-act-${sceneIndex + 1}`}><span aria-hidden="true">{String(sceneIndex + 1).padStart(2, "0")}</span>{scene.teaser}</a></li>)}</ol></nav>
         <a href="#intro-act-1" className="button-primary act-reveal">Start the tour <span aria-hidden="true">↓</span></a>
       </div>;
     }

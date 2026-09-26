@@ -236,3 +236,17 @@ html[data-intro-page="true"][data-motion="full"] { scroll-behavior: smooth; }
   .act-steps li { opacity: 1; }
   .act-steps p { display: block; }
 }
+
+.hero-contents { margin-top: 26px; max-width: 36rem; }
+.hero-contents ol { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 28px; margin: 0; padding: 0; list-style: none; border-top: 1px solid rgba(246, 239, 229, .28); }
+.hero-contents li { border-bottom: 1px solid rgba(246, 239, 229, .28); }
+.hero-contents a { display: flex; align-items: baseline; gap: 12px; padding: 9px 0; color: inherit; font-size: 15px; font-weight: 600; text-decoration: none; transition: color 160ms ease, transform 200ms var(--ease-out); }
+.hero-contents a span { font-family: var(--font-display), sans-serif; font-size: 12px; font-weight: 700; letter-spacing: .04em; color: var(--clay); }
+@media (hover: hover) and (pointer: fine) {
+  .hero-contents a:hover { color: var(--sky); transform: translateX(3px); }
+}
+.intro-experience .hero-copy .hero-contents + .button-primary { margin-top: 26px; }
+@media (max-width: 767px) {
+  .hero-contents ol { grid-template-columns: 1fr; }
+  .hero-contents a { padding: 8px 0; font-size: 14px; }
+}
