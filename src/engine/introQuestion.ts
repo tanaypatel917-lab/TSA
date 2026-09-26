@@ -19,7 +19,7 @@ export const galaxy: GalaxyPoint[] = galaxyClusters.flatMap((cluster, index) => 
   const cy = Math.sin(angle) * 0.64;
   return cluster.words.map((word) => {
     const spin = hash(word, 3) * Math.PI * 2;
-    const reach = 0.03 + Math.sqrt(hash(word, 5)) * 0.13;
+    const reach = 0.03 + Math.sqrt(hash(word, 5)) * 0.11;
     return { word, cluster: cluster.id, x: cx + Math.cos(spin) * reach, y: cy + Math.sin(spin) * reach, z: hash(word, 7) * 2 - 1 };
   });
 });

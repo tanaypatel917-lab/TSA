@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent, type PointerEvent } from "react";
 import type { Application } from "@splinetool/runtime";
-import { introActs, introClaim, introPromptParts, introQuestions, type IntroActId, type IntroPartId } from "@/content/intro";
+import { insideSteps, introActs, introClaim, introPromptParts, introQuestions, type IntroActId, type IntroPartId } from "@/content/intro";
 import { introSuggestions } from "@/content/galaxy";
 import { contentWords, galaxy, land, recommend } from "@/engine/introQuestion";
 import { tokens } from "@/engine/labs";
@@ -51,6 +51,7 @@ export function IntroExperience() {
   const [question, setQuestion] = useState("");
   const [extra, setExtra] = useState<string[]>([]);
   const [draft, setDraft] = useState("");
+  const [step, setStep] = useState(0);
   const [manualParts, setManualParts] = useState<IntroPartId[] | null>(null);
   const [autoCount, setAutoCount] = useState(1);
   const [claimChecked, setClaimChecked] = useState(false);
@@ -263,6 +264,7 @@ export function IntroExperience() {
     let color = "";
     let folded = "";
     let shownDive = -1;
+    let shownStep = -1;
     let tone = "";
     let shownAct = -1;
     let shownAuto = -1;
@@ -303,7 +305,9 @@ export function IntroExperience() {
       }
       const dive = position.act === INSIDE_ACT ? smoothstep(0.02, 0.3, position.local) * (1 - smoothstep(0.05, 0.6, position.t - INSIDE_ACT)) : 0;
       if (Math.abs(dive - shownDive) > 0.004) { shownDive = dive; stage.style.setProperty("--dive", dive.toFixed(3)); }
-      galaxyView.current?.render(dive, time / 1000, reduced);
+      const beat = position.act === INSIDE_ACT ? insideSteps.reduce((found, item, index) => (position.local >= item.at ? index : found), 0) : position.act > INSIDE_ACT ? insideSteps.length - 1 : 0;
+      if (beat !== shownStep) { shownStep = beat; setStep(beat); }
+      galaxyView.current?.render(dive, time / 1000, reduced, beat);
       if (introActs[nearest].tone !== tone) { tone = introActs[nearest].tone; root.dataset.tone = tone; }
       if (progressBar.current) progressBar.current.style.transform = `scaleX(${position.progress.toFixed(4)})`;
       const count = autoPartCount(position.t, position.act === PROMPT_ACT ? position.local : 0, PROMPT_ACT);
@@ -416,9 +420,10 @@ export function IntroExperience() {
         </div>;
       case "inside":
         return <div className="act-controls act-reveal">
-          <form className="act-drop" onSubmit={(event) => { event.preventDefault(); dropWord(); }}><label><span className="sr-only">Drop in any word</span><input type="text" value={draft} maxLength={24} placeholder="Drop in any word" onChange={(event) => setDraft(event.target.value)} /></label><button type="submit" className="button-primary">Drop it in</button></form>
+          <ol className="act-steps">{insideSteps.map((item, index) => <li key={item.title} aria-current={step === index ? "step" : undefined} data-done={index < step}><span aria-hidden="true">{index + 1}</span><div><strong>{item.title}</strong><p>{item.text}</p></div></li>)}</ol>
+          <form className="act-drop" onSubmit={(event) => { event.preventDefault(); dropWord(); }}><label><span className="sr-only">Drop in any word</span><input type="text" value={draft} maxLength={24} placeholder="Try a word, like pizza or teacher" onChange={(event) => setDraft(event.target.value)} /></label><button type="submit" className="button-primary">Drop it in</button></form>
           <ul className="act-landings" aria-live="polite">{landings.map((landing) => <li key={landing.word}><strong>{landing.word}</strong> {landing.known ? `landed near ${listed(landing.neighbors)}.` : "is not on this small map, so it floats at the edge."}</li>)}</ul>
-          <p className="act-note">A simplified map of {galaxy.length} words. Real models place tens of thousands of tokens, in far more dimensions than two.</p>
+          <p className="act-note">This map is simplified: {galaxy.length} words and two numbers each. Real models use hundreds of numbers for every word.</p>
         </div>;
       case "prompts":
         return <div className="act-controls act-reveal">

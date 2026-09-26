@@ -91,11 +91,11 @@ test("your question travels: it is tokenized, lands in the word galaxy, frames t
   const landings = page.locator(".act-landings li");
   await expect(landings).toHaveCount(2);
   await expect(landings.first()).toContainText("robots landed near");
-  await page.getByPlaceholder("Drop in any word").fill("pizza");
+  await page.getByLabel("Drop in any word").fill("pizza");
   await page.getByRole("button", { name: "Drop it in", exact: true }).click();
   await expect(landings).toHaveCount(3);
   await expect(landings.last()).toHaveText("pizza landed near bread, rice and cake.");
-  await page.getByPlaceholder("Drop in any word").fill("zorblax");
+  await page.getByLabel("Drop in any word").fill("zorblax");
   await page.keyboard.press("Enter");
   await expect(landings.last()).toHaveText("zorblax is not on this small map, so it floats at the edge.");
   await expect(page.getByText("Before you trust any answer to “Will robots take my job?”, check it like this.", { exact: true })).toBeAttached();
