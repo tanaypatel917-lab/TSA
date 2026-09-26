@@ -250,3 +250,15 @@ html[data-intro-page="true"][data-motion="full"] { scroll-behavior: smooth; }
   .hero-contents ol { grid-template-columns: 1fr; }
   .hero-contents a { padding: 8px 0; font-size: 14px; }
 }
+
+.intro-experience .hero-copy { --dot: #D5FEFF; }
+.intro-experience .hero-copy > p,
+.hero-contents a,
+.hero-contents a span { color: var(--dot); }
+.hero-contents ol,
+.hero-contents li { border-color: rgba(213, 254, 255, .3); }
+.intro-experience .intro-act[data-tone="dark"] .hero-copy .button-primary { border-color: var(--dot); background: var(--dot); }
+@media (hover: hover) and (pointer: fine) {
+  .hero-contents a:hover { color: var(--paper); }
+  .hero-contents a:hover span { color: var(--paper); }
+}
