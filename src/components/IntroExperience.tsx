@@ -2,18 +2,24 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Fragment, useEffect, useRef, useState, type CSSProperties, type MouseEvent, type PointerEvent } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent, type PointerEvent } from "react";
 import type { Application } from "@splinetool/runtime";
-import { introActs, introClaim, introDatasets, introPromptParts, introQuestions, type IntroActId, type IntroDataset, type IntroPartId } from "@/content/intro";
+import { introActs, introClaim, introPromptParts, introQuestions, type IntroActId, type IntroPartId } from "@/content/intro";
+import { introSuggestions } from "@/content/galaxy";
+import { contentWords, galaxy, land, recommend } from "@/engine/introQuestion";
+import { tokens } from "@/engine/labs";
 import { questionScene } from "@/content/visuals";
 import { clearIntroReturn, introReturnPath, markIntroSeen } from "@/engine/intro";
-import { autoIntroParts, autoPartCount, clamp, composeIntroPrompt, damp, easeInOutCubic, mixHex, nextIntroHint, resolveTimeline, wallColorIndex, type ActSpan } from "@/engine/introStory";
+import { autoIntroParts, autoPartCount, clamp, composeIntroPrompt, damp, easeInOutCubic, mixHex, nextIntroHint, resolveTimeline, smoothstep, type ActSpan } from "@/engine/introStory";
 import { createIntroScene, type IntroScene } from "./intro/IntroScene";
+import { WordGalaxy } from "./intro/WordGalaxy";
 import { useMotionPreference } from "./MotionPreferences";
 
 type SceneState = "idle" | "loading" | "ready" | "error";
 
 const PROMPT_ACT = introActs.findIndex((item) => item.id === "prompts");
+const INSIDE_ACT = introActs.findIndex((item) => item.id === "inside");
+const listed = (words: readonly string[]) => words.length > 1 ? `${words.slice(0, -1).join(", ")} and ${words[words.length - 1]}` : words.join("");
 const LAST_ACT = introActs.length - 1;
 const heroWords = introActs[0].title.split(" ");
 const seconds = () => performance.now() / 1000;
@@ -27,6 +33,10 @@ export function IntroExperience() {
   const marquee = useRef<HTMLDivElement>(null);
   const marqueeTrack = useRef<HTMLDivElement>(null);
   const heroTitle = useRef<HTMLHeadingElement>(null);
+  const fold = useRef<HTMLDivElement>(null);
+  const foldShade = useRef<HTMLElement>(null);
+  const galaxyCanvas = useRef<HTMLCanvasElement>(null);
+  const galaxyView = useRef<WordGalaxy>();
   const scene = useRef<IntroScene>();
   const exitTimer = useRef(0);
   const { reduced } = useMotionPreference();
@@ -38,7 +48,9 @@ export function IntroExperience() {
   const [ready, setReady] = useState(false);
   const [act, setAct] = useState(0);
   const [returnPath, setReturnPath] = useState("/");
-  const [dataset, setDataset] = useState<IntroDataset>("varied");
+  const [question, setQuestion] = useState("");
+  const [extra, setExtra] = useState<string[]>([]);
+  const [draft, setDraft] = useState("");
   const [manualParts, setManualParts] = useState<IntroPartId[] | null>(null);
   const [autoCount, setAutoCount] = useState(1);
   const [claimChecked, setClaimChecked] = useState(false);
@@ -46,11 +58,16 @@ export function IntroExperience() {
   const [dragged, setDragged] = useState(false);
   const [exit, setExit] = useState<{ x: number; y: number } | null>(null);
   const parts = manualParts ?? autoIntroParts(autoCount);
+  const asked = question.trim();
+  const effective = asked || introSuggestions[0];
+  const pieces = useMemo(() => tokens(effective), [effective]);
+  const landings = useMemo(() => Array.from(new Set([...contentWords(effective), ...extra])).slice(0, 8).map((word) => land(word)), [effective, extra]);
+  const pick = useMemo(() => recommend(effective), [effective]);
   const complete = parts.length === introPromptParts.length;
   const sceneUrl = questionScene.url.trim();
   const enabled = !!sceneUrl && !reduced && wide;
   const displayState = !sceneUrl ? "disabled" : !enabled ? "still" : state;
-  const live = useRef({ dataset, parts, claimChecked, claimAt: 0, breakAt: 0, celebrateAt: 0, exitAt: 0, interactive: false });
+  const live = useRef({ parts, claimChecked, claimAt: 0, breakAt: 0, celebrateAt: 0, exitAt: 0, interactive: false });
   const pointer = useRef({ x: 0, y: 0, clientX: -9999, clientY: -9999, fine: false });
   const drag = useRef({ active: false, id: -1, lastX: 0, lastTime: 0, velocity: 0, spin: 0 });
 
@@ -82,8 +99,20 @@ export function IntroExperience() {
   }, []);
 
   useEffect(() => {
-    Object.assign(live.current, { dataset, parts, claimChecked, interactive: displayState === "ready" });
+    Object.assign(live.current, { parts, claimChecked, interactive: displayState === "ready" });
   });
+
+  useEffect(() => {
+    const canvas = galaxyCanvas.current;
+    if (!canvas) return;
+    const view = new WordGalaxy(canvas);
+    galaxyView.current = view;
+    const observer = new ResizeObserver(() => view.resize());
+    observer.observe(canvas);
+    return () => { observer.disconnect(); galaxyView.current = undefined; };
+  }, []);
+
+  useEffect(() => { galaxyView.current?.setWords(landings, performance.now() / 1000); }, [landings]);
 
   useEffect(() => {
     if (complete) live.current.celebrateAt = seconds();
@@ -232,6 +261,8 @@ export function IntroExperience() {
     let lastY = smoothY;
     let velocity = 0;
     let color = "";
+    let folded = "";
+    let shownDive = -1;
     let tone = "";
     let shownAct = -1;
     let shownAuto = -1;
@@ -248,9 +279,31 @@ export function IntroExperience() {
       const position = resolveTimeline(spans, smoothY, viewport);
       const nearest = Math.round(position.t);
       if (nearest !== shownAct) { shownAct = nearest; setAct(nearest); }
-      const from = Math.floor(position.t);
-      const next = mixHex(introActs[from].background, introActs[Math.min(LAST_ACT, from + 1)].background, easeInOutCubic(position.t - from));
+      const snapped = position.t - Math.floor(position.t) > 0.99 ? Math.ceil(position.t) : position.t;
+      const from = Math.min(LAST_ACT, Math.floor(snapped));
+      const frac = snapped - from;
+      const ease = easeInOutCubic(frac);
+      const next = reduced ? mixHex(introActs[from].background, introActs[Math.min(LAST_ACT, from + 1)].background, ease) : introActs[from].background;
       if (next !== color) { color = next; stage.style.backgroundColor = next; }
+      const sheet = fold.current;
+      if (sheet) {
+        const turning = !reduced && frac > 0.002 && from < LAST_ACT;
+        const state = turning ? `${from}:${ease.toFixed(3)}` : "flat";
+        if (state !== folded) {
+          folded = state;
+          sheet.style.visibility = turning ? "visible" : "hidden";
+          if (turning) {
+            const hinge = from % 2 ? "left" : "bottom";
+            sheet.dataset.hinge = hinge;
+            sheet.style.backgroundColor = introActs[from + 1].background;
+            sheet.style.transform = hinge === "bottom" ? `rotateX(${((1 - ease) * 86).toFixed(2)}deg)` : `rotateY(${((ease - 1) * 86).toFixed(2)}deg)`;
+            if (foldShade.current) foldShade.current.style.opacity = ((1 - ease) * 0.6).toFixed(3);
+          }
+        }
+      }
+      const dive = position.act === INSIDE_ACT ? smoothstep(0.02, 0.3, position.local) * (1 - smoothstep(0.05, 0.6, position.t - INSIDE_ACT)) : 0;
+      if (Math.abs(dive - shownDive) > 0.004) { shownDive = dive; stage.style.setProperty("--dive", dive.toFixed(3)); }
+      galaxyView.current?.render(dive, time / 1000, reduced);
       if (introActs[nearest].tone !== tone) { tone = introActs[nearest].tone; root.dataset.tone = tone; }
       if (progressBar.current) progressBar.current.style.transform = `scaleX(${position.progress.toFixed(4)})`;
       const count = autoPartCount(position.t, position.act === PROMPT_ACT ? position.local : 0, PROMPT_ACT);
@@ -292,7 +345,7 @@ export function IntroExperience() {
       current.update({
         t: position.t, act: position.act, local: position.local, time: time / 1000, dt,
         aspect: width / viewport, compact: width < 1024 || width / viewport < 1.15,
-        pointer: smoothPointer, spin: spin.spin, dataset: input.dataset, parts: input.parts,
+        pointer: smoothPointer, spin: spin.spin, parts: input.parts,
         claimChecked: input.claimChecked, claimAt: input.claimAt, breakAt: input.breakAt, celebrateAt: input.celebrateAt,
         exit: input.exitAt ? clamp((time / 1000 - input.exitAt) / 0.75) : 0, finaleTop
       });
@@ -312,6 +365,12 @@ export function IntroExperience() {
     Object.assign(drag.current, { active: true, id: event.pointerId, lastX: event.clientX, lastTime: performance.now(), velocity: 0 });
     event.currentTarget.dataset.dragging = "true";
     setDragged(true);
+  }
+
+  function dropWord() {
+    const [word] = contentWords(draft, 1);
+    setDraft("");
+    if (word) setExtra((current) => [...current.filter((item) => item !== word), word].slice(-3));
   }
 
   function togglePart(id: IntroPartId) {
@@ -348,10 +407,18 @@ export function IntroExperience() {
 
   function controls(id: IntroActId) {
     switch (id) {
-      case "examples":
+      case "questions":
         return <div className="act-controls act-reveal">
-          <div className="act-segmented" role="group" aria-label="Training examples">{introDatasets.map((option) => <button key={option.id} type="button" aria-pressed={dataset === option.id} onClick={() => setDataset(option.id)}>{option.label}</button>)}</div>
-          <p className="act-status" role="status">{introDatasets.find((option) => option.id === dataset)?.status}</p>
+          <label className="act-ask"><span>Your question</span><input type="text" value={question} maxLength={90} placeholder="What do you wonder about AI?" onChange={(event) => setQuestion(event.target.value)} /></label>
+          <div className="act-suggest" role="group" aria-label="Question ideas">{introSuggestions.map((suggestion) => <button key={suggestion} type="button" aria-pressed={effective === suggestion} onClick={() => setQuestion(suggestion)}>{suggestion}</button>)}</div>
+          <p className="act-tokens" aria-label={`How a model reads it: ${pieces.map((piece) => piece.trim()).join(" | ")}`}>{pieces.map((piece, index) => <span key={index}>{piece.trim()}</span>)}</p>
+          <p className="act-status" role="status">{asked ? `${pieces.length} tokens. That is how a model reads your question. Keep scrolling to follow it.` : `No question yet, so we will follow “${effective}” for now. Type your own anytime.`}</p>
+        </div>;
+      case "inside":
+        return <div className="act-controls act-reveal">
+          <form className="act-drop" onSubmit={(event) => { event.preventDefault(); dropWord(); }}><label><span className="sr-only">Drop in any word</span><input type="text" value={draft} maxLength={24} placeholder="Drop in any word" onChange={(event) => setDraft(event.target.value)} /></label><button type="submit" className="button-primary">Drop it in</button></form>
+          <ul className="act-landings" aria-live="polite">{landings.map((landing) => <li key={landing.word}><strong>{landing.word}</strong> {landing.known ? `landed near ${listed(landing.neighbors)}.` : "is not on this small map, so it floats at the edge."}</li>)}</ul>
+          <p className="act-note">A simplified map of {galaxy.length} words. Real models place tens of thousands of tokens, in far more dimensions than two.</p>
         </div>;
       case "prompts":
         return <div className="act-controls act-reveal">
@@ -361,6 +428,7 @@ export function IntroExperience() {
         </div>;
       case "proof":
         return <div className="act-controls act-reveal">
+          <p className="act-thread">Before you trust any answer to “{effective}”, check it like this.</p>
           <figure className="act-claim" data-checked={claimChecked}>
             <figcaption>AI answer</figcaption>
             <blockquote>{introClaim.answer}</blockquote>
@@ -393,6 +461,7 @@ export function IntroExperience() {
       return <div className="act-copy finale-copy">
         <h2 id={titleId} className="act-reveal">{(item.lines ?? [item.title]).map((line, lineIndex) => <Fragment key={line}>{lineIndex > 0 && " "}<span>{line}</span></Fragment>)}</h2>
         <p className="act-reveal">{item.text}</p>
+        <p className="finale-thread act-reveal"><span>Your question: “{effective}”</span><Link href={pick.href} onClick={(event) => leave(event, pick.href)}>Start with {pick.lesson} <span aria-hidden="true">↗</span></Link></p>
         <div className="finale-actions act-reveal"><Link href={returnPath} className="button-primary" onClick={(event) => leave(event, returnPath)}>Enter Wordplay <span aria-hidden="true">↗</span></Link><Link href="/modules" className="button-secondary" onClick={(event) => leave(event, "/modules")}>Explore lessons</Link></div>
       </div>;
     }
@@ -404,16 +473,17 @@ export function IntroExperience() {
   }
 
   return <article ref={page} className="intro-experience" data-scene-state={displayState} data-scene-subject={subject} data-scene-objects={objects} data-ready={ready} data-exiting={!!exit} onPointerDown={startDrag}>
-    <div ref={backdrop} className="intro-stage" data-act={act} data-dataset={dataset} data-claim={claimChecked ? "checked" : "open"}>
+    <div ref={backdrop} className="intro-stage" data-act={act} data-claim={claimChecked ? "checked" : "open"}>
+      <div ref={fold} className="intro-fold" aria-hidden="true"><i ref={foldShade} /></div>
       <div ref={marquee} className="intro-marquee" aria-hidden="true"><div ref={marqueeTrack} className="intro-marquee-track">{[...introQuestions, ...introQuestions].map((question, index) => <span key={index}>{question}</span>)}</div></div>
       <div className="intro-fallback" aria-hidden="true">
-        <div className="fallback-grid">{Array.from({ length: 24 }, (_, index) => <i key={index} data-tone={wallColorIndex(index)} />)}</div>
         <div className="fallback-stack">{introPromptParts.map((part) => <i key={part.id} data-on={parts.includes(part.id)} style={{ "--part": part.color } as CSSProperties} />)}</div>
         <span className="fallback-glyph glyph-star" style={{ "--spin": `${breaks * 72}deg` } as CSSProperties}>*</span>
         <span className="fallback-glyph glyph-bang">!</span>
         <span className="fallback-glyph glyph-question">?</span>
       </div>
       <div ref={canvasHost} className="intro-canvas" aria-hidden="true" />
+      <canvas ref={galaxyCanvas} className="intro-galaxy" aria-hidden="true" />
     </div>
     {enabled && state === "error" && <div className="intro-recovery" role="status"><span>Typography mode. 3D unavailable.</span><button type="button" onClick={() => setAttempt((value) => value + 1)}>Retry 3D</button></div>}
     <div className="intro-progress" aria-hidden="true"><span ref={progressBar} /></div>

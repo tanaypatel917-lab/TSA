@@ -56,6 +56,15 @@ cloned in place of the built-in shapes. Reduced motion, narrow screens, no WebGL
 or a failed load open the same game as an interactive map, where missions become a
 quick sort with the same scoring, so every learning action works without 3D.
 
+## Intro: a paper world your question travels through
+
+Scenes fold in like sheets of paper (`intro-fold` in `src/components/IntroExperience.tsx`; reduced motion
+cross-fades instead). Visitors type a question in the second scene: it is split into tokens, its
+words land in a word galaxy (`src/components/intro/WordGalaxy.ts`, a simplified 2D map of the words
+in `src/content/galaxy.ts`), it frames the proof scene, and the finale recommends a starting lesson
+(`recommend` in `src/engine/introQuestion.ts`). On desktop the 3D question mark dives in as the
+galaxy appears; phones get the same story without 3D. Nothing typed leaves the browser.
+
 ## Hands-on lesson tools
 
 `src/content/figures.ts` places interactive figures between lesson paragraphs:

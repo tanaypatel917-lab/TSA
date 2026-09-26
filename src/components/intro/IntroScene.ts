@@ -1,7 +1,7 @@
 import type { Application, SPEObject } from "@splinetool/runtime";
-import { introActs, introPalette, introPromptParts, introWallColors, type IntroDataset, type IntroPartId } from "@/content/intro";
+import { introActs, introPalette, introPromptParts, type IntroPartId } from "@/content/intro";
 import { hideKit } from "@/content/visuals";
-import { clamp, damp, easeInOutCubic, easeOutCubic, hexToRgb, lerp, pseudoRandom, rgbToHex, smoothstep, wallColorIndex } from "@/engine/introStory";
+import { clamp, damp, easeInOutCubic, easeOutCubic, hexToRgb, lerp, pseudoRandom, rgbToHex, smoothstep } from "@/engine/introStory";
 
 export type IntroSceneInput = {
   t: number;
@@ -13,7 +13,6 @@ export type IntroSceneInput = {
   compact: boolean;
   pointer: { x: number; y: number };
   spin: number;
-  dataset: IntroDataset;
   parts: readonly IntroPartId[];
   claimChecked: boolean;
   claimAt: number;
@@ -69,7 +68,7 @@ const ANCHORS: [number, number, number, number][] = [[0.7, 0.5, 0.5, 0.3], [0.27
 const LOOKS = [
   { body: clay, dot: sky, light: clay, rings: [paper, clay, sky], tokens: [clay, sky, paper, slate] },
   { body: clay, dot: sky, light: clay, rings: [paper, clay, sky], tokens: [clay, sky, paper, slate] },
-  { body: ink, dot: sky, light: paper, rings: [paper, ink, sky], tokens: [ink, paper, sky, slate] },
+  { body: clay, dot: paper, light: paper, rings: [paper, clay, sky], tokens: [paper, sky, clay, paper] },
   { body: ink, dot: clay, light: paper, rings: [ink, clay, paper], tokens: [ink, paper, clay, slate] },
   { body: ink, dot: clay, light: clay, rings: [ink, clay, sky], tokens: [clay, rust, clay, slate] },
   { body: clay, dot: sky, light: sky, rings: [paper, clay, sky], tokens: [clay, sky, paper, slate] },
@@ -283,7 +282,10 @@ export class IntroScene {
     switch (act) {
       case 0: return set(out, x, y, 0, 0.06 + p.y * 0.14, -0.38 + Math.sin(time * 0.55) * 0.1 + p.x * 0.35, Math.sin(time * 0.4) * 0.04, 1.02 * k, clay);
       case 1: return set(out, x, y, 0, 0.08 + p.y * 0.1, 0.5 + local * 1.2 + p.x * 0.3, -0.06, 0.92 * k, clay);
-      case 2: return set(out, x - 175 * k, y - 40 * k, 150, 0.05 + p.y * 0.08, 0.35 + p.x * 0.25, 0, 0.72 * k, clay);
+      case 2: {
+        const dive = Math.pow(smoothstep(0, 0.32, local), 2.2);
+        return set(out, lerp(x, 0, dive), lerp(y, 0, dive), 150 + dive * 520, 0.05 + p.y * 0.08, 0.35 + p.x * 0.25 + dive * 0.6, 0, lerp(0.8, 7, dive) * k, clay);
+      }
       case 3: return set(out, x - 130 * k, y + 10 * k, 0, 0.05 + p.y * 0.08, 0.42 + p.x * 0.25, 0, 0.8 * k, clay);
       case 4: return input.claimChecked
         ? set(out, x + 190 * k, y + 10 * k, -40, 0.04, Math.sin(time * 0.5) * 0.15, 0, 1.02 * k, clay)
@@ -328,12 +330,10 @@ export class IntroScene {
         return set(out, x + Math.cos(theta) * ring * radius, y + height * radius * 0.9 + Math.sin(time * 0.8 + index) * 6, Math.sin(theta) * ring * radius, Math.sin(time * 0.6 + index) * 1.2, Math.sin(time * 0.45 + index * 1.7) * 1.2, index * 0.3, (0.55 + pseudoRandom(index, 4) * 0.4) * k, color);
       }
       case 2: {
-        const yaw = -0.32 + input.pointer.x * 0.12;
-        const spacing = 74 * k;
-        const lx = ((index % 6) - 2.5) * spacing;
-        const ly = (1.5 - Math.floor(index / 6)) * spacing;
-        const tint = input.dataset === "narrow" ? paper : introWallColors[wallColorIndex(index)];
-        return set(out, x + 70 * k + lx * Math.cos(yaw), y + ly + Math.sin(time * 1.1 + index * 0.5) * 4, -170 - lx * Math.sin(yaw), Math.sin(time * 0.7 + index) * 0.06, yaw, 0, 1.12 * k, tint);
+        const rush = smoothstep(0, 0.32, local);
+        const angle = index * 2.39996 + time * 0.2;
+        const reach = (260 + rush * 1100 + (index % 5) * 30) * k;
+        return set(out, x + Math.cos(angle) * reach, y + Math.sin(angle) * reach * 0.62, -220 + rush * 900 + (index % 7) * 40, time * 0.8 + index, time * 0.6 + index * 0.4, 0, (0.42 + (index % 3) * 0.12) * k, color);
       }
       case 3: {
         const slot = this.ribbon[index];
@@ -506,9 +506,8 @@ export class IntroScene {
   }
 
   private paint(input: IntroSceneInput, from: number, to: number, mix: number) {
-    const narrow = (act: number) => act === 2 && input.dataset === "narrow";
-    this.fade(this.body, this.bodies, narrow(from) ? paper : LOOKS[from].body, narrow(to) ? paper : LOOKS[to].body, mix, input.dt);
-    this.fade(this.dot, this.dots, narrow(from) ? paper : LOOKS[from].dot, narrow(to) ? paper : LOOKS[to].dot, mix, input.dt);
+    this.fade(this.body, this.bodies, LOOKS[from].body, LOOKS[to].body, mix, input.dt);
+    this.fade(this.dot, this.dots, LOOKS[from].dot, LOOKS[to].dot, mix, input.dt);
     if (!this.light) return;
     this.fade(this.glow, [this.light], LOOKS[from].light, LOOKS[to].light, mix, input.dt);
     const a = this.frames[from];

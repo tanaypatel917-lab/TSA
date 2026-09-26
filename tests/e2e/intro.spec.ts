@@ -82,15 +82,29 @@ test("chapter index, color tone and still composition follow the scroll position
   await expect(page.locator(".intro-stage")).toHaveCSS("background-color", "rgb(246, 239, 229)");
 });
 
-test("the example, prompt, claim and practice scenes respond with text, not only visuals", async ({ page }) => {
+test("your question travels: it is tokenized, lands in the word galaxy, frames the proof scene and picks a starting lesson", async ({ page }) => {
   await openIntro(page);
+  await expect(page.getByText("No question yet, so we will follow “Can AI be wrong?” for now. Type your own anytime.", { exact: true })).toBeAttached();
+  await page.getByLabel("Your question").fill("Will robots take my job?");
+  await expect(page.locator(".act-tokens span")).toHaveText(["Will", "robot", "s", "take", "my", "job", "?"]);
+  await expect(page.getByText("7 tokens. That is how a model reads your question. Keep scrolling to follow it.", { exact: true })).toBeAttached();
+  const landings = page.locator(".act-landings li");
+  await expect(landings).toHaveCount(2);
+  await expect(landings.first()).toContainText("robots landed near");
+  await page.getByPlaceholder("Drop in any word").fill("pizza");
+  await page.getByRole("button", { name: "Drop it in", exact: true }).click();
+  await expect(landings).toHaveCount(3);
+  await expect(landings.last()).toHaveText("pizza landed near bread, rice and cake.");
+  await page.getByPlaceholder("Drop in any word").fill("zorblax");
+  await page.keyboard.press("Enter");
+  await expect(landings.last()).toHaveText("zorblax is not on this small map, so it floats at the edge.");
+  await expect(page.getByText("Before you trust any answer to “Will robots take my job?”, check it like this.", { exact: true })).toBeAttached();
+  await page.getByRole("button", { name: "Is it cheating to use AI for homework?", exact: true }).click();
+  await expect(page.getByRole("link", { name: "Start with Learning honestly with AI" })).toHaveAttribute("href", "/modules/ethical-ai/lessons/academic-integrity/");
+});
 
-  const narrow = page.getByRole("button", { name: "Narrow examples", exact: true });
-  await narrow.click();
-  await expect(narrow).toHaveAttribute("aria-pressed", "true");
-  await expect(page.getByRole("button", { name: "Varied examples", exact: true })).toHaveAttribute("aria-pressed", "false");
-  await expect(page.getByText("Narrow examples: every answer echoes the one pattern it saw.", { exact: true })).toBeVisible();
-  await expect(page.locator(".intro-stage")).toHaveAttribute("data-dataset", "narrow");
+test("the prompt, claim and practice scenes respond with text, not only visuals", async ({ page }) => {
+  await openIntro(page);
 
   const parts = page.getByRole("group", { name: "Prompt parts" });
   const format = parts.getByRole("button", { name: "Format", exact: true });
@@ -178,6 +192,6 @@ test("without JavaScript every scene is readable on its own color field", async 
     await heading.scrollIntoViewIfNeeded();
     await expect(heading).toBeVisible();
   }
-  expect(await page.locator("#intro-act-2").evaluate((element) => getComputedStyle(element).backgroundColor)).toBe("rgb(221, 137, 98)");
+  expect(await page.locator("#intro-act-2").evaluate((element) => getComputedStyle(element).backgroundColor)).toBe("rgb(74, 104, 146)");
   await context.close();
 });

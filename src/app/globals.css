@@ -974,3 +974,8 @@ html[data-motion="full"] .xp-demo-track i { animation: xp-fill 1.8s var(--ease-o
   .demo-head { padding-right: 70px; min-height: 0; }
   .demo-guesses button { grid-template-columns: minmax(80px, auto) 1fr 40px; gap: 8px; }
 }
+
+body { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .11 0 0 0 0 .16 0 0 0 0 .26 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E"); }
+.lab, .progress-visual, .copyright-check { position: relative; }
+.demo::after, .lab::after, .progress-visual::after, .copyright-check::after { content: ""; position: absolute; top: -2px; right: -2px; width: 26px; height: 26px; background: linear-gradient(225deg, var(--corner, var(--paper)) 50%, rgba(28, 42, 67, .2) 50%, rgba(28, 42, 67, .08)); border-bottom-left-radius: 4px; pointer-events: none; }
+.demo { --corner: var(--clay); }
