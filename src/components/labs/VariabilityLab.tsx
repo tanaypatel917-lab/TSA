@@ -23,7 +23,7 @@ export function VariabilityLab() {
     }));
   }
   const unique = new Set(answers).size;
-  return <LabFrame id="lab-vary" title="Ask the same question three times." note="Most chat tools add some randomness, so the same prompt can give different answers. That is why you compare versions and verify the one you keep. This uses the same tiny model as the homepage demo.">
+  return <LabFrame id="lab-vary" sources="vary" title="Ask the same question three times." note="Most chat tools add some randomness, so the same prompt can give different answers. That is why you compare versions and verify the one you keep. This uses the same tiny model as the homepage demo.">
     <div className="lab-choices" role="group" aria-label="Start the sentence with">
       {predictorStarters.map((value) => <button key={value} type="button" aria-pressed={value === starter} onClick={() => { setStarter(value); setAnswers([]); }}>{value}…</button>)}
     </div>

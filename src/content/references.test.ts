@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { modules } from "./index";
-import { formatCitation, referenceGroups, referenceKinds, referenceNumber, referencesForLesson } from "./references";
+import { toolSources } from "./toolSources";
+import { formatCitation, referenceById, referenceGroups, referenceKinds, referenceNumber, referencePlaces, referencesForLesson } from "./references";
 
 const references = referenceGroups.flatMap((group) => group.references);
 const lessonKeys = modules.flatMap((module) => module.lessons.map((lesson) => `${module.id}/${lesson.id}`));
@@ -12,7 +13,12 @@ describe("references", () => {
   });
 
   it("only links to lessons that exist", () => {
-    expect(references.flatMap((reference) => reference.lessons).filter((key) => !lessonKeys.includes(key))).toEqual([]);
+    expect(references.flatMap((reference) => reference.lessons).filter((key) => !lessonKeys.includes(key) && !(key in referencePlaces))).toEqual([]);
+  });
+
+  it("backs every hands-on tool and demo with sources that exist", () => {
+    for (const ids of Object.values(toolSources)) for (const id of ids) expect(referenceById(id), id).toBeDefined();
+    for (const key of Object.keys(referencePlaces)) expect(references.some((reference) => reference.lessons.includes(key)), key).toBe(true);
   });
 
   it("uses unique ids, secure links and continuous numbering", () => {

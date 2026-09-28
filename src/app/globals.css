@@ -979,3 +979,8 @@ body { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org
 .lab, .progress-visual, .copyright-check { position: relative; }
 .demo::after, .lab::after, .progress-visual::after, .copyright-check::after { content: ""; position: absolute; top: -2px; right: -2px; width: 26px; height: 26px; background: linear-gradient(225deg, var(--corner, var(--paper)) 50%, rgba(28, 42, 67, .2) 50%, rgba(28, 42, 67, .08)); border-bottom-left-radius: 4px; pointer-events: none; }
 .demo { --corner: var(--clay); }
+
+.source-line { margin-top: 10px; font-size: 12.5px; line-height: 1.5; color: var(--muted); }
+.source-line a { color: inherit; text-decoration: underline; text-decoration-color: rgba(28, 42, 67, .35); text-underline-offset: 3px; }
+.source-line a:hover { color: var(--ink); text-decoration-color: currentColor; }
+.intro-experience .source-line, .intro-experience .source-line a { color: var(--sky); }

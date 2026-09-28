@@ -13,6 +13,7 @@ import { clearIntroReturn, introReturnPath, markIntroSeen } from "@/engine/intro
 import { autoIntroParts, autoPartCount, clamp, composeIntroPrompt, damp, easeInOutCubic, mixHex, nextIntroHint, resolveTimeline, smoothstep, type ActSpan } from "@/engine/introStory";
 import { createIntroScene, type IntroScene } from "./intro/IntroScene";
 import { WordGalaxy } from "./intro/WordGalaxy";
+import { SourceLine } from "./SourceLine";
 import { useMotionPreference } from "./MotionPreferences";
 
 type SceneState = "idle" | "loading" | "ready" | "error";
@@ -424,6 +425,7 @@ export function IntroExperience() {
           <form className="act-drop" onSubmit={(event) => { event.preventDefault(); dropWord(); }}><label><span className="sr-only">Drop in any word</span><input type="text" value={draft} maxLength={24} placeholder="Try a word, like pizza or teacher" onChange={(event) => setDraft(event.target.value)} /></label><button type="submit" className="button-primary">Drop it in</button></form>
           <ul className="act-landings" aria-live="polite">{landings.map((landing) => <li key={landing.word}><strong>{landing.word}</strong> {landing.known ? `landed near ${listed(landing.neighbors)}.` : "is not on this small map, so it floats at the edge."}</li>)}</ul>
           <p className="act-note">This map is simplified: {galaxy.length} words and two numbers each. Real models use hundreds of numbers for every word.</p>
+          <SourceLine tool="galaxy" />
         </div>;
       case "prompts":
         return <div className="act-controls act-reveal">

@@ -16,7 +16,7 @@ export function Redactor() {
   const [sent, setSent] = useState(false);
   const removed = hidden.size;
   const toggle = (index: number) => { setSent(false); setHidden((current) => { const next = new Set(current); if (next.has(index)) next.delete(index); else next.add(index); return next; }); };
-  return <LabFrame id="lab-redact" title="Clean up a prompt before you send it." note="The request still works without the private details: the tool only needs a placeholder like [Name]. Health details about someone else need their permission even when a teacher is involved.">
+  return <LabFrame id="lab-redact" sources="redact" title="Clean up a prompt before you send it." note="The request still works without the private details: the tool only needs a placeholder like [Name]. Health details about someone else need their permission even when a teacher is involved.">
     <p className="lab-hint">Click every personal detail to replace it with a placeholder.</p>
     <p className="redact-text">
       {pieces.map((piece, index) => piece.kind

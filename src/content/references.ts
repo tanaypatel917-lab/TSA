@@ -25,7 +25,13 @@ export type ReferenceGroup = { id: string; title: string; description: string; r
 
 export type Credit = { name: string; detail: string; url?: string };
 
-export const referencesCheckedOn = "September 22, 2026";
+export const referencesCheckedOn = "September 28, 2026";
+
+export const referencePlaces: Record<string, { title: string; href: string }> = {
+  "intro/proof": { title: "Intro: the proof scene", href: "/intro/#intro-act-4" },
+  "intro/galaxy": { title: "Intro: the word galaxy", href: "/intro/#intro-act-2" },
+  "home/demo": { title: "Homepage: next-word demo", href: "/" }
+};
 
 export const referenceGroups: ReferenceGroup[] = [
   {
@@ -39,7 +45,13 @@ export const referenceGroups: ReferenceGroup[] = [
       { id: "ouyang-2022", kind: "research", publisher: "arXiv", short: "Learning from human feedback", authors: "Ouyang, L., Wu, J., Jiang, X., et al.", date: "2022", title: "Training language models to follow instructions with human feedback", source: "arXiv:2203.02155", url: "https://arxiv.org/abs/2203.02155", note: "How extra training with human feedback makes model responses more helpful and less harmful.", lessons: ["foundations/language-models"] },
       { id: "ji-2022", kind: "research", publisher: "arXiv", short: "Survey of hallucination", authors: "Ji, Z., Lee, N., Frieske, R., et al.", date: "2022", title: "Survey of hallucination in natural language generation", source: "arXiv:2202.03629", url: "https://arxiv.org/abs/2202.03629", note: "Why language models produce fluent text that is unsupported or invented.", lessons: ["foundations/language-models", "foundations/strengths-and-limits"] },
       { id: "buolamwini-2018", kind: "research", publisher: "PMLR", short: "Gender Shades", authors: "Buolamwini, J., & Gebru, T.", date: "2018", title: "Gender shades: Intersectional accuracy disparities in commercial gender classification", source: "Proceedings of Machine Learning Research, 81", url: "https://proceedings.mlr.press/v81/buolamwini18a.html", note: "Evidence that a high overall accuracy can hide much worse results for some groups of people.", lessons: ["foundations/data-and-bias", "ethics/fairness"] },
-      { id: "dastin-2018", kind: "journalism", publisher: "Reuters", short: "Amazon’s biased recruiting tool", authors: "Dastin, J.", date: "2018, October 10", title: "Amazon scraps secret AI recruiting tool that showed bias against women", source: "Reuters", url: "https://www.reuters.com/article/world/amazon-scraps-secret-ai-recruiting-tool-that-showed-bias-against-women-idUSKCN1MK08J/", note: "A real hiring model that learned to favor the narrow past workforce it was trained on.", lessons: ["foundations/data-and-bias"] }
+      { id: "dastin-2018", kind: "journalism", publisher: "Reuters", short: "Amazon’s biased recruiting tool", authors: "Dastin, J.", date: "2018, October 10", title: "Amazon scraps secret AI recruiting tool that showed bias against women", source: "Reuters", url: "https://www.reuters.com/article/world/amazon-scraps-secret-ai-recruiting-tool-that-showed-bias-against-women-idUSKCN1MK08J/", note: "A real hiring model that learned to favor the narrow past workforce it was trained on.", lessons: ["foundations/data-and-bias"] },
+      { id: "sennrich-2016", kind: "research", publisher: "arXiv", short: "Subword tokens", authors: "Sennrich, R., Haddow, B., & Birch, A.", date: "2016", title: "Neural machine translation of rare words with subword units", source: "arXiv:1508.07909", url: "https://arxiv.org/abs/1508.07909", note: "Shows how tokenizers learn to split rare words into smaller pieces from data, the idea behind the simplified tokenizer tool.", lessons: ["foundations/language-models"] },
+      { id: "mikolov-2013", kind: "research", publisher: "arXiv", short: "Words as vectors", authors: "Mikolov, T., Chen, K., Corrado, G., & Dean, J.", date: "2013", title: "Efficient estimation of word representations in vector space", source: "arXiv:1301.3781", url: "https://arxiv.org/abs/1301.3781", note: "Turns words into lists of numbers where words used in similar ways sit close together, the idea behind the word galaxy.", lessons: ["foundations/language-models", "intro/galaxy"] },
+      { id: "touvron-2023", kind: "research", publisher: "arXiv", short: "Llama 2", authors: "Touvron, H., Martin, L., Stone, K., et al.", date: "2023", title: "Llama 2: Open foundation and fine-tuned chat models", source: "arXiv:2307.09288", url: "https://arxiv.org/abs/2307.09288", note: "A modern language model trained on about 2 trillion tokens, supporting the demo's point that real models learn from trillions of words.", lessons: ["foundations/language-models", "home/demo"] },
+      { id: "toureiffel-history", kind: "institution", publisher: "Eiffel Tower (official site)", short: "Eiffel Tower history", authors: "Société d’Exploitation de la Tour Eiffel", date: "n.d.", title: "Eiffel Tower history, architecture, design & construction", url: "https://www.toureiffel.paris/en/the-monument/history", note: "Facts for the hallucination tool: built for the 1889 World’s Fair, designed by Eiffel’s company with engineers Koechlin and Nouguier, finished in 2 years, 2 months and 5 days.", lessons: ["foundations/strengths-and-limits"] },
+      { id: "toureiffel-330", kind: "institution", publisher: "Eiffel Tower (official site)", short: "133 years and 330 metres", authors: "Société d’Exploitation de la Tour Eiffel", date: "2022, March 31", title: "133 years and 330 metres", url: "https://www.toureiffel.paris/en/news/history-and-culture/133-years-and-1083-feet", note: "Supports the tower’s current height of about 330 meters.", lessons: ["foundations/strengths-and-limits"] },
+      { id: "toureiffel-paint", kind: "institution", publisher: "Eiffel Tower (official site)", short: "The tower’s colors", authors: "Société d’Exploitation de la Tour Eiffel", date: "n.d.", title: "Painting and color of the Eiffel Tower", url: "https://www.toureiffel.paris/en/the-monument/painting-eiffel-tower", note: "Its first coats were Venetian red and reddish brown, followed by other colors including yellow.", lessons: ["foundations/strengths-and-limits"] }
     ]
   },
   {
@@ -50,6 +62,8 @@ export const referenceGroups: ReferenceGroup[] = [
       { id: "openai-prompting", kind: "guide", publisher: "OpenAI", short: "Prompt engineering guide", authors: "OpenAI", date: "n.d.", title: "Prompt engineering", source: "OpenAI API documentation", url: "https://developers.openai.com/api/docs/guides/prompt-engineering", note: "Practical guidance on clear instructions, roles, context, examples, and testing a prompt before relying on it.", lessons: ["tools/prompt-anatomy", "tools/iterate-verify"] },
       { id: "unesco-2023", kind: "institution", publisher: "UNESCO", short: "Generative AI in education", authors: "UNESCO", date: "2023", title: "Guidance for generative AI in education and research", url: "https://www.unesco.org/en/articles/guidance-generative-ai-education-and-research", note: "International guidance on human-centered, age-appropriate, and privacy-aware use of generative AI in schools.", lessons: ["tools/study-tools", "tools/when-not-to-use", "ethics/academic-integrity"] },
       { id: "openai-data", kind: "guide", publisher: "OpenAI", short: "How chats train models", authors: "OpenAI", date: "n.d.", title: "How your data is used to improve model performance", source: "OpenAI Help Center", url: "https://help.openai.com/en/articles/5722486", note: "An example of a consumer AI service that can train on conversations unless the user opts out.", lessons: ["tools/when-not-to-use", "ethics/privacy"] },
+      { id: "holtzman-2020", kind: "research", publisher: "arXiv", short: "Randomness in AI writing", authors: "Holtzman, A., Buys, J., Du, L., Forbes, M., & Choi, Y.", date: "2020", title: "The curious case of neural text degeneration", source: "arXiv:1904.09751", url: "https://arxiv.org/abs/1904.09751", note: "Explains why models sample likely words with some randomness, so the same prompt can give different answers.", lessons: ["tools/iterate-verify", "home/demo"] },
+      { id: "openstax-bio", kind: "guide", publisher: "OpenStax", short: "Biology 2e: photosynthesis", authors: "Clark, M. A., Choi, J., & Douglas, M.", date: "2018", title: "The light-dependent reactions of photosynthesis", source: "Biology 2e, section 8.2. OpenStax", url: "https://openstax.org/books/biology-2e/pages/8-2-the-light-dependent-reactions-of-photosynthesis", note: "Checks the biology in the prompt builder’s example answers about photosynthesis.", lessons: ["tools/prompt-anatomy"] },
       { id: "copyright-office", kind: "institution", publisher: "U.S. Copyright Office", short: "Copyright and AI", authors: "U.S. Copyright Office", date: "n.d.", title: "Copyright and artificial intelligence", url: "https://www.copyright.gov/ai/", note: "Ongoing U.S. policy work on training data, authorship, and who owns AI-generated material.", lessons: ["tools/creative-and-coding-tools", "real-world/creative-fields"] }
     ]
   },
@@ -93,10 +107,10 @@ export const referenceGroups: ReferenceGroup[] = [
   },
   {
     id: "introduction",
-    title: "Interactive introduction",
-    description: "The proof scene pairs a real fact with an invented quote, a common pattern in AI hallucinations.",
+    title: "Introduction and homepage",
+    description: "Sources for the intro scenes and the homepage demo, including the proof scene that pairs a real fact with an invented quote.",
     references: [
-      { id: "geiling-2013", kind: "journalism", publisher: "Smithsonian", short: "Honey’s shelf life", authors: "Geiling, N.", date: "2013, August 22", title: "The science behind honey\u2019s eternal shelf life", source: "Smithsonian Magazine", url: "https://www.smithsonianmag.com/science-nature/the-science-behind-honeys-eternal-shelf-life-1218690/", note: "Supports the honey half of the claim. The Einstein quote in the same scene is invented on purpose.", lessons: [] }
+      { id: "geiling-2013", kind: "journalism", publisher: "Smithsonian", short: "Honey’s shelf life", authors: "Geiling, N.", date: "2013, August 22", title: "The science behind honey\u2019s eternal shelf life", source: "Smithsonian Magazine", url: "https://www.smithsonianmag.com/science-nature/the-science-behind-honeys-eternal-shelf-life-1218690/", note: "Supports the honey half of the claim. The Einstein quote in the same scene is invented on purpose.", lessons: ["intro/proof"] }
     ]
   }
 ];
@@ -156,6 +170,10 @@ export const creditGroups: { id: string; title: string; credits: Credit[] }[] = 
 ];
 
 const allReferences = referenceGroups.flatMap((group) => group.references);
+
+export function referenceById(id: string) {
+  return allReferences.find((reference) => reference.id === id);
+}
 
 export function referenceNumber(id: string) {
   return allReferences.findIndex((reference) => reference.id === id) + 1;

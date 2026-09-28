@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react"
 import { predictorCorpus, predictorStarters } from "@/content/predictor";
 import { END, pick, predict, tokenize, train } from "@/engine/predictor";
 import { useMotionPreference } from "./MotionPreferences";
+import { SourceLine } from "./SourceLine";
 
 const LIMIT = 14;
 const moods = [[0.1, "Always the top guess"], [0.6, "Mostly likely words"], [1.1, "Adventurous"], [1.6, "Wild"]] as const;
@@ -89,5 +90,6 @@ export function NextWordDemo() {
       </div>
     </div>
     <p className="demo-note">A tiny model we trained on {predictorCorpus.length} sentences. Real language models learn from trillions of words and can still be confidently wrong. <Link href="/modules/ai-foundations/lessons/language-models" className="text-link">How language models work <span aria-hidden="true">↗</span></Link></p>
+    <SourceLine tool="predictor" />
   </section>;
 }

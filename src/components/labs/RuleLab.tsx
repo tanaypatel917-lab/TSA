@@ -20,7 +20,7 @@ export function RuleLab() {
   const keywords = text.split(",").map((word) => word.trim()).filter(Boolean);
   const results = messages.map((message) => ({ ...message, flagged: ruleFlags(message.text, keywords) }));
   const correct = results.filter((result) => result.flagged === result.spam).length;
-  return <LabFrame id="lab-rules" title="Write a spam rule. Watch it break." note="Hand-written rules only catch the patterns someone predicted, and they misfire on innocent messages. Machine learning finds patterns from thousands of labeled examples instead, though it can learn the wrong pattern too.">
+  return <LabFrame id="lab-rules" sources="rules" title="Write a spam rule. Watch it break." note="Hand-written rules only catch the patterns someone predicted, and they misfire on innocent messages. Machine learning finds patterns from thousands of labeled examples instead, though it can learn the wrong pattern too.">
     <label className="lab-field"><span>Flag a message if it contains any of these words (separate with commas)</span><input type="text" value={text} onChange={(event) => setText(event.target.value)} spellCheck={false} /></label>
     <p className="lab-score" aria-live="polite"><strong>{correct} of {messages.length}</strong> messages sorted correctly</p>
     <ul className="rule-list">
