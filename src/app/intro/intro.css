@@ -272,3 +272,8 @@ html[data-intro-page="true"][data-motion="full"] { scroll-behavior: smooth; }
 @media (max-width: 767px) {
   .intro-stage[data-act="5"] .glyph-question { transform: translate(-88%, calc(-50% - 27vh)) rotate(calc(-14deg + 24deg * (1 - var(--quality, 1)))) scale(.72); }
 }
+@media (max-width: 767px) {
+  .intro-experience .hero-copy { display: flex; flex-direction: column; }
+  .intro-experience .hero-copy .button-primary { order: 2; align-self: flex-start; margin-top: 22px; }
+  .intro-experience .hero-copy .hero-contents { order: 3; margin-top: 24px; }
+}

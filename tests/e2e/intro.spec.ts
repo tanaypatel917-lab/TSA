@@ -162,6 +162,9 @@ test("the mobile still version is readable, does not load a canvas, and exits cl
   await openIntro(page);
   await expect(page.getByRole("heading", { level: 1, name: "Follow the question.", exact: true })).toBeVisible();
   expect(await page.locator(".intro-experience").getAttribute("data-scene-state")).not.toBe("ready");
+  const start = await page.getByRole("link", { name: "Start the tour", exact: true }).boundingBox();
+  expect(start!.y + start!.height).toBeLessThan(844);
+  await expect(page.getByRole("navigation", { name: "In this introduction" })).toBeAttached();
   await expect(page.locator(".intro-canvas canvas")).toHaveCount(0);
   await expect(page.getByRole("navigation", { name: "Introduction chapters" })).toBeHidden();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);

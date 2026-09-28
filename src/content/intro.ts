@@ -1,4 +1,4 @@
-export const introPalette = { ink: "#1C2A43", clay: "#DD8962", paper: "#F6EFE5", sky: "#AFCBE3", slate: "#4A6892", rust: "#B5502B" } as const;
+export const introPalette = { ink: "#1C2A43", clay: "#DD8962", paper: "#F6EFE5", sky: "#AFCBE3", slate: "#4A6892", rust: "#B5502B", lake: "#5F86BA" } as const;
 
 export type IntroTone = "dark" | "light";
 export type IntroLayout = "hero" | "left" | "right" | "center";

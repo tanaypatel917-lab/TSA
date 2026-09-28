@@ -79,6 +79,7 @@ const TOKEN_PART = introPromptParts.flatMap((part, index) => Array.from({ length
 const RING_TILTS: Vector[] = [[1.2, 0.2, 0.9], [1.55, -0.45, 1.06], [1.85, 0.7, 1.22]];
 const STAR_DIRECTION = unit(0.6, 0.7, -0.3);
 const ROUGH = "#8A93A3";
+const ORIGAMI = "Wordplay.Origami.Root";
 const NEAT_RINGS: Vector[] = [[1.32, 0, 0.92], [1.32, 0, 1.12], [1.32, 0, 1.32]];
 const colors = new Map<string, readonly number[]>();
 
@@ -151,7 +152,9 @@ export class IntroScene {
   private dotScale = NaN;
   private readonly dotBase: number[];
 
-  constructor(private readonly app: Application, private readonly stage: SPEObject, private readonly items: Item[], private readonly bodies: SPEObject[], private readonly dots: SPEObject[], private readonly light?: SPEObject) {
+  private readonly crease = { rgb: [...rgb(clay)], hex: "" };
+
+  constructor(private readonly app: Application, private readonly stage: SPEObject, private readonly items: Item[], private readonly bodies: SPEObject[], private readonly dots: SPEObject[], private readonly light?: SPEObject, private readonly creases: SPEObject[] = []) {
     this.dotBase = dots.map((dot) => dot.scale.x || 1);
   }
 
@@ -530,6 +533,7 @@ export class IntroScene {
     const body = (act: number) => act === 5 ? mixHex(ROUGH, clay, smoothstep(0.34, 0.5, q)) : LOOKS[act].body;
     const dot = (act: number) => act === 5 ? mixHex(ROUGH, sky, smoothstep(0.17, 0.34, q)) : LOOKS[act].dot;
     this.fade(this.body, this.bodies, body(from), body(to), mix, input.dt);
+    if (this.creases.length) this.fade(this.crease, this.creases, mixHex(body(from), ink, 0.28), mixHex(body(to), ink, 0.28), mix, input.dt);
     this.fade(this.dot, this.dots, dot(from), dot(to), mix, input.dt);
     if (!this.light) return;
     this.fade(this.glow, [this.light], LOOKS[from].light, LOOKS[to].light, mix, input.dt);
@@ -584,10 +588,13 @@ export async function createIntroScene(app: Application, subject: string) {
   const ground = app.findObjectByName("Wordplay.Studio.PaperGround");
   if (ground) ground.visible = false;
   const stage = await app.createObject("Group", { name: "Wordplay.Intro.Stage", position: STAGE_POSITION, rotation: STAGE_ROTATION.map((angle) => (angle * 180) / Math.PI) as Vector });
-  const question = await app.cloneObject(root, { name: "Wordplay.Intro.Question", parent: stage, position: [0, 0, 0] });
+  const origami = app.findObjectByName(ORIGAMI);
+  const question = await app.cloneObject(origami ?? root, { name: "Wordplay.Intro.Question", parent: stage, position: [0, 0, 0] });
   root.visible = false;
-  const bodies = app.getAllObjects().filter((object) => object.name === "Wordplay.Question.Body");
-  const dots = app.getAllObjects().filter((object) => object.name === "Wordplay.Question.Dot");
+  const named = (prefix: string) => app.getAllObjects().filter((object) => object.name === prefix || object.name.startsWith(`${prefix}.`));
+  const bodies = origami ? named("Wordplay.Origami.Face") : named("Wordplay.Question.Body");
+  const dots = origami ? named("Wordplay.Origami.Dot") : named("Wordplay.Question.Dot");
+  const creases = origami ? named("Wordplay.Origami.Crease") : [];
   const create = (type: string, name: string, options: Record<string, unknown>) => app.createObject(type, { name, parent: stage, visible: false, scale: HIDDEN, castShadow: false, receiveShadow: false, ...options });
   const items = [makeItem(question, "question", 0)];
   for (let index = 0; index < 3; index += 1) items.push(makeItem(await create("Torus", `Wordplay.Intro.Ring.${index + 1}`, { width: 540, height: 540, depth: 13, material: { color: paper, roughness: 0.45 } }), "ring", index));
@@ -597,5 +604,5 @@ export async function createIntroScene(app: Application, subject: string) {
   items.push(makeItem(await create("Sphere", "Wordplay.Intro.Claim.Dot", { width: 62, height: 62, depth: 62, material: { color: clay, roughness: 0.25 } }), "dot", 0));
   items.push(makeItem(await create("Star", "Wordplay.Intro.Star", { width: 170, height: 170, depth: 46, spikes: 6, innerRadiusPercent: 46, cornerRadius: 14, material: { color: sky, roughness: 0.55 } }), "star", 0));
   const light = await app.createObject("PointLight", { name: "Wordplay.Intro.Rim", parent: stage, position: [300, 260, -380], color: clay, intensity: 1.2, distance: 1800 });
-  return new IntroScene(app, stage, items, bodies, dots, light);
+  return new IntroScene(app, stage, items, bodies, dots, light, creases);
 }
