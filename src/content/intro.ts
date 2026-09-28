@@ -22,6 +22,10 @@ export const insideSteps = [
   { at: 0.78, title: "Why it matters", text: "To answer you, a model leans on these neighborhoods to pick likely next words. That’s why an answer can sound right even when nobody checked the facts." }
 ];
 
+export const practiceStart = "Version 1 is rough: crooked, dull and missing its dot. Break it to improve it.";
+export const practiceSteps = ["Straighter.", "Its dot is growing back.", "Warmer color.", "The rings found an orbit.", "Steadier, with less wobble.", "Polished, with a star on top. That is the loop: test, notice, improve."];
+export const practiceDone = "Still 100%. Real projects keep testing even when they look done.";
+
 export const introQuestions = ["Is this true?", "Who made this?", "What is missing?", "Who does it affect?", "Can I check it?"];
 
 export type IntroPartId = "role" | "task" | "context" | "format" | "constraints";

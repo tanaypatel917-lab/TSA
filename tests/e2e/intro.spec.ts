@@ -130,9 +130,16 @@ test("the prompt, claim and practice scenes respond with text, not only visuals"
   await expect(page.getByText("No source exists", { exact: true })).toHaveCount(0);
 
   const breakIt = page.getByRole("button", { name: "Break it", exact: true });
-  await breakIt.click();
-  await breakIt.click();
-  await expect(page.getByText("Rebuilt 2 times. That is the loop: test, notice, improve.", { exact: true })).toBeVisible();
+  const meter = page.getByRole("meter", { name: "Quality" });
+  await expect(meter).toHaveAttribute("aria-valuenow", "0");
+  await expect(page.getByText("Version 1 is rough: crooked, dull and missing its dot. Break it to improve it.", { exact: true })).toBeAttached();
+  const steps = [[17, "Straighter."], [33, "Its dot is growing back."], [50, "Warmer color."], [67, "The rings found an orbit."], [83, "Steadier, with less wobble."], [100, "Polished, with a star on top. That is the loop: test, notice, improve."], [100, "Still 100%. Real projects keep testing even when they look done."]] as const;
+  for (const [value, note] of steps) {
+    await breakIt.click();
+    await expect(meter).toHaveAttribute("aria-valuenow", String(value));
+    await expect(page.getByText(note, { exact: true })).toBeAttached();
+  }
+  await expect(page.locator(".intro-stage")).toHaveAttribute("data-quality", "100");
 });
 
 test("the intro remains keyboard-operable and Skip intro restores navigation", async ({ page }) => {

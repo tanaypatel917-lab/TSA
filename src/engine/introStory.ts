@@ -72,3 +72,9 @@ export function autoPartCount(t: number, local: number, act: number) {
   if (t > act + 0.5) return introAutoOrder.length;
   return Math.round(clamp(1 + Math.floor(local * 5.4), 1, introAutoOrder.length));
 }
+
+export const PRACTICE_STEPS = 6;
+
+export function practiceQuality(breaks: number) {
+  return clamp(breaks / PRACTICE_STEPS);
+}

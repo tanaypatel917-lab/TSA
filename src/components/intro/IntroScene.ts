@@ -1,7 +1,7 @@
 import type { Application, SPEObject } from "@splinetool/runtime";
 import { introActs, introPalette, introPromptParts, type IntroPartId } from "@/content/intro";
 import { hideKit } from "@/content/visuals";
-import { clamp, damp, easeInOutCubic, easeOutCubic, hexToRgb, lerp, pseudoRandom, rgbToHex, smoothstep } from "@/engine/introStory";
+import { clamp, damp, easeInOutCubic, easeOutCubic, hexToRgb, lerp, pseudoRandom, mixHex, rgbToHex, smoothstep } from "@/engine/introStory";
 
 export type IntroSceneInput = {
   t: number;
@@ -20,6 +20,7 @@ export type IntroSceneInput = {
   celebrateAt: number;
   exit: number;
   finaleTop?: number;
+  quality?: number;
 };
 
 type Kind = "question" | "ring" | "token" | "slab" | "bar" | "dot" | "star";
@@ -77,6 +78,8 @@ const LOOKS = [
 const TOKEN_PART = introPromptParts.flatMap((part, index) => Array.from({ length: part.tokens }, () => index));
 const RING_TILTS: Vector[] = [[1.2, 0.2, 0.9], [1.55, -0.45, 1.06], [1.85, 0.7, 1.22]];
 const STAR_DIRECTION = unit(0.6, 0.7, -0.3);
+const ROUGH = "#8A93A3";
+const NEAT_RINGS: Vector[] = [[1.32, 0, 0.92], [1.32, 0, 1.12], [1.32, 0, 1.32]];
 const colors = new Map<string, readonly number[]>();
 
 function unit(x: number, y: number, z: number): Vector {
@@ -144,8 +147,13 @@ export class IntroScene {
   private readonly dot = { rgb: [...rgb(sky)], hex: "" };
   private readonly glow = { rgb: [...rgb(clay)], hex: "", x: NaN, y: NaN };
   private readonly tilted = { x: NaN, y: NaN };
+  private quality = 0;
+  private dotScale = NaN;
+  private readonly dotBase: number[];
 
-  constructor(private readonly app: Application, private readonly stage: SPEObject, private readonly items: Item[], private readonly bodies: SPEObject[], private readonly dots: SPEObject[], private readonly light?: SPEObject) {}
+  constructor(private readonly app: Application, private readonly stage: SPEObject, private readonly items: Item[], private readonly bodies: SPEObject[], private readonly dots: SPEObject[], private readonly light?: SPEObject) {
+    this.dotBase = dots.map((dot) => dot.scale.x || 1);
+  }
 
   get objectCount() {
     return this.items.length;
@@ -164,6 +172,7 @@ export class IntroScene {
     const from = clamp(Math.floor(input.t), 0, last);
     const to = Math.min(last, from + 1);
     const mix = easeInOutCubic(clamp(input.t - from));
+    this.quality = damp(this.quality, input.quality ?? 1, 4, input.dt);
     this.layout(input);
     this.prepare(input);
     this.simulate(input);
@@ -179,6 +188,7 @@ export class IntroScene {
     }
     this.started = true;
     this.paint(input, from, to, mix);
+    this.growDot(input);
     this.tilt(input);
     this.app.requestRender();
   }
@@ -292,7 +302,10 @@ export class IntroScene {
         : set(out, x + 190 * k, y + 10 * k, -40, 0.04 + p.y * 0.08, -0.55 + p.x * 0.2, 0, 0.8 * k, clay);
       case 5: {
         const ex = this.explode(local, input);
-        return set(out, x, y, 0, ex * 0.5 * Math.sin(time * 2.2) + p.y * 0.08, 0.3 + p.x * 0.3 + ex * 1.4, ex * 0.35, 0.9 * k, clay);
+        const q = this.quality;
+        const steady = smoothstep(0.67, 0.83, q);
+        const lean = lerp(0.42, 0, smoothstep(0, 0.17, q)) + lerp(0.14, 0, steady) * Math.sin(time * 2.4);
+        return set(out, x, y, 0, ex * 0.5 * Math.sin(time * 2.2) + p.y * 0.08, 0.3 + p.x * 0.3 + ex * 1.4, ex * 0.35 + lean, lerp(0.8, 0.95, q) * k, clay);
       }
       default: return set(out, x, y, 0, 0.04 + p.y * 0.06, -0.4 + Math.sin(time * 0.45) * 0.18 + p.x * 0.25, 0, 0.44 * k, clay);
     }
@@ -307,10 +320,15 @@ export class IntroScene {
     if (act === 1 && index === 1) return set(out, x, y, 0, 1.95 + Math.sin(time * 0.3) * 0.12, -Math.sin(time * 0.2) * 0.5, -0.5, 1.02 * k, color);
     if (act === 5) {
       const ex = this.explode(local, input);
-      const [tilt, roll, scale] = RING_TILTS[index];
+      const orbit = smoothstep(0.5, 0.67, this.quality);
+      const [messyTilt, messyRoll, messyScale] = RING_TILTS[index];
+      const [neatTilt, neatRoll, neatScale] = NEAT_RINGS[index];
+      const tilt = lerp(messyTilt + Math.sin(time * 0.9 + index) * 0.3, neatTilt, orbit);
+      const roll = lerp(messyRoll, neatRoll, orbit);
+      const scale = lerp(messyScale, neatScale, orbit);
       const [dx, dy, dz] = [0, 1, 2].map((axis) => [0.8, -0.5, 0.3][(axis + index) % 3]);
       const push = 170 * k * ex;
-      return set(out, x + (dx - 0.6) * push, y + dy * push, dz * push, tilt + ex * 1.3 * (index + 1) + Math.sin(time * 0.3 + index) * 0.08, Math.sin(time * 0.25 + index) * 0.4, roll + ex, scale * (0.72 - ex * 0.12) * k, color);
+      return set(out, x + (dx - 0.6) * push, y + dy * push, dz * push, tilt + ex * 1.3 * (index + 1) + Math.sin(time * 0.3 + index) * 0.08 * (1 - orbit), Math.sin(time * 0.25 + index) * 0.4 * (1 - orbit), roll + ex, scale * (0.72 - ex * 0.12) * k, color);
     }
     if (act === 6 && index === 0) return set(out, x, y, -40, 0, 0, Math.sin(time * 0.2) * 0.3, 0.54 * k, color);
     return set(out, x, y, 0, 1.4, 0, 0, HIDDEN, color);
@@ -356,7 +374,8 @@ export class IntroScene {
         const radius = 215 * k;
         const push = 330 * k * ex;
         const [dx, dy, dz] = item.dir;
-        return set(out, x + Math.cos(angle) * radius + ((dx > 0 ? dx * 0.35 : dx) * 0.8 - 0.25) * push, y + Math.sin(angle * 2) * 36 * k + dy * push, Math.sin(angle) * radius * 0.6 + dz * push, Math.sin(time * 0.4 + index) * 0.5 + ex * (2 + (index % 5)), Math.sin(time * 0.3 + index * 0.7) * 0.5 + ex * 3, ex * index * 0.2, 0.78 * k, color);
+        const jitter = (1 - this.quality) * 70 * k * Math.sin(time * 3.1 + index * 1.7);
+        return set(out, x + Math.cos(angle) * radius + ((dx > 0 ? dx * 0.35 : dx) * 0.8 - 0.25) * push + dx * jitter, y + Math.sin(angle * 2) * 36 * k * this.quality + dy * push + dy * jitter, Math.sin(angle) * radius * 0.6 + dz * push + dz * jitter, Math.sin(time * 0.4 + index) * 0.5 + ex * (2 + (index % 5)), Math.sin(time * 0.3 + index * 0.7) * 0.5 + ex * 3, ex * index * 0.2, 0.78 * k, color);
       }
       case 6: {
         const angle = (index / TOKENS) * TAU + time * 0.2;
@@ -404,12 +423,13 @@ export class IntroScene {
   private starPose(out: Pose, act: number, local: number, input: IntroSceneInput) {
     const { x, y, k } = this.frames[5];
     const { time } = input;
-    const baseX = x + 210 * k;
-    const baseY = y + 150 * k;
+    const baseX = x;
+    const baseY = y + 250 * k;
     if (act !== 5) return set(out, baseX, baseY, -60, 0.3, 0.2, 0, HIDDEN, sky);
     const ex = this.explode(local, input);
     const push = 320 * k * ex;
-    return set(out, baseX + STAR_DIRECTION[0] * push, baseY + STAR_DIRECTION[1] * push, -60 + STAR_DIRECTION[2] * push, 0.3 + ex, 0.2 + Math.sin(time * 0.5) * 0.4, Math.sin(time * 0.6) * 0.5 + ex * 3, 0.85 * k, sky);
+    const crown = smoothstep(0.83, 1, this.quality);
+    return set(out, baseX + STAR_DIRECTION[0] * push, baseY + STAR_DIRECTION[1] * push, -60 + STAR_DIRECTION[2] * push, 0.15 + ex, Math.sin(time * 0.5) * 0.3, time * 0.8 + ex * 3, Math.max(HIDDEN, crown * 0.6 * k), sky);
   }
 
   private finish(item: Item, input: IntroSceneInput, act: number) {
@@ -506,8 +526,11 @@ export class IntroScene {
   }
 
   private paint(input: IntroSceneInput, from: number, to: number, mix: number) {
-    this.fade(this.body, this.bodies, LOOKS[from].body, LOOKS[to].body, mix, input.dt);
-    this.fade(this.dot, this.dots, LOOKS[from].dot, LOOKS[to].dot, mix, input.dt);
+    const q = this.quality;
+    const body = (act: number) => act === 5 ? mixHex(ROUGH, clay, smoothstep(0.34, 0.5, q)) : LOOKS[act].body;
+    const dot = (act: number) => act === 5 ? mixHex(ROUGH, sky, smoothstep(0.17, 0.34, q)) : LOOKS[act].dot;
+    this.fade(this.body, this.bodies, body(from), body(to), mix, input.dt);
+    this.fade(this.dot, this.dots, dot(from), dot(to), mix, input.dt);
     if (!this.light) return;
     this.fade(this.glow, [this.light], LOOKS[from].light, LOOKS[to].light, mix, input.dt);
     const a = this.frames[from];
@@ -519,6 +542,19 @@ export class IntroScene {
       this.light.position.y = this.glow.y = y;
       this.light.position.z = -380;
     }
+  }
+
+  private growDot(input: IntroSceneInput) {
+    const presence = clamp(1 - Math.abs(input.t - 5));
+    const factor = Math.max(0.001, lerp(1, smoothstep(0.17, 0.34, this.quality), presence));
+    if (!moved(factor, this.dotScale, 0.002)) return;
+    this.dotScale = factor;
+    this.dots.forEach((dot, index) => {
+      const size = this.dotBase[index] * factor;
+      dot.scale.x = size;
+      dot.scale.y = size;
+      dot.scale.z = size;
+    });
   }
 
   private fade(state: { rgb: number[]; hex: string }, targets: SPEObject[], from: string, to: string, mix: number, dt: number) {

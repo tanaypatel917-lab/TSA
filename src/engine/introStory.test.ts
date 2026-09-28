@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { introPromptParts } from "@/content/intro";
-import { autoIntroParts, autoPartCount, composeIntroPrompt, mixHex, nextIntroHint, resolveTimeline } from "./introStory";
+import { autoIntroParts, autoPartCount, composeIntroPrompt, mixHex, nextIntroHint, resolveTimeline, practiceQuality } from "./introStory";
 
 const viewport = 900;
 const spans = [{ top: 0, height: 1440 }, { top: 1440, height: 1710 }, { top: 3150, height: 1260 }];
@@ -57,5 +57,11 @@ describe("intro prompt builder", () => {
     expect(autoPartCount(3, 1, 3)).toBe(5);
     expect(autoPartCount(3.8, 1, 3)).toBe(5);
     expect(introPromptParts.reduce((total, part) => total + part.tokens, 0)).toBe(24);
+  });
+});
+
+describe("practice quality", () => {
+  it("improves one sixth per break and stays at 100%", () => {
+    expect([0, 1, 3, 6, 9].map(practiceQuality)).toEqual([0, 1 / 6, 0.5, 1, 1]);
   });
 });

@@ -4,13 +4,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent, type PointerEvent } from "react";
 import type { Application } from "@splinetool/runtime";
-import { insideSteps, introActs, introClaim, introPromptParts, introQuestions, type IntroActId, type IntroPartId } from "@/content/intro";
+import { insideSteps, introActs, introClaim, introPromptParts, introQuestions, practiceDone, practiceStart, practiceSteps, type IntroActId, type IntroPartId } from "@/content/intro";
 import { introSuggestions } from "@/content/galaxy";
 import { contentWords, galaxy, land, recommend } from "@/engine/introQuestion";
 import { tokens } from "@/engine/labs";
 import { questionScene } from "@/content/visuals";
 import { clearIntroReturn, introReturnPath, markIntroSeen } from "@/engine/intro";
-import { autoIntroParts, autoPartCount, clamp, composeIntroPrompt, damp, easeInOutCubic, mixHex, nextIntroHint, resolveTimeline, smoothstep, type ActSpan } from "@/engine/introStory";
+import { autoIntroParts, autoPartCount, clamp, composeIntroPrompt, damp, easeInOutCubic, mixHex, nextIntroHint, practiceQuality, resolveTimeline, smoothstep, type ActSpan } from "@/engine/introStory";
 import { createIntroScene, type IntroScene } from "./intro/IntroScene";
 import { WordGalaxy } from "./intro/WordGalaxy";
 import { SourceLine } from "./SourceLine";
@@ -65,11 +65,14 @@ export function IntroExperience() {
   const pieces = useMemo(() => tokens(effective), [effective]);
   const landings = useMemo(() => Array.from(new Set([...contentWords(effective), ...extra])).slice(0, 8).map((word) => land(word)), [effective, extra]);
   const pick = useMemo(() => recommend(effective), [effective]);
+  const quality = practiceQuality(breaks);
+  const qualityPct = Math.round(quality * 100);
+  const practiceNote = breaks === 0 ? practiceStart : breaks <= practiceSteps.length ? practiceSteps[breaks - 1] : practiceDone;
   const complete = parts.length === introPromptParts.length;
   const sceneUrl = questionScene.url.trim();
   const enabled = !!sceneUrl && !reduced && wide;
   const displayState = !sceneUrl ? "disabled" : !enabled ? "still" : state;
-  const live = useRef({ parts, claimChecked, claimAt: 0, breakAt: 0, celebrateAt: 0, exitAt: 0, interactive: false });
+  const live = useRef({ quality, parts, claimChecked, claimAt: 0, breakAt: 0, celebrateAt: 0, exitAt: 0, interactive: false });
   const pointer = useRef({ x: 0, y: 0, clientX: -9999, clientY: -9999, fine: false });
   const drag = useRef({ active: false, id: -1, lastX: 0, lastTime: 0, velocity: 0, spin: 0 });
 
@@ -101,7 +104,7 @@ export function IntroExperience() {
   }, []);
 
   useEffect(() => {
-    Object.assign(live.current, { parts, claimChecked, interactive: displayState === "ready" });
+    Object.assign(live.current, { quality, parts, claimChecked, interactive: displayState === "ready" });
   });
 
   useEffect(() => {
@@ -352,7 +355,7 @@ export function IntroExperience() {
         aspect: width / viewport, compact: width < 1024 || width / viewport < 1.15,
         pointer: smoothPointer, spin: spin.spin, parts: input.parts,
         claimChecked: input.claimChecked, claimAt: input.claimAt, breakAt: input.breakAt, celebrateAt: input.celebrateAt,
-        exit: input.exitAt ? clamp((time / 1000 - input.exitAt) / 0.75) : 0, finaleTop
+        exit: input.exitAt ? clamp((time / 1000 - input.exitAt) / 0.75) : 0, finaleTop, quality: input.quality
       });
     };
     frame = requestAnimationFrame(tick);
@@ -446,8 +449,9 @@ export function IntroExperience() {
         </div>;
       case "practice":
         return <div className="act-controls act-reveal">
-          <button type="button" className="button-primary" onClick={breakIt}>Break it <span aria-hidden="true">*</span></button>
-          <p className="act-status" role="status">{breaks ? `Rebuilt ${breaks} ${breaks === 1 ? "time" : "times"}. That is the loop: test, notice, improve.` : ""}</p>
+          <div className="act-break"><button type="button" className="button-primary" onClick={breakIt}>Break it <span aria-hidden="true">*</span></button>
+          <div className="act-quality" role="meter" aria-label="Quality" aria-valuemin={0} aria-valuemax={100} aria-valuenow={qualityPct} aria-valuetext={`${qualityPct}%`}><span>Quality <strong>{qualityPct}%</strong></span><i><b style={{ width: `${qualityPct}%` }} /></i></div></div>
+          <p className="act-status" role="status">{practiceNote}</p>
         </div>;
       default:
         return null;
@@ -481,7 +485,7 @@ export function IntroExperience() {
   }
 
   return <article ref={page} className="intro-experience" data-scene-state={displayState} data-scene-subject={subject} data-scene-objects={objects} data-ready={ready} data-exiting={!!exit} onPointerDown={startDrag}>
-    <div ref={backdrop} className="intro-stage" data-act={act} data-claim={claimChecked ? "checked" : "open"}>
+    <div ref={backdrop} className="intro-stage" data-act={act} data-quality={qualityPct} style={{ "--quality": quality } as CSSProperties} data-claim={claimChecked ? "checked" : "open"}>
       <div ref={fold} className="intro-fold" aria-hidden="true"><i ref={foldShade} /></div>
       <div ref={marquee} className="intro-marquee" aria-hidden="true"><div ref={marqueeTrack} className="intro-marquee-track">{[...introQuestions, ...introQuestions].map((question, index) => <span key={index}>{question}</span>)}</div></div>
       <div className="intro-fallback" aria-hidden="true">
