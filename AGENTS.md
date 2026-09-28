@@ -8,6 +8,9 @@
   group visible (Spline drops hidden objects from exports) and keep the editor view framed on the
   question mark before publishing, because the export uses the editor view as its camera.
 
+- The intro uses `Wordplay.Origami.Root` (inside the kit group) when it exists; the homepage and game keep
+  the solid question mark. Game blues are `lake` (#5F86BA) in code and in the Spline kit pieces.
+
 ## Verification
 - `npx tsc --noEmit`
 - `npm run lint`

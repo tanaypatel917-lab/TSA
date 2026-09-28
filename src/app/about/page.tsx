@@ -12,7 +12,7 @@ const principles = [["Questions before answers.", "Every chapter opens with a qu
 const buildSteps = [
   ["Research", "We started from the TSA 2026–27 brief, AI literacy frameworks such as AI4K12’s Five Big Ideas and UNESCO’s AI competency framework, and award-winning websites."],
   ["Design system", "Two typefaces, a four-color palette, one grid and shared components, so every page looks like part of one product. No templates or themes."],
-  ["Build", "Next.js and TypeScript, exported as a static site: fast, no server, no accounts. 3D is built in Spline and loads only when motion is on and the screen is wide enough."],
+  ["Build", "Next.js and TypeScript, exported as a static site: fast, no server, no accounts. 3D is built in Spline and loads only when motion is on and the screen is wide enough. Every hands-on tool lists its sources, and teachers get plans, worksheets and a progress checker."],
   ["Test", "Every change runs type checks, linting and unit tests before it deploys. A browser test suite covers keyboard use, phones, reduced motion, 200% zoom and storage failures."]
 ];
 const stack = [["Framework", "Next.js 14 (static export) and React 18"], ["Language", "TypeScript"], ["3D", "Spline scenes and the Spline runtime"], ["Styling", "Hand-written CSS with Tailwind CSS for resets"], ["Testing", "Vitest unit tests and Playwright browser tests"], ["Hosting", "GitHub Pages, deployed by GitHub Actions"]];

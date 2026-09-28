@@ -81,6 +81,28 @@ model with bigram and unigram backoff, trained in the browser on the sentences i
 `src/content/predictor.ts`. Learners pick a starter, add likely words, or let it
 write with a creativity (temperature) slider.
 
+## Teacher toolkit and certificate
+
+`/teachers` (linked from the footer, About and the homepage) has a lesson plan for each chapter
+(`src/content/toolkit.ts`: goals, timing, warm-up, discussion, activity tips, AI4K12 Big Ideas),
+printable worksheets and answer guides, a progress file checker that reads exported progress files
+in the browser, and a classroom AI policy builder. Printing copies one block into `#print-root`
+(`src/components/print.ts`). My learning unlocks a printable certificate once every chapter is
+complete (`courseComplete` in `src/engine/chapters.ts`); the typed name is never stored.
+
+## Sources under every tool
+
+Each hands-on tool, the homepage demo and the intro galaxy show a "Sources" line (`SourceLine`)
+built from `src/content/toolSources.ts`. Intro and homepage citations use the places in
+`referencePlaces`, so they appear on the References evidence board too.
+
+## Break it
+
+In the intro's practice scene each break raises a quality meter by one sixth
+(`practiceQuality`); the 3D question mark straightens, regrows its dot, warms from grey to
+terracotta, finds an orbit, steadies and gains a star. If a `Wordplay.Origami.Root` exists in the
+Spline scene, the intro uses that folded-paper question mark instead of the solid one.
+
 ## Judges' tour and documentation
 
 The homepage and About page start an eight-stop site tour (`src/content/tour.ts`,
