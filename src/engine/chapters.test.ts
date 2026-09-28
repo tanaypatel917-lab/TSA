@@ -1,13 +1,20 @@
 import { describe, expect, it } from "vitest";
 import { modules } from "@/content";
 import { foundations } from "@/content/modules/foundations";
-import { chapterMinutes, chapterProgress } from "./chapters";
+import { chapterMinutes, chapterProgress, courseComplete } from "./chapters";
 import { lessonsForTerm } from "./glossary";
 import { initialState } from "./progress";
 
 const allLessons = foundations.lessons.map((lesson) => `foundations/${lesson.id}`);
 
 describe("chapter progress", () => {
+  it("completes the course only when every chapter is complete", () => {
+    const done = { ...initialState, completedLessons: modules.flatMap((module) => module.lessons.map((lesson) => `${module.id}/${lesson.id}`)), completedActivities: modules.map((module) => module.id), quizBest: Object.fromEntries(modules.map((module) => [module.id, 80])) };
+    expect(courseComplete(done, modules)).toBe(true);
+    expect(courseComplete({ ...done, quizBest: { ...done.quizBest, capstone: 60 } }, modules)).toBe(false);
+    expect(courseComplete(initialState, modules)).toBe(false);
+  });
+
   it("starts new learners on the first lesson", () => {
     expect(chapterProgress(initialState, foundations)).toMatchObject({ status: "new", label: "Not started", started: false, next: { href: "/modules/ai-foundations/lessons/what-is-ai", label: "Lesson 1: What AI is (and is not)" } });
   });

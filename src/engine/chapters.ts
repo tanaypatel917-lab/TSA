@@ -51,3 +51,7 @@ export function chapterProgress(state: ProgressState, module: Module): ChapterPr
   const label = complete ? "Complete" : started ? `${lessonsDone} of ${module.lessons.length} lessons read` : "Not started";
   return { lessonsDone, activityDone, quizBest, complete, started, status, label, next };
 }
+
+export function courseComplete(state: ProgressState, moduleList: Module[]) {
+  return moduleList.length > 0 && moduleList.every((module) => chapterProgress(state, module).complete);
+}

@@ -1007,3 +1007,15 @@ body { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org
   .sheet-lesson { font-size: 9pt !important; color: #555; }
   .sheet-lines { height: 62pt; background: repeating-linear-gradient(transparent 0 19pt, #bbb 19pt 20pt); }
 }
+@page certificate { size: landscape; margin: 12mm; }
+@media print {
+  .print-certificate { page: certificate; display: grid; justify-items: center; gap: 10pt; min-height: 170mm; padding: 22mm 18mm; border: 3pt double #111; text-align: center; }
+  .cert-brand { font-family: var(--font-display), sans-serif; font-size: 22pt; font-weight: 700; }
+  .cert-kicker { font-size: 11pt; letter-spacing: .16em; text-transform: uppercase; }
+  .cert-name { margin-top: 10pt; padding: 0 24pt 6pt; border-bottom: 1pt solid #111; font-family: var(--font-display), sans-serif; font-size: 34pt; font-weight: 600; }
+  .cert-line { font-size: 14pt; }
+  .cert-chapters { display: flex; flex-wrap: wrap; justify-content: center; gap: 4pt 16pt; margin: 6pt 0 0; padding: 0; list-style: none; font-size: 11pt; }
+  .cert-stats { font-size: 10.5pt; color: #333; }
+  .cert-sign { display: flex; gap: 60pt; margin-top: 26pt; }
+  .cert-sign span { min-width: 150pt; padding-top: 4pt; border-top: 1pt solid #111; font-size: 9.5pt; }
+}
