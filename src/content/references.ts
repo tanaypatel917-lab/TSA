@@ -149,6 +149,7 @@ export const creditGroups: { id: string; title: string; credits: Credit[] }[] = 
       { name: "React and React DOM", url: "https://react.dev/", detail: "Meta. MIT License." },
       { name: "Spline runtime", url: "https://spline.design/terms", detail: "Spline, Inc. Loads and animates the 3D scenes. The package declares no open-source license, so it is used under the Spline Terms of Service." },
       { name: "TypeScript", url: "https://www.typescriptlang.org/", detail: "Microsoft. Apache License 2.0." },
+      { name: "three.js", url: "https://threejs.org/", detail: "three.js authors. Draws the generated 3D pieces: the progress tower, medals, voxel marks, embedding space and island. MIT License." },
       { name: "Tailwind CSS and Tailwind Forms", url: "https://tailwindcss.com/", detail: "Tailwind Labs. MIT License." },
       { name: "PostCSS, Autoprefixer and ESLint", url: "https://postcss.org/", detail: "Build and code-quality tools. MIT License." },
       { name: "Vitest", url: "https://vitest.dev/", detail: "Unit tests. MIT License." },
