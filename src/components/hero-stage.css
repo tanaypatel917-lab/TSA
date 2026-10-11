@@ -35,3 +35,9 @@
   .page-hero[data-tone="ink"] .hero-stage[data-variant="echo"] .hero-stage-item[data-kind="solid"] { color: var(--clay); }
   .page-hero[data-tone="clay"] .hero-stage[data-variant="echo"] .hero-stage-item[data-kind="solid"] { color: var(--paper); }
 }
+
+.hero-voxel { position: absolute; top: 52%; left: 50%; transform: translate(-50%, -50%); }
+.hero-voxel > .chapter-glyph { opacity: 0 !important; padding: 0; font-size: clamp(240px, 26vw, 400px); letter-spacing: -.06em; color: var(--ink); }
+.page-hero[data-tone="ink"] .hero-voxel > .chapter-glyph { color: var(--clay); }
+.page-hero[data-tone="clay"] .hero-voxel > .chapter-glyph { color: var(--paper); }
+.hero-stage:has(.hero-voxel[data-on="true"]) .hero-stage-item { visibility: hidden; }
