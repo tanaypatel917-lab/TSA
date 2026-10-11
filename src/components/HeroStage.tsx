@@ -26,7 +26,7 @@ function layout(variant: HeroVariant, mark: string, earned: string[]): Item[] {
 
 export function HeroStage({ variant, mark }: { variant: HeroVariant; mark: string }) {
   const stage = useRef<HTMLDivElement>(null);
-  const reduced = useMotionPreference();
+  const { reduced } = useMotionPreference();
   const { state, hydrated } = useProgress();
   const items = layout(variant, mark, hydrated ? state.badges : []);
 

@@ -1,0 +1,11 @@
+.reading-layer { position: fixed; z-index: 60; inset: 0; pointer-events: none; }
+.reading-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.reading-lines path { fill: none; stroke: var(--clay); stroke-linecap: round; stroke-dasharray: 600; animation: reading-line 420ms var(--ease-out) both; }
+.reading-lines text { fill: var(--ink); font: 700 11px var(--font-body), sans-serif; letter-spacing: .04em; paint-order: stroke; stroke: var(--paper); stroke-width: 4px; }
+@keyframes reading-line { from { stroke-dashoffset: 600; } to { stroke-dashoffset: 0; } }
+.reading-chip { position: absolute; top: 0; left: 0; display: flex; gap: 3px; opacity: 0; transition: opacity 160ms; will-change: transform; }
+.reading-chip[data-on="true"] { opacity: 1; }
+.reading-chip span { display: grid; padding: 3px 6px 4px; border: 1.5px solid var(--ink); border-radius: 3px; background: var(--paper); color: var(--ink); box-shadow: 2px 2px 0 var(--ink); font: 600 12px/1.1 var(--font-body), sans-serif; }
+.reading-chip span:nth-child(2n) { background: var(--sky); }
+.reading-chip span:nth-child(3n) { background: var(--clay); }
+.reading-chip span::after { content: attr(data-id); margin-top: 2px; font-size: 9px; font-weight: 700; letter-spacing: .04em; opacity: .65; }

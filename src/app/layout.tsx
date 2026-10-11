@@ -8,6 +8,7 @@ import { MotionProvider } from "@/components/MotionPreferences";
 import { IntroGate } from "@/components/IntroGate";
 import { RevealObserver } from "@/components/RevealObserver";
 import { PageTransitions } from "@/components/PageTransitions";
+import { ReadingLayer } from "@/components/ReadingLayer";
 import { TypeField } from "@/components/TypeField";
 import { TourGuide } from "@/components/TourGuide";
 import { ProgressProvider } from "@/state/ProgressProvider";
@@ -18,5 +19,5 @@ const uncut = localFont({ src: "../../public/fonts/uncut-sans-variable.woff2", v
 export const metadata: Metadata = { title: "Wordplay — Hands-on AI literacy", description: "Learn how AI works, test its answers, and make decisions you can explain. Hands-on AI literacy for grades 9–12." };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en" className={`${clash.variable} ${uncut.variable}`}><body><a href="#main" className="skip-link">Skip to content</a><MotionProvider><RevealObserver /><TypeField /><PageTransitions /><ProgressProvider><SiteNav /><IntroGate /><main id="main" tabIndex={-1}>{children}</main><BadgeToast /><TourGuide /><SiteFooter /></ProgressProvider></MotionProvider></body></html>;
+  return <html lang="en" className={`${clash.variable} ${uncut.variable}`}><body><a href="#main" className="skip-link">Skip to content</a><MotionProvider><RevealObserver /><TypeField /><ReadingLayer /><PageTransitions /><ProgressProvider><SiteNav /><IntroGate /><main id="main" tabIndex={-1}>{children}</main><BadgeToast /><TourGuide /><SiteFooter /></ProgressProvider></MotionProvider></body></html>;
 }
