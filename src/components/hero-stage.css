@@ -41,3 +41,8 @@
 .page-hero[data-tone="ink"] .hero-voxel > .chapter-glyph { color: var(--clay); }
 .page-hero[data-tone="clay"] .hero-voxel > .chapter-glyph { color: var(--paper); }
 .hero-stage:has(.hero-voxel[data-on="true"]) .hero-stage-item { visibility: hidden; }
+
+.orbit3d { position: absolute; inset: 0; opacity: 0; transition: opacity .6s var(--ease-out); }
+.orbit3d[data-on="true"] { opacity: 1; }
+.orbit3d canvas { display: block; width: 100%; height: 100%; }
+.hero-stage:has(.orbit3d[data-on="true"]) :is(.hero-stage-item, .hero-stage-ring, .hero-stage-center) { visibility: hidden; }

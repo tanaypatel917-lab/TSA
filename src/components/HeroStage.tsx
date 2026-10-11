@@ -7,6 +7,7 @@ import { BADGES } from "@/engine/badges";
 import { useMotionPreference } from "./MotionPreferences";
 import { useProgress } from "@/state/ProgressProvider";
 import { BadgeCoins } from "./three/BadgeCoins";
+import { ChapterOrbit } from "./three/ChapterOrbit";
 import { EmbeddingSpace } from "./three/EmbeddingSpace";
 import { VoxelGlyph } from "./three/VoxelGlyph";
 import "./hero-stage.css";
@@ -129,6 +130,7 @@ export function HeroStage({ variant, mark }: { variant: HeroVariant; mark: strin
   return <div ref={stage} className="hero-stage" data-variant={variant} aria-hidden="true">
     {variant === "stamps" && hydrated && <BadgeCoins earned={state.badges} />}
     {variant === "cloud" && <EmbeddingSpace />}
+    {variant === "orbit" && <ChapterOrbit />}
     {variant === "echo" && <VoxelGlyph mark={mark} className="hero-voxel" />}
     {variant === "orbit" && <><span className="hero-stage-ring" /><span className="hero-stage-center" data-stage-center="">?</span></>}
     {items.map((item, index) => <span key={`${item.label}-${index}`} className="hero-stage-item" data-stage-item="" data-kind={item.kind} data-on={item.on} style={variant === "echo" ? { opacity: 0.18 + (index / (ECHOES - 1)) * 0.82 } : undefined}>
