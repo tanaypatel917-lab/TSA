@@ -1053,3 +1053,11 @@ html[data-motion="full"] :is(.section-heading h2, .spine h2, .human-judgment h2,
 .island3d[data-on="true"] { opacity: 1; }
 .island3d canvas { display: block; width: 100%; height: 100%; }
 .home-world-map:has(.island3d[data-on="true"]) > :not(.island3d) { visibility: hidden; }
+
+.quiz-score { position: relative; }
+.quiz-voxel { display: none !important; }
+@media (min-width: 900px) {
+  .quiz-voxel { display: grid !important; position: absolute !important; left: -2%; top: 50%; transform: translateY(-50%); pointer-events: none; }
+  .quiz-voxel > .chapter-glyph { opacity: 0 !important; padding: 0; font-size: 112px; letter-spacing: -.04em; color: var(--clay); }
+  .quiz-score:has(.quiz-voxel[data-on="true"]) h2 { color: transparent; }
+}
