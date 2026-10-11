@@ -202,7 +202,7 @@ html[data-motion="full"] .system-arrow i { animation: system-flow 700ms linear i
 .rail-head, .rail-lessons, .rail-mark-ink { display: none; }
 .rail[data-mode="list"] .chapter-index-section { padding-top: 0; }
 .rail[data-mode="scrub"] { position: relative; height: calc(var(--count) * 78vh + 22vh); margin-top: -1px; }
-.rail[data-mode="scrub"] .rail-sticky { position: sticky; top: 0; display: flex; flex-direction: column; justify-content: center; gap: 3vh; height: 100vh; overflow: hidden; }
+.rail[data-mode="scrub"] .rail-sticky { position: sticky; top: 0; display: flex; flex-direction: column; justify-content: center; gap: 3vh; height: 100vh; overflow: clip; }
 .rail[data-mode="scrub"] .rail-head { display: flex; align-items: center; gap: 28px; padding-inline: 6vw; font-size: 14px; font-weight: 600; }
 .rail-count { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .rail-count strong { font-family: var(--font-display), sans-serif; font-size: 34px; font-weight: 650; letter-spacing: -.03em; }
