@@ -10,6 +10,12 @@
 .meter-glyph { grid-area: 1 / 1; font-family: var(--font-display), sans-serif; font-size: clamp(260px, 30vw, 440px); font-weight: 650; line-height: .82; color: rgba(246, 239, 229, .1); user-select: none; }
 .meter-fill { color: var(--clay); clip-path: inset(calc(100% - var(--fill) * 1%) 0 0 0); transition: clip-path 1.3s cubic-bezier(.77, 0, .175, 1); }
 .question-meter[data-ready="false"] .meter-fill { clip-path: inset(100% 0 0 0); }
+.tower3d { grid-area: 1 / 1; width: 100%; height: clamp(380px, 38vw, 540px); cursor: grab; touch-action: pan-y; opacity: 0; transition: opacity .6s var(--ease-out); }
+.tower3d:active { cursor: grabbing; }
+.tower3d[data-on="true"] { opacity: 1; }
+.tower3d canvas { display: block; width: 100%; height: 100%; }
+.question-meter:has(.tower3d[data-on="true"]) .meter-glyph { opacity: 0; }
+.question-meter:has(.tower3d[data-on="true"]) figcaption { position: relative; z-index: 1; pointer-events: none; }
 .question-meter figcaption { grid-area: 1 / 1; align-self: end; justify-self: start; max-width: 9ch; font-size: 15px; line-height: 1.3; }
 .question-meter figcaption strong { display: block; font-family: var(--font-display), sans-serif; font-size: clamp(40px, 4vw, 60px); font-weight: 600; line-height: 1; }
 .learn-figures { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; margin: 40px 0 0; padding-top: 18px; border-top: 1px solid rgba(246, 239, 229, .3); }
