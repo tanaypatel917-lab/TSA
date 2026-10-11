@@ -25,3 +25,11 @@
   .study-actions > button { flex: 1 1 100%; }
   .study-summary { padding: 24px; box-shadow: 5px 5px 0 var(--sky); }
 }
+
+.flashcard { position: relative; isolation: isolate; }
+.flashcard::before, .flashcard::after { content: ""; position: absolute; z-index: -1; inset: 0; border: 1.5px solid var(--ink); border-radius: 4px; }
+.flashcard::before { background: var(--sky); transform: translate(14px, 12px) rotate(1.6deg); }
+.flashcard::after { background: var(--paper); transform: translate(26px, 22px) rotate(-1.4deg); z-index: -2; }
+html[data-motion="full"] .flashcard { transform: perspective(1400px) rotateX(var(--ty, 0deg)) rotateY(var(--tx, 0deg)); transition: transform .35s var(--ease-out); animation: card-deal 560ms var(--ease-out) backwards; }
+@keyframes card-deal { from { opacity: 0; transform: perspective(1400px) translate(60px, 80px) rotate(9deg) scale(.9); } }
+@media (max-width: 899px) { .flashcard::before { transform: translate(8px, 7px) rotate(1.2deg); } .flashcard::after { display: none; } }
