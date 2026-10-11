@@ -3,6 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { tourStops } from "@/content/tour";
+import { scrollToElement } from "./SmoothScroll";
 
 export const TOUR_KEY = "wordplay:tour:v1";
 export const TOUR_EVENT = "wordplay:tour";
@@ -56,8 +57,7 @@ export function TourGuide() {
       window.clearInterval(timer);
       if (!element) return;
       element.dataset.tour = "on";
-      const reduced = document.documentElement.dataset.motion !== "full";
-      element.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "center" });
+      scrollToElement(element);
       heading.current?.focus({ preventScroll: true });
     }, 100);
     return () => { window.clearInterval(timer); if (element) delete element.dataset.tour; };

@@ -983,6 +983,22 @@ body { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org
 .source-line { margin-top: 10px; font-size: 12.5px; line-height: 1.5; color: var(--muted); }
 .source-line a { color: inherit; text-decoration: underline; text-decoration-color: rgba(28, 42, 67, .35); text-underline-offset: 3px; }
 .source-line a:hover { color: var(--ink); text-decoration-color: currentColor; }
+
+/* Inertial scroll motion */
+html[data-motion="full"] :is(.section-heading h2, .spine h2, .human-judgment h2, .home-closing h2, .about-principles h2) {
+  transform: skewY(calc(var(--scroll-velocity, 0) * -2.5deg));
+  transition: transform 200ms var(--ease-out);
+}
+@supports (animation-timeline: view()) {
+  @keyframes home-hero-exit {
+    to { opacity: .4; transform: translateY(-60px); }
+  }
+  html[data-motion="full"] .home-hero .hero-copy {
+    animation: home-hero-exit linear both;
+    animation-timeline: view();
+    animation-range: exit 0% exit 100%;
+  }
+}
 .intro-experience .source-line, .intro-experience .source-line a { color: var(--sky); }
 
 .print-only, #print-root { display: none; }
