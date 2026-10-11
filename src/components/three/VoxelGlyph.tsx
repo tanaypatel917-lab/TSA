@@ -21,7 +21,7 @@ function sample(mark: string, font: string) {
   return cells;
 }
 
-export function VoxelGlyph({ mark }: { mark: string }) {
+export function VoxelGlyph({ mark, className = "" }: { mark: string; className?: string }) {
   const glyph = useRef<HTMLSpanElement>(null);
   const host = useRef<HTMLDivElement>(null);
   const [on, setOn] = useState(false);
@@ -72,7 +72,7 @@ export function VoxelGlyph({ mark }: { mark: string }) {
       const resize = new ResizeObserver(size);
       resize.observe(element);
 
-      const hero = element.closest(".chapter-hero") ?? element;
+      const hero = element.closest(".chapter-hero, .lesson-opener") ?? element;
       const pointer = new THREE.Vector2(9, 9);
       const local = new THREE.Vector3();
       const ray = new THREE.Raycaster();
@@ -145,5 +145,5 @@ export function VoxelGlyph({ mark }: { mark: string }) {
     return () => { disposed = true; cleanup(); setOn(false); };
   }, [mark, reduced]);
 
-  return <span className="voxel-glyph" data-on={on} aria-hidden="true"><span ref={glyph} className="chapter-glyph">{mark}</span><span ref={host} className="voxel-glyph-stage" /></span>;
+  return <span className={`voxel-glyph ${className}`.trim()} data-on={on} aria-hidden="true"><span ref={glyph} className="chapter-glyph">{mark}</span><span ref={host} className="voxel-glyph-stage" /></span>;
 }
