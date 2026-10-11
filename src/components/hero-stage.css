@@ -18,6 +18,10 @@
   .hero-stage[data-variant="cloud"] .hero-stage-item:nth-of-type(5n + 2) { background: var(--clay); }
   .hero-stage[data-variant="cloud"] .hero-stage-item[data-hot="true"] { background: var(--ink); color: var(--paper); }
 
+  .coins3d { position: absolute; inset: 0; opacity: 0; transition: opacity .6s var(--ease-out); }
+  .coins3d[data-on="true"] { opacity: 1; }
+  .coins3d canvas { display: block; width: 100%; height: 100%; }
+  .hero-stage:has(.coins3d[data-on="true"]) .hero-stage-item { visibility: hidden; }
   .hero-stage[data-variant="stamps"] .hero-stage-item { display: grid; place-items: center; width: 112px; height: 112px; border: 2px dashed rgba(246, 239, 229, .5); border-radius: 50%; color: rgba(246, 239, 229, .55); font-size: 34px; transition: background-color 160ms, color 160ms, border-color 160ms; }
   .hero-stage[data-variant="stamps"] .hero-stage-item[data-on="true"] { border: 3px solid var(--clay); background: var(--clay); color: var(--ink); box-shadow: inset 0 0 0 7px var(--ink), inset 0 0 0 9px var(--clay); }
   .hero-stage[data-variant="stamps"] .hero-stage-item[data-hot="true"] { border-style: solid; border-color: var(--sky); color: var(--sky); }

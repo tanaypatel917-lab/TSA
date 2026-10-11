@@ -6,6 +6,7 @@ import { moduleVisuals } from "@/content/visuals";
 import { BADGES } from "@/engine/badges";
 import { useMotionPreference } from "./MotionPreferences";
 import { useProgress } from "@/state/ProgressProvider";
+import { BadgeCoins } from "./three/BadgeCoins";
 import "./hero-stage.css";
 
 export type HeroVariant = "orbit" | "cloud" | "stamps" | "echo";
@@ -124,6 +125,7 @@ export function HeroStage({ variant, mark }: { variant: HeroVariant; mark: strin
   }, [variant, reduced, items.length, items.map((item) => item.label + item.on).join("|")]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return <div ref={stage} className="hero-stage" data-variant={variant} aria-hidden="true">
+    {variant === "stamps" && hydrated && <BadgeCoins earned={state.badges} />}
     {variant === "orbit" && <><span className="hero-stage-ring" /><span className="hero-stage-center" data-stage-center="">?</span></>}
     {items.map((item, index) => <span key={`${item.label}-${index}`} className="hero-stage-item" data-stage-item="" data-kind={item.kind} data-on={item.on} style={variant === "echo" ? { opacity: 0.18 + (index / (ECHOES - 1)) * 0.82 } : undefined}>
       {variant === "orbit" && <small>{item.kind}</small>}{item.label}
