@@ -29,7 +29,7 @@ export function Certificate() {
         </>
         : <p>Finish all five chapters (every lesson, the activity and 70% on each quiz) to unlock a printable certificate. You’re {overallProgress(state, modules)}% of the way there.</p>}
     </div>
-    <div className="cert-preview" aria-hidden="true"><span className="cert-mark">?</span><strong>Certificate of completion</strong><span>{complete ? name.trim() || "Your name" : "Locked"}</span></div>
+    <div className="cert-preview" aria-hidden="true" onPointerMove={(event) => { const box = event.currentTarget.getBoundingClientRect(); const x = (event.clientX - box.left) / box.width, y = (event.clientY - box.top) / box.height; event.currentTarget.style.setProperty("--rx", `${(0.5 - y) * 16}deg`); event.currentTarget.style.setProperty("--ry", `${(x - 0.5) * 22}deg`); event.currentTarget.style.setProperty("--mx", `${x * 100}%`); event.currentTarget.style.setProperty("--my", `${y * 100}%`); }} onPointerLeave={(event) => { ["--rx", "--ry"].forEach((name) => event.currentTarget.style.setProperty(name, "0deg")); }}><span className="cert-mark">?</span><strong>Certificate of completion</strong><span>{complete ? name.trim() || "Your name" : "Locked"}</span></div>
     {complete && <div className="print-only" aria-hidden="true"><div data-print-id="certificate" data-print-kind="certificate">
       <article className="print-certificate">
         <p className="cert-brand">Wordplay.</p>
