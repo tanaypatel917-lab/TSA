@@ -1,0 +1,32 @@
+.quiz-streak { display: inline-block; margin-top: 12px; padding: 4px 10px; border: 1.5px solid var(--ink); border-radius: 999px; background: var(--clay); font-weight: 700; }
+.quiz-steps i[data-result="right"] { background: #5F86BA; }
+.quiz-steps i[data-result="missed"] { background: var(--clay); }
+.answer-feedback { position: relative; }
+.answer-stamp { position: absolute; top: -6px; right: 0; display: grid; place-items: center; width: 84px; height: 84px; border: 3px solid currentColor; border-radius: 50%; color: #5F86BA; font-family: var(--font-display), sans-serif; font-size: 34px; font-weight: 650; line-height: 1; transform: rotate(-10deg); box-shadow: inset 0 0 0 5px var(--paper), inset 0 0 0 7px currentColor; }
+.answer-feedback[data-good="false"] .answer-stamp { color: var(--clay); }
+.answer-feedback > div { padding-right: 100px; }
+
+html[data-motion="full"] .answer-choice[data-state="correct"] { animation: juice-slam 420ms var(--ease-out); }
+html[data-motion="full"] .answer-choice[data-state="incorrect"] { animation: juice-shake 380ms ease-out; }
+html[data-motion="full"] .answer-stamp { animation: juice-stamp 460ms cubic-bezier(.2, 1.6, .4, 1) both; }
+html[data-motion="full"] .quiz-streak { animation: juice-pop 420ms cubic-bezier(.2, 1.6, .4, 1) both; }
+html[data-motion="full"] .quiz-results h2 { display: inline-block; animation: juice-stamp 620ms cubic-bezier(.2, 1.5, .4, 1) both; }
+html[data-motion="full"] .answer-strip li { animation: juice-pop 380ms cubic-bezier(.2, 1.6, .4, 1) both; animation-delay: calc(240ms + var(--i, 0) * 110ms); }
+
+@keyframes juice-slam { 0% { transform: scale(1); } 35% { transform: scale(1.035); box-shadow: 6px 6px 0 var(--ink); } 100% { transform: scale(1); box-shadow: 0 0 0 var(--ink); } }
+@keyframes juice-shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-9px); } 40% { transform: translateX(8px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(3px); } }
+@keyframes juice-stamp { from { opacity: 0; transform: scale(2.4) rotate(-26deg); } 60% { opacity: 1; } to { opacity: 1; transform: scale(1) rotate(-10deg); } }
+@keyframes juice-pop { from { opacity: 0; transform: scale(.4); } to { opacity: 1; transform: scale(1); } }
+
+@supports (animation-timeline: view()) {
+  html[data-motion="full"] .lesson-reading section > p, html[data-motion="full"] .lesson-reading section > div > p { animation: juice-read linear both; animation-timeline: view(); animation-range: entry 0% cover 35%; }
+}
+@keyframes juice-read { from { opacity: .22; filter: blur(1.5px); transform: translateY(16px); } to { opacity: 1; filter: none; transform: none; } }
+
+.badge-stamp { position: fixed; z-index: 90; inset: 0; display: grid; place-items: center; pointer-events: none; animation: badge-veil 2200ms ease-out forwards; }
+.badge-stamp-disc { display: grid; place-items: center; align-content: center; gap: 10px; width: min(56vmin, 420px); aspect-ratio: 1; border: 6px solid var(--ink); border-radius: 50%; background: var(--clay); color: var(--ink); box-shadow: inset 0 0 0 14px var(--clay), inset 0 0 0 18px var(--ink), 14px 14px 0 var(--ink); animation: badge-slam 2200ms cubic-bezier(.2, 1.4, .4, 1) forwards; }
+.badge-stamp-disc > span { font-family: var(--font-display), sans-serif; font-size: min(20vmin, 150px); font-weight: 650; line-height: 1; letter-spacing: -.05em; }
+.badge-stamp-disc small { max-width: 80%; font-family: var(--font-display), sans-serif; font-size: min(4vmin, 28px); font-weight: 600; text-align: center; text-transform: uppercase; letter-spacing: .04em; }
+@keyframes badge-veil { 0% { background: rgba(28, 42, 67, 0); } 15% { background: rgba(28, 42, 67, .55); } 70% { background: rgba(28, 42, 67, .55); opacity: 1; } 100% { background: rgba(28, 42, 67, 0); opacity: 0; } }
+@keyframes badge-slam { 0% { opacity: 0; transform: scale(3) rotate(-30deg); } 18% { opacity: 1; transform: scale(.94) rotate(-8deg); } 26% { transform: scale(1.02) rotate(-8deg); } 32%, 72% { opacity: 1; transform: scale(1) rotate(-8deg); } 100% { opacity: 0; transform: scale(.6) rotate(-8deg) translate(40vw, 30vh); } }
+@media print { .badge-stamp { display: none; } }

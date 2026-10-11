@@ -11,6 +11,7 @@ import { useProgress } from "@/state/ProgressProvider";
 import { todayKey } from "@/engine/dates";
 import { StudyShell } from "./StudyShell";
 import { lessonFigures } from "@/content/figures";
+import "./juice.css";
 import { LessonFigure } from "./labs/LessonFigure";
 
 export function LessonClient({ module, lesson, index, sources, terms }: { module: Module; lesson: Lesson; index: number; sources: Reference[]; terms: LessonTerm[] }) {
