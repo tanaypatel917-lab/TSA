@@ -18,7 +18,7 @@ function layout(variant: HeroVariant, mark: string, earned: string[]): Item[] {
   if (variant === "orbit") return Object.values(moduleVisuals).map((visual, index) => ({ label: visual.mark, x: 0, y: 0, kind: String(index + 1).padStart(2, "0") }));
   if (variant === "cloud") return glossary.slice(0, 16).map(({ term }, index) => {
     const col = index % 4, row = Math.floor(index / 4);
-    return { label: term, x: 12 + col * 24 + (row % 2) * 8, y: 14 + row * 22 + (col % 2) * 6 };
+    return { label: term, x: 12 + col * 22 + (row % 2) * 6, y: 14 + row * 22 + (col % 2) * 6 };
   });
   if (variant === "stamps") return BADGES.slice(0, 12).map((badge, index) => ({ label: badge.mark, x: 16 + (index % 4) * 23 + (Math.floor(index / 4) % 2) * 6, y: 20 + Math.floor(index / 4) * 30, on: earned.includes(badge.id) }));
   return Array.from({ length: ECHOES }, (_, index) => ({ label: mark, x: 50, y: 52, kind: index === ECHOES - 1 ? "solid" : "line" }));
