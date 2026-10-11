@@ -295,3 +295,12 @@ html[data-motion="full"] .results-stars > span[data-on="true"]::before { content
   .board li { grid-template-columns: 24px minmax(0, 1fr) auto; }
   .board-day { display: none; }
 }
+
+.countdown { perspective: 700px; text-shadow: 1px 1px 0 var(--ink), 2px 2px 0 var(--ink), 3px 3px 0 var(--ink), 4px 4px 0 var(--ink), 5px 5px 0 var(--ink), 6px 6px 0 var(--ink), 7px 7px 0 var(--ink), 8px 8px 0 var(--ink), 9px 9px 0 var(--ink), 10px 10px 0 var(--clay), 11px 11px 0 var(--clay), 12px 12px 0 var(--clay), 14px 22px 24px rgba(28, 42, 67, .35); animation-name: countdown-flip; animation-duration: 650ms; animation-timing-function: cubic-bezier(.2, 1.4, .4, 1); }
+@keyframes countdown-flip { from { opacity: 0; transform: scale(2.4) rotateX(-75deg) rotateZ(-8deg); } 55% { opacity: 1; transform: scale(.9) rotateX(10deg) rotateZ(2deg); } }
+html[data-motion="full"] .countdown:not(.is-banner)::after { content: ""; position: absolute; top: 50%; left: 50%; width: 46vmin; aspect-ratio: 1; margin: -23vmin 0 0 -23vmin; border: 8px solid var(--clay); border-radius: 50%; pointer-events: none; animation: countdown-ring 650ms var(--ease-out) forwards; }
+@keyframes countdown-ring { from { opacity: 1; transform: scale(.3); } to { opacity: 0; transform: scale(1.7); border-width: 1px; } }
+@media (prefers-reduced-motion: reduce) {
+  .countdown { animation: none; }
+}
+html[data-motion="reduced"] .countdown { animation: none; }
