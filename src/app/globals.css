@@ -1042,3 +1042,8 @@ html[data-motion="full"] :is(.section-heading h2, .spine h2, .human-judgment h2,
 .voxel-glyph-stage canvas { display: block; width: 100%; height: 100%; }
 .voxel-glyph[data-on="true"] .voxel-glyph-stage { opacity: 1; }
 .voxel-glyph[data-on="true"] > .chapter-glyph { opacity: 0; }
+
+.nf-voxel { position: absolute !important; right: 4%; top: 50%; transform: translateY(-50%); display: none !important; }
+.nf-voxel > .chapter-glyph { opacity: 0 !important; padding: 0; font-size: clamp(200px, 22vw, 340px); letter-spacing: -.04em; color: var(--clay); }
+@media (min-width: 900px) { .nf-voxel { display: grid !important; } }
+.not-found:has(.nf-voxel[data-on="true"]) .not-found-mark { opacity: 0; }
