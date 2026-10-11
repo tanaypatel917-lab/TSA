@@ -22,7 +22,7 @@ const teacherSources = ["touretzky-2019", "unesco-2023", "teachai", "nist-2023",
 
 export default function TeachersPage() {
   return <div className="teachers">
-    <PageHero tone="sky" label="For teachers" title="Teach AI literacy in five chapters." lede="Lesson plans, worksheets and classroom tools for using Wordplay with grades 9–12. Everything prints, and nothing needs a login." mark="✎">
+    <PageHero stage="echo" tone="sky" label="For teachers" title="Teach AI literacy in five chapters." lede="Lesson plans, worksheets and classroom tools for using Wordplay with grades 9–12. Everything prints, and nothing needs a login." mark="✎">
       <dl className="page-hero-stats"><div><dt>Chapter plans</dt><dd>{chapterPlans.length}</dd></div><div><dt>Worksheets</dt><dd>{chapterPlans.length}</dd></div><div><dt>Lessons</dt><dd>{lessonCount}</dd></div><div><dt>Accounts needed</dt><dd>0</dd></div></dl>
     </PageHero>
     <section className="shell teachers-basics" aria-label="How Wordplay works in class">{basics.map(([title, text], index) => <article key={title} data-reveal={index}><span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span><h2>{title}</h2><p>{text}</p></article>)}</section>

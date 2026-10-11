@@ -10,5 +10,5 @@ export const metadata: Metadata = { title: "Glossary | Wordplay" };
 
 export default function GlossaryPage() {
   const entries = glossary.map((item) => ({ ...item, lessons: lessonsForTerm(item.term, modules) }));
-  return <><PageHero tone="paper" label="Glossary" title="Words that make better questions." lede={`${glossary.length} terms you will meet in the lessons. Search them, jump to the lesson that explains each one, or test yourself with study cards.`} mark="Aa" /><GlossaryExplorer entries={entries} /></>;
+  return <><PageHero stage="cloud" tone="paper" label="Glossary" title="Words that make better questions." lede={`${glossary.length} terms you will meet in the lessons. Search them, jump to the lesson that explains each one, or test yourself with study cards.`} mark="Aa" /><GlossaryExplorer entries={entries} /></>;
 }
