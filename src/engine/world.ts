@@ -1,10 +1,21 @@
 export type Point = { x: number; z: number };
 export type Circle = Point & { r: number };
 export type Mover = Point & { vx: number; vz: number; heading: number };
+export type BoostState = { active: boolean; ready: boolean; multiplier: number; charge: number };
 
 export const MOVE = { max: 640, accel: 7, friction: 5, turn: 10, radius: 60 };
+export const BOOST = { duration: 1200, cooldown: 4000, multiplier: 1.6 };
 const TAU = Math.PI * 2;
 const GOLDEN = 2.399963229728653;
+
+export function boostState(now: number, startedAt: number | null): BoostState {
+  if (startedAt === null) return { active: false, ready: true, multiplier: 1, charge: 1 };
+  const elapsed = now - startedAt;
+  const active = elapsed >= 0 && elapsed < BOOST.duration;
+  const ready = elapsed >= BOOST.duration + BOOST.cooldown;
+  const charge = ready ? 1 : Math.max(0, Math.min(1, (elapsed - BOOST.duration) / BOOST.cooldown));
+  return { active, ready, multiplier: active ? BOOST.multiplier : 1, charge };
+}
 
 export function startMover(): Mover {
   return { x: 0, z: 260, vx: 0, vz: 0, heading: Math.PI };
@@ -14,12 +25,13 @@ export function wrapAngle(angle: number) {
   return angle - TAU * Math.floor((angle + Math.PI) / TAU);
 }
 
-export function step(mover: Mover, input: Point, dt: number, bounds: number, obstacles: Circle[]): Mover {
+export function step(mover: Mover, input: Point, dt: number, bounds: number, obstacles: Circle[], multiplier = 1): Mover {
   const length = Math.hypot(input.x, input.z);
   const scale = length > 1 ? 1 / length : 1;
   const k = 1 - Math.exp(-(length > 0.05 ? MOVE.accel : MOVE.friction) * dt);
-  let vx = mover.vx + (input.x * scale * MOVE.max - mover.vx) * k;
-  let vz = mover.vz + (input.z * scale * MOVE.max - mover.vz) * k;
+  const max = MOVE.max * multiplier;
+  let vx = mover.vx + (input.x * scale * max - mover.vx) * k;
+  let vz = mover.vz + (input.z * scale * max - mover.vz) * k;
   let x = mover.x + vx * dt;
   let z = mover.z + vz * dt;
   for (const obstacle of obstacles) {

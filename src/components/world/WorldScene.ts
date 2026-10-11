@@ -2,11 +2,11 @@ import type { Application, SPEObject } from "@splinetool/runtime";
 import { introPalette } from "@/content/intro";
 import { hideKit } from "@/content/visuals";
 import { WORLD, gateSpots, stations, trees, tufts, wordTokens, type Station } from "@/content/world";
-import { MOVE, type Mover, type Point } from "@/engine/world";
+import { MOVE, type Mover, type Point, wrapAngle } from "@/engine/world";
 
 type Vector = [number, number, number];
 export type SceneMission = { colors: [string, string]; carrying: boolean } | null;
-export type WorldFrame = { mover: Mover; time: number; collected: ReadonlySet<string>; stamped: ReadonlySet<string>; near: string | null; mission: SceneMission; crates: readonly Point[] };
+export type WorldFrame = { mover: Mover; time: number; collected: ReadonlySet<string>; stamped: ReadonlySet<string>; near: string | null; mission: SceneMission; crates: readonly Point[]; boosted: boolean; combo: number };
 
 const { ink, clay, paper, lake, slate, rust } = introPalette;
 const STAGE_POSITION: Vector = [0, 118, 36];
@@ -34,6 +34,9 @@ export class WorldScene {
   private shownCrates = 0;
   private carriedShown = false;
   private lastTime = NaN;
+  private lastHeading = NaN;
+  private lastSpeed = 0;
+  private punchStartedAt = NaN;
   private lastPuff = 0;
   private cursor = 0;
 
@@ -55,23 +58,30 @@ export class WorldScene {
     this.zoom = NaN;
   }
 
-  burst(x: number, z: number, color: string, count = 10) {
+  burst(x: number, z: number, color: string, count = 10, scale = 1) {
     const now = this.lastTime || 0;
     for (let index = 0; index < count; index += 1) {
       const spark = this.parts.sparks[this.cursor];
       this.cursor = (this.cursor + 1) % this.parts.sparks.length;
       const angle = (index / count) * Math.PI * 2 + Math.random() * 0.5;
-      const speed = 420 + Math.random() * 380;
-      Object.assign(spark, { x, y: 150, z, vx: Math.cos(angle) * speed, vy: 520 + Math.random() * 420, vz: Math.sin(angle) * speed, born: now, life: 0.75 + Math.random() * 0.3, size: 0.8 + Math.random() * 0.6, active: true });
+      const speed = (420 + Math.random() * 380) * scale;
+      Object.assign(spark, { x, y: 150, z, vx: Math.cos(angle) * speed, vy: (520 + Math.random() * 420) * scale, vz: Math.sin(angle) * speed, born: now, life: 0.75 + Math.random() * 0.3, size: (0.8 + Math.random() * 0.6) * scale, active: true });
       spark.object.color = color;
       spark.object.visible = true;
     }
   }
 
-  update({ mover, time, collected, stamped, near, mission, crates }: WorldFrame) {
-    if (this.zoom !== ZOOM) { this.app.setZoom(ZOOM); this.zoom = ZOOM; }
+  punch(time: number) {
+    this.punchStartedAt = time;
+  }
+
+  update({ mover, time, collected, stamped, near, mission, crates, boosted, combo }: WorldFrame) {
     const dt = Number.isNaN(this.lastTime) ? 0 : Math.min(0.05, time - this.lastTime);
     this.lastTime = time;
+    const punchAge = time - this.punchStartedAt;
+    const punch = punchAge >= 0 && punchAge < 0.3 ? Math.sin((punchAge / 0.3) * Math.PI) : 0;
+    const zoom = ZOOM * (1 + 0.06 * punch);
+    if (this.zoom !== zoom) { this.app.setZoom(zoom); this.zoom = zoom; }
     const { written } = this;
     if (mover.x !== written.x || mover.z !== written.z) {
       this.map.position.x = written.x = -mover.x;
@@ -79,10 +89,15 @@ export class WorldScene {
     }
     const pace = Math.min(1, Math.hypot(mover.vx, mover.vz) / MOVE.max);
     const pose = this.pose;
-    const ease = 0.14;
+    const ease = 1 - Math.exp(-8 * dt);
+    const speed = Math.hypot(mover.vx, mover.vz);
+    const turnRate = dt > 0 && !Number.isNaN(this.lastHeading) ? wrapAngle(mover.heading - this.lastHeading) / dt : 0;
+    const acceleration = dt > 0 ? (speed - this.lastSpeed) / dt : 0;
     pose.yaw += (Math.sin(mover.heading) * 0.75 - pose.yaw) * ease;
-    pose.roll += ((-mover.vx / MOVE.max) * 0.16 - pose.roll) * ease;
-    pose.pitch += ((mover.vz / MOVE.max) * 0.14 - pose.pitch) * ease;
+    pose.roll += (Math.max(-0.35, Math.min(0.35, -turnRate / MOVE.turn * 0.35)) - pose.roll) * ease;
+    pose.pitch += (Math.max(-0.35, Math.min(0.35, -acceleration / (MOVE.max * 4))) - pose.pitch) * ease;
+    this.lastHeading = mover.heading;
+    this.lastSpeed = speed;
     this.player.rotation.x = pose.pitch;
     this.player.rotation.y = pose.yaw;
     this.player.rotation.z = pose.roll;
@@ -105,7 +120,7 @@ export class WorldScene {
       if (shown !== ring.shown) { ring.object.visible = ring.shown = shown; }
     }
     this.updateMission(mission, crates, time, y);
-    this.updateParticles(dt, time, mover, pace);
+    this.updateParticles(dt, time, mover, pace, boosted, combo);
     this.app.requestRender();
   }
 
@@ -143,7 +158,7 @@ export class WorldScene {
     }
   }
 
-  private updateParticles(dt: number, time: number, mover: Mover, pace: number) {
+  private updateParticles(dt: number, time: number, mover: Mover, pace: number, boosted: boolean, combo: number) {
     for (const spark of this.parts.sparks) {
       if (!spark.active) continue;
       const age = time - spark.born;
@@ -160,11 +175,13 @@ export class WorldScene {
       spark.object.rotation.z = age * 7;
       spark.object.scale.x = spark.object.scale.y = spark.object.scale.z = Math.max(0.01, scale);
     }
-    if (pace > 0.55 && time - this.lastPuff > 0.07) {
+    const comboTrail = combo >= 3;
+    if ((boosted || comboTrail || pace > 0.55) && time - this.lastPuff > 0.07) {
       this.lastPuff = time;
       const puff = this.parts.puffs.find((item) => !item.active);
       if (puff) {
-        Object.assign(puff, { x: mover.x - Math.sin(mover.heading) * 60, y: 26, z: mover.z - Math.cos(mover.heading) * 60, born: time, life: 0.55, size: 0.7 + pace * 0.5, active: true });
+        Object.assign(puff, { x: mover.x - Math.sin(mover.heading) * 60, y: 26, z: mover.z - Math.cos(mover.heading) * 60, born: time, life: 0.55, size: 0.7 + pace * 0.5 + (boosted || comboTrail ? 0.25 : 0), active: true });
+        puff.object.color = boosted || comboTrail ? clay : PUFF;
         puff.object.position.x = puff.x;
         puff.object.position.y = puff.y;
         puff.object.position.z = puff.z;

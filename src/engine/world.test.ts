@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { MOVE, inputFrom, nearest, scatter, startMover, step, wrapAngle, type Mover } from "./world";
+import { BOOST, MOVE, boostState, inputFrom, nearest, scatter, startMover, step, wrapAngle, type Mover } from "./world";
 
-const run = (mover: Mover, input: { x: number; z: number }, seconds: number, obstacles = [] as { x: number; z: number; r: number }[], bounds = 2000) => {
+const run = (mover: Mover, input: { x: number; z: number }, seconds: number, obstacles = [] as { x: number; z: number; r: number }[], bounds = 2000, multiplier = 1) => {
   let current = mover;
-  for (let time = 0; time < seconds; time += 1 / 60) current = step(current, input, 1 / 60, bounds, obstacles);
+  for (let time = 0; time < seconds; time += 1 / 60) current = step(current, input, 1 / 60, bounds, obstacles, multiplier);
   return current;
 };
 
@@ -20,6 +20,23 @@ describe("world movement", () => {
     expect(Math.hypot(diagonal.vx, diagonal.vz)).toBeCloseTo(MOVE.max, 0);
     const stopped = run(diagonal, { x: 0, z: 0 }, 2);
     expect(Math.hypot(stopped.vx, stopped.vz)).toBeLessThan(1);
+  });
+
+  it("activates boost for 1.2 seconds and then recharges over four seconds", () => {
+    const startedAt = 1000;
+    expect(boostState(startedAt, null)).toMatchObject({ active: false, ready: true, multiplier: 1, charge: 1 });
+    expect(boostState(startedAt + BOOST.duration - 1, startedAt)).toMatchObject({ active: true, ready: false, multiplier: 1.6, charge: 0 });
+    expect(boostState(startedAt + BOOST.duration, startedAt)).toMatchObject({ active: false, ready: false, multiplier: 1, charge: 0 });
+    expect(boostState(startedAt + BOOST.duration + BOOST.cooldown / 2, startedAt).charge).toBeCloseTo(0.5);
+    expect(boostState(startedAt + BOOST.duration + BOOST.cooldown - 1, startedAt).ready).toBe(false);
+    expect(boostState(startedAt + BOOST.duration + BOOST.cooldown, startedAt)).toMatchObject({ active: false, ready: true, multiplier: 1, charge: 1 });
+  });
+
+  it("scales the top speed passed to step", () => {
+    const regular = run(startMover(), { x: 1, z: 0 }, 2);
+    const boosted = run(startMover(), { x: 1, z: 0 }, 2, [], 5000, BOOST.multiplier);
+    expect(Math.hypot(regular.vx, regular.vz)).toBeCloseTo(MOVE.max, 0);
+    expect(Math.hypot(boosted.vx, boosted.vz)).toBeCloseTo(MOVE.max * BOOST.multiplier, 0);
   });
 
   it("cannot pass through a station pedestal or leave the island", () => {

@@ -1,5 +1,5 @@
 export const SOUND_KEY = "wordplay:sound:v1";
-export type Cue = "pickup" | "good" | "bad" | "tick" | "go" | "win" | "lose";
+export type Cue = "pickup" | "good" | "bad" | "boost" | "tick" | "go" | "win" | "lose";
 
 let context: AudioContext | null = null;
 
@@ -7,6 +7,7 @@ const notes: Record<Cue, { wave: OscillatorType; tones: number[]; step: number; 
   pickup: { wave: "square", tones: [660, 880], step: 0.05, length: 0.06, volume: 0.05 },
   good: { wave: "triangle", tones: [523, 659, 784], step: 0.07, length: 0.12, volume: 0.09 },
   bad: { wave: "sawtooth", tones: [196, 147], step: 0.11, length: 0.16, volume: 0.05 },
+  boost: { wave: "sawtooth", tones: [920, 620, 380], step: 0.035, length: 0.14, volume: 0.045 },
   tick: { wave: "sine", tones: [440], step: 0, length: 0.08, volume: 0.07 },
   go: { wave: "triangle", tones: [880], step: 0, length: 0.22, volume: 0.09 },
   win: { wave: "triangle", tones: [523, 659, 784, 1047], step: 0.1, length: 0.22, volume: 0.09 },

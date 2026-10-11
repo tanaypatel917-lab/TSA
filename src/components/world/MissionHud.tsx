@@ -1,9 +1,12 @@
 import type { Mission } from "@/content/missions";
 import { MODES, type Run } from "@/engine/mission";
+import type { BoostState } from "@/engine/world";
 
-type Props = { mission: Mission; run: Run; onQuit: () => void; inline?: boolean; sound?: boolean; onSound?: () => void };
+type Props = { mission: Mission; run: Run; boost?: BoostState; onQuit: () => void; inline?: boolean; sound?: boolean; onSound?: () => void };
 
-export function MissionHud({ mission, run, onQuit, inline, sound, onSound }: Props) {
+const idleBoost: BoostState = { active: false, ready: true, multiplier: 1, charge: 1 };
+
+export function MissionHud({ mission, run, boost = idleBoost, onQuit, inline, sound, onSound }: Props) {
   const seconds = Math.ceil(run.timeLeft);
   const lives = run.lives - run.mistakes;
   return <div className={`mission-hud${inline ? " is-inline" : ""}`} data-urgent={!run.relaxed && seconds <= 10}>
@@ -18,6 +21,9 @@ export function MissionHud({ mission, run, onQuit, inline, sound, onSound }: Pro
       <div><dt>Crates</dt><dd>{run.results.length}/{run.order.length}</dd></div>
       <div><dt>Lives</dt><dd className="mission-lives" aria-label={`${lives} of ${run.lives} lives left`}>{Array.from({ length: run.lives }, (_, index) => <span key={index} aria-hidden="true" data-on={index < lives}>?</span>)}</dd></div>
     </dl>
+    {!inline && <div className="mission-hud-boost" data-active={boost.active} aria-label={`Boost ${boost.ready ? "ready" : boost.active ? "active" : "recharging"}`}>
+      <span>Boost</span><span className="mission-hud-boost-track" aria-hidden="true"><i style={{ transform: `scaleX(${boost.charge})` }} /></span>
+    </div>}
     <div className="mission-hud-buttons">{onSound && <button type="button" className="mission-quit" aria-pressed={sound} onClick={onSound}>{sound ? "Sound on" : "Sound off"}</button>}<button type="button" className="mission-quit" onClick={onQuit}>Quit <span aria-hidden="true">Esc</span></button></div>
   </div>;
 }

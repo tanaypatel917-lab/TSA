@@ -1,10 +1,12 @@
 "use client";
 
+import { useEffect, useState, type CSSProperties } from "react";
 import type { Mission } from "@/content/missions";
 import { MODES, type Run } from "@/engine/mission";
 import type { ScoreEntry } from "@/engine/scores";
 import { WORLD_XP } from "@/engine/progress";
-import { Board, Stars } from "./MissionBriefing";
+import { useMotionPreference } from "../MotionPreferences";
+import { Board } from "./MissionBriefing";
 import { WorldDialog } from "./WorldDialog";
 
 type Props = { mission: Mission; run: Run; stars: number; best: boolean; stamped: boolean; perfect: boolean; daily: string | null; board: ScoreEntry[]; rank: number | null; onAgain: () => void; onClose: () => void };
@@ -13,15 +15,31 @@ const endings = { cleared: "Every crate delivered.", time: "Time’s up.", mista
 const verdicts = ["Keep practicing.", "Station stamped.", "Sharp sorting.", "Perfect run."];
 
 export function MissionResults({ mission, run, stars, best, stamped, perfect, daily, board, rank, onAgain, onClose }: Props) {
+  const { reduced } = useMotionPreference();
+  const [score, setScore] = useState(0);
   const correct = run.results.filter((result) => result.ok).length;
   const gate = (id: string) => mission.gates.find((item) => item.id === id)!;
+
+  useEffect(() => {
+    if (reduced) { setScore(run.score); return; }
+    const started = performance.now();
+    let frame = 0;
+    const count = (now: number) => {
+      const progress = Math.min(1, (now - started) / 700);
+      setScore(Math.round(run.score * (1 - (1 - progress) ** 3)));
+      if (progress < 1) frame = requestAnimationFrame(count);
+    };
+    frame = requestAnimationFrame(count);
+    return () => cancelAnimationFrame(frame);
+  }, [reduced, run.score]);
+
   return <WorldDialog labelledBy="results-title" module={mission.moduleId} onClose={onClose} wide>
     <header className="results-head">
       <p className="results-kicker">{daily ? `Daily challenge · ${daily} · ` : `${MODES[run.mode].label} · `}{run.over ? endings[run.over] : ""}</p>
-      <Stars count={stars} />
+      <span className="results-stars" aria-label={`${stars} of 3 stars`} role="img">{[0, 1, 2].map((index) => <span key={index} data-on={index < stars} style={{ "--star-delay": `${index * 180}ms` } as CSSProperties} aria-hidden="true">★</span>)}</span>
       <h2 id="results-title" tabIndex={-1} data-autofocus>{stars ? verdicts[stars] : verdicts[0]}</h2>
       <dl className="results-figures">
-        <div><dt>Score</dt><dd>{run.score.toLocaleString()}{best && <span className="results-best">New best</span>}</dd></div>
+        <div><dt>Score</dt><dd>{score.toLocaleString()}{best && <span className="results-best">New best</span>}</dd></div>
         <div><dt>Sorted right</dt><dd>{correct}<span>/{run.results.length}</span></dd></div>
         <div><dt>Mistakes</dt><dd>{run.mistakes}</dd></div>
       </dl>
