@@ -1105,3 +1105,10 @@ html[data-motion="full"] :is(.section-heading h2, .spine h2, .human-judgment h2,
 }
 @media (prefers-reduced-motion: reduce) { .takeaways li { animation: none !important; } }
 html[data-motion="reduced"] .takeaways li { animation: none !important; }
+@media (min-width: 900px) {
+  .glossary-group h2 { position: sticky; top: 96px; align-self: start; color: var(--ink); text-shadow: 1px 1px 0 var(--clay), 2px 2px 0 var(--clay), 3px 3px 0 var(--clay), 4px 4px 0 var(--clay), 5px 5px 0 var(--clay), 6px 6px 0 var(--clay), 7px 7px 0 #B8694A, 8px 8px 0 #B8694A, 10px 14px 14px rgba(28, 42, 67, .2); transition: transform .4s var(--ease-out); }
+  .glossary-group:hover h2 { transform: translate(-3px, -3px); }
+  .glossary-letters a { background: var(--paper); box-shadow: 0 4px 0 var(--ink); translate: 0 -2px; transition: translate 140ms var(--ease-out), box-shadow 140ms var(--ease-out), background-color 160ms ease; }
+  .glossary-letters a:hover { translate: 0 -4px; box-shadow: 0 6px 0 var(--ink); }
+  .glossary-letters a:active { translate: 0 2px; box-shadow: 0 0 0 var(--ink); }
+}
