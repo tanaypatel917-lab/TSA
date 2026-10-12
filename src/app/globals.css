@@ -1246,3 +1246,7 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
   html[data-motion="full"] .outline-terms a:hover, html[data-motion="full"] .chapter-terms a:hover { translate: 0 -3px; box-shadow: 0 6px 0 var(--clay); background: var(--sky); }
   .outline-terms a:active, .chapter-terms a:active { translate: 0 2px; box-shadow: 0 1px 0 var(--ink); }
 }
+
+.tour-card { box-shadow: 8px 8px 0 var(--ink), 12px 12px 0 var(--clay); }
+.tour-back { background: var(--paper); box-shadow: 3px 3px 0 var(--ink); transition: transform 140ms var(--ease-out), box-shadow 140ms var(--ease-out); }
+.tour-back:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--ink); }
