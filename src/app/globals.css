@@ -1264,3 +1264,8 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
 .choice span:active { transform: none; translate: 3px 3px; box-shadow: 0 0 0 var(--ink); }
 .glossary-tools input[type="search"], .directory-tools input[type="search"] { box-shadow: 3px 3px 0 var(--ink); transition: translate 160ms var(--ease-out), box-shadow 160ms var(--ease-out); }
 .glossary-tools input[type="search"]:focus, .directory-tools input[type="search"]:focus { translate: -2px -2px; box-shadow: 5px 5px 0 var(--clay); }
+@media (max-width: 899px) {
+  .glossary-letters a { background: var(--paper); box-shadow: 0 3px 0 var(--ink); transition: translate 140ms var(--ease-out), box-shadow 140ms var(--ease-out); }
+  .glossary-letters a:active { translate: 0 3px; box-shadow: 0 0 0 var(--ink); }
+}
+.directory-tools input[type="search"] { margin-bottom: 8px; }
