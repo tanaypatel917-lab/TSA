@@ -1,0 +1,58 @@
+.timeline-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 170px;
+  grid-template-rows: auto 1fr;
+  column-gap: clamp(32px, 6vw, 96px);
+  align-items: start;
+  padding-block: 42px 110px;
+}
+.timeline-hero { grid-column: 1; grid-row: 1; padding-bottom: 56px; }
+.timeline-eyebrow { font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.timeline-hero h1 { max-width: 12ch; margin-top: 34px; font-size: clamp(52px, 7vw, 100px); line-height: .96; letter-spacing: -.055em; text-wrap: balance; }
+.timeline-deck { margin-top: 22px; font-size: clamp(18px, 2vw, 24px); }
+.timeline-nav-wrap { grid-column: 2; grid-row: 1 / span 2; position: sticky; top: 24px; z-index: 10; padding-top: 30px; }
+.timeline-nav { display: grid; gap: 8px; }
+.timeline-nav a { display: block; padding: 11px 14px; border: 1px solid var(--ink); background: var(--paper); box-shadow: 0 4px 0 var(--ink); font-size: 14px; font-weight: 750; text-align: center; text-decoration: none; transition: transform 130ms ease, box-shadow 130ms ease, background-color 130ms ease; }
+.timeline-nav a[aria-current="true"] { background: var(--clay); }
+.timeline-nav a:focus-visible { outline: 3px solid var(--sky); outline-offset: 4px; }
+.timeline-nav a:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--ink); }
+.timeline-content { grid-column: 1; grid-row: 2; min-width: 0; }
+.timeline-era { scroll-margin-top: 140px; }
+.timeline-era + .timeline-era { margin-top: 68px; }
+.timeline-era h2 { display: flex; align-items: center; gap: 22px; margin-bottom: 10px; font-size: clamp(36px, 4.5vw, 58px); line-height: 1; letter-spacing: -.045em; }
+.timeline-rule { height: 1px; flex: 1; background: currentColor; opacity: .45; }
+.timeline-list { margin: 0; padding: 0; list-style: none; }
+.timeline-entry { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); align-items: center; gap: clamp(22px, 3vw, 48px); min-width: 0; padding: 34px 0 38px; border-bottom: 1px solid rgba(28, 42, 67, .25); }
+.timeline-date { position: relative; display: flex; min-width: 0; min-height: 190px; align-items: center; }
+.timeline-dots { position: absolute; inset: 8% 0; background-image: radial-gradient(circle, rgba(196, 103, 75, .58) 1.5px, transparent 1.8px); background-size: 12px 12px; mask-image: radial-gradient(ellipse at center, #000 12%, transparent 72%); pointer-events: none; }
+.timeline-date time, .timeline-question { position: relative; z-index: 1; color: var(--ink); font-family: var(--font-display), sans-serif; font-size: clamp(72px, 14vw, 200px); font-weight: 700; line-height: .82; letter-spacing: -.09em; white-space: nowrap; text-shadow: 2px 2px 0 var(--clay), 4px 4px 0 #B8694A; }
+.timeline-question { color: var(--clay); font-size: clamp(108px, 17vw, 200px); }
+.timeline-copy { min-width: 0; padding-block: 8px; }
+.timeline-copy h3 { font-size: clamp(22px, 2.5vw, 34px); line-height: 1.14; letter-spacing: -.035em; text-wrap: pretty; }
+.timeline-why { margin-top: 14px; max-width: 54ch; font-size: 16px; line-height: 1.6; color: var(--muted); }
+.timeline-source { margin-top: 12px; }
+.timeline-lesson { display: inline-block; margin-top: 15px; font-weight: 750; text-underline-offset: 4px; }
+.timeline-lesson:hover { color: #8E5037; }
+@media (hover: hover) and (pointer: fine) {
+  .timeline-nav a:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--ink); }
+}
+@media (max-width: 767px) {
+  .timeline-layout { display: flex; flex-direction: column; gap: 0; padding-block: 30px 78px; }
+  .timeline-hero { padding-bottom: 28px; }
+  .timeline-hero h1 { margin-top: 25px; font-size: clamp(48px, 12vw, 68px); }
+  .timeline-deck { margin-top: 16px; }
+  .timeline-nav-wrap { position: sticky; top: 0; width: 100%; margin: 0 calc(-1 * var(--page-gutter, 20px)) 25px; padding: 10px var(--page-gutter, 20px) 12px; background: var(--paper); }
+  .timeline-nav { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .timeline-nav a { padding: 10px 6px; font-size: 13px; }
+  .timeline-content { width: 100%; }
+  .timeline-era { scroll-margin-top: 80px; }
+  .timeline-era + .timeline-era { margin-top: 52px; }
+  .timeline-era h2 { margin-bottom: 4px; }
+  .timeline-entry { grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 24px 0 28px; }
+  .timeline-date { min-height: clamp(88px, 26vw, 132px); }
+  .timeline-date time { font-size: clamp(72px, 20vw, 108px); }
+  .timeline-question { font-size: clamp(92px, 25vw, 132px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .timeline-nav a { transition: none; }
+}

@@ -25,12 +25,13 @@ export type ReferenceGroup = { id: string; title: string; description: string; r
 
 export type Credit = { name: string; detail: string; url?: string };
 
-export const referencesCheckedOn = "September 28, 2026";
+export const referencesCheckedOn = "October 12, 2026";
 
 export const referencePlaces: Record<string, { title: string; href: string }> = {
   "intro/proof": { title: "Intro: the proof scene", href: "/intro/#intro-act-4" },
   "intro/galaxy": { title: "Intro: the word galaxy", href: "/intro/#intro-act-2" },
-  "home/demo": { title: "Homepage: next-word demo", href: "/" }
+  "home/demo": { title: "Homepage: next-word demo", href: "/" },
+  timeline: { title: "AI timeline", href: "/timeline/" }
 };
 
 export const referenceGroups: ReferenceGroup[] = [
@@ -39,6 +40,12 @@ export const referenceGroups: ReferenceGroup[] = [
     title: "AI Foundations",
     description: "How AI systems learn from examples, how language models write, and why errors and bias happen.",
     references: [
+      { id: "turing-1950", kind: "research", publisher: "Mind", short: "Computing machinery and intelligence", authors: "Turing, A. M.", date: "1950", title: "Computing machinery and intelligence", source: "Mind, 59(236), 433–460", url: "https://doi.org/10.1093/mind/LIX.236.433", note: "Turing asked whether machines can think and proposed a test based on typed conversation.", lessons: ["timeline"] },
+      { id: "dartmouth-1955", kind: "research", publisher: "Stanford University", short: "The Dartmouth proposal", authors: "McCarthy, J., Minsky, M., Rochester, N., & Shannon, C.", date: "1955, August 31", title: "A proposal for the Dartmouth summer research project on artificial intelligence", url: "https://www-formal.stanford.edu/jmc/history/dartmouth/dartmouth.html", note: "The proposal for a 1956 summer project helped establish artificial intelligence as a field.", lessons: ["timeline"] },
+      { id: "ibm-deep-blue-2025", kind: "institution", publisher: "IBM", short: "Deep Blue", authors: "IBM", date: "2025, November 10", title: "Deep Blue", source: "IBM History", url: "https://www.ibm.com/history/deep-blue", note: "IBM's account of Deep Blue's 1997 match victory over reigning world chess champion Garry Kasparov.", lessons: ["timeline"] },
+      { id: "krizhevsky-2012", kind: "research", publisher: "NeurIPS", short: "AlexNet", authors: "Krizhevsky, A., Sutskever, I., & Hinton, G. E.", date: "2012", title: "ImageNet classification with deep convolutional neural networks", source: "Advances in Neural Information Processing Systems 25 (NIPS 2012)", url: "https://proceedings.neurips.cc/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html", note: "AlexNet's ImageNet result demonstrated the power of deep convolutional networks trained on large image collections.", lessons: ["timeline"] },
+      { id: "vaswani-2017", kind: "research", publisher: "arXiv", short: "Attention is all you need", authors: "Vaswani, A., et al.", date: "2017, June 12", title: "Attention is all you need", source: "arXiv:1706.03762", url: "https://arxiv.org/abs/1706.03762", note: "The paper introduced the Transformer architecture, based on attention rather than recurrent or convolutional layers.", lessons: ["timeline"] },
+      { id: "openai-chatgpt-2022", kind: "institution", publisher: "OpenAI", short: "Introducing ChatGPT", authors: "OpenAI", date: "2022, November 30", title: "Introducing ChatGPT", source: "OpenAI", url: "https://openai.com/index/chatgpt/", note: "OpenAI's launch announcement introduced ChatGPT as a conversational model.", lessons: ["timeline"] },
       { id: "touretzky-2019", kind: "research", publisher: "AAAI", short: "Envisioning AI for K-12", authors: "Touretzky, D., Gardner-McCune, C., Martin, F., & Seehorn, D.", date: "2019", title: "Envisioning AI for K-12: What should every child know about AI?", source: "Proceedings of the AAAI Conference on Artificial Intelligence, 33(01)", url: "https://ojs.aaai.org/index.php/AAAI/article/view/5053", note: "The AI4K12 Five Big Ideas (perception, representation and reasoning, learning, natural interaction, and societal impact) shaped what the course covers.", lessons: ["foundations/what-is-ai", "foundations/rules-and-learning"] },
       { id: "google-mlcc", kind: "guide", publisher: "Google", short: "Machine learning crash course", authors: "Google for Developers", date: "n.d.", title: "Machine learning crash course", url: "https://developers.google.com/machine-learning/crash-course", note: "How models learn patterns from labeled examples, including classification tasks such as spam filtering.", lessons: ["foundations/rules-and-learning"] },
       { id: "weizenbaum-1966", kind: "research", publisher: "ACM", short: "ELIZA", authors: "Weizenbaum, J.", date: "1966", title: "ELIZA — a computer program for the study of natural language communication between man and machine", source: "Communications of the ACM, 9(1), 36–45", url: "https://dl.acm.org/doi/10.1145/365153.365168", note: "An early chatbot that produced replies by matching text patterns to written rules.", lessons: ["foundations/rules-and-learning"] },
@@ -73,6 +80,7 @@ export const referenceGroups: ReferenceGroup[] = [
     title: "Ethical & Responsible Use",
     description: "Academic honesty, fairness, privacy, misinformation, and the real costs of AI.",
     references: [
+      { id: "eu-ai-act-2024", kind: "institution", publisher: "European Union", short: "Artificial Intelligence Act", authors: "European Parliament & Council of the European Union", date: "2024, June 13", title: "Regulation (EU) 2024/1689 of the European Parliament and of the Council of 13 June 2024 laying down harmonised rules on artificial intelligence (Artificial Intelligence Act)", source: "Official Journal of the European Union, OJ L, 2024/1689", url: "https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng", note: "The EU's first comprehensive AI law sets rules using a risk-based approach.", lessons: ["timeline"] },
       { id: "mcadoo-2023", kind: "guide", publisher: "APA Style", short: "How to cite ChatGPT", authors: "McAdoo, T.", date: "2023, April 7", title: "How to cite ChatGPT", source: "APA Style Blog", url: "https://apastyle.apa.org/blog/how-to-cite-chatgpt", note: "How to disclose and cite AI assistance in schoolwork.", lessons: ["ethics/academic-integrity"] },
       { id: "mla-2023", kind: "guide", publisher: "MLA Style Center", short: "Citing AI in MLA style", authors: "Modern Language Association", date: "2023, March 17", title: "How do I cite generative AI in MLA style?", source: "MLA Style Center", url: "https://style.mla.org/citing-generative-ai/", note: "A second citation style for crediting generative AI.", lessons: ["ethics/academic-integrity"] },
       { id: "openai-classifier-2023", kind: "institution", publisher: "OpenAI", short: "OpenAI’s AI-text classifier", authors: "OpenAI", date: "2023, January 31 (updated July 20, 2023)", title: "New AI classifier for indicating AI-written text", source: "OpenAI", url: "https://openai.com/index/new-ai-classifier-for-indicating-ai-written-text/", note: "OpenAI announced its text classifier in January and later discontinued it because of its low accuracy.", lessons: ["ethics/academic-integrity"] },
