@@ -62,7 +62,7 @@ export function EmbeddingSpace() {
       const font = getComputedStyle(document.body).getPropertyValue("--font-display").trim() || "sans-serif";
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
-      camera.position.set(0, 0, 21);
+      camera.position.set(0, 0, 23);
       const space = new THREE.Group();
       scene.add(space);
 
@@ -76,7 +76,7 @@ export function EmbeddingSpace() {
         const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false }));
         const width = (texture.image as HTMLCanvasElement).width / 84;
         sprite.scale.set(width * 0.52, 0.52, 1);
-        const home = new THREE.Vector3(cluster.center[0] + jitter(term, 1) * 4.6, cluster.center[1] + jitter(term, 2) * 4.2, cluster.center[2] + jitter(term, 3) * 1.6);
+        const home = new THREE.Vector3(cluster.center[0] + jitter(term, 1) * 4.6, cluster.center[1] + jitter(term, 2) * 4.2, cluster.center[2] * 0.35 + jitter(term, 3) * 0.5);
         sprite.position.copy(home).multiplyScalar(0.05);
         sprite.userData.cluster = clusterIndex;
         space.add(sprite);
@@ -87,7 +87,7 @@ export function EmbeddingSpace() {
         const dx = other.home.x - node.home.x;
         const dy = other.home.y - node.home.y;
         const overlapX = (node.width + other.width) * 0.26 + 0.3 - Math.abs(dx);
-        const overlapY = 0.8 - Math.abs(dy);
+        const overlapY = 0.86 - Math.abs(dy);
         if (overlapX <= 0 || overlapY <= 0) return;
         if (overlapY < overlapX) {
           const push = (overlapY / 2 + 0.01) * (dy >= 0 ? 1 : -1);
@@ -151,7 +151,7 @@ export function EmbeddingSpace() {
         if (!visible) return;
         const time = (now - started) / 1000;
         const grow = 1 - (1 - Math.min(1, time / 1.6)) ** 4;
-        space.rotation.y += (Math.sin(time * 0.3) * 0.28 + tx * 0.35 - space.rotation.y) * 0.05;
+        space.rotation.y += (Math.sin(time * 0.3) * 0.14 + tx * 0.2 - space.rotation.y) * 0.05;
         space.rotation.x += (-ty * 0.3 - space.rotation.x) * 0.05;
         ray.setFromCamera(pointer, camera);
         const hit = pointer.x < 5 ? ray.intersectObjects(nodes.map((node) => node.sprite))[0]?.object : undefined;
