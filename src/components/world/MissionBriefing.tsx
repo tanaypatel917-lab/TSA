@@ -50,7 +50,7 @@ export function MissionBriefing({ station, module, mission, stamped, bestStars =
     <footer className="station-actions">
       <div className="mission-best">{bestStars ? <><Stars count={bestStars} /> <span>Best stars on this mission</span></> : <span>No stars yet</span>}</div>
       <div className="mission-start">
-        <Link href={`/modules/${module.slug}`} className="text-link">Open the chapter <span aria-hidden="true">↗</span></Link>
+        <Link href={`/modules/${module.slug}`} className="text-link text-link--arrow"><span className="text-link-label">Open the chapter </span><span aria-hidden="true">↗</span></Link>
         <button type="button" className="button-primary" onClick={onStart}>{daily ? "Start the daily" : "Start mission"} <span aria-hidden="true">→</span></button>
       </div>
     </footer>

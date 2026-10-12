@@ -32,7 +32,7 @@ export function BiasLab() {
         <text x={SIZE - 8} y={SIZE - 8} textAnchor="end" className="plot-axis">redder →</text>
       </svg>
       <div className="bias-results" aria-live="polite">
-        {([["Farm A", scoreA], ["Farm B", scoreB]] as const).map(([label, score]) => <div key={label} className="bias-bar"><span>{label} <strong>{Math.round(score * 100)}%</strong></span><span className="bias-track"><i style={{ width: `${score * 100}%` }} data-low={score < 0.75} /></span></div>)}
+        {([["Farm A", scoreA], ["Farm B", scoreB]] as const).map(([label, score]) => <div key={label} className="bias-bar"><span>{label} <strong>{Math.round(score * 100)}%</strong></span><span className="bias-track"><i style={{ width: `${score * 100}%` }} data-filled={score > 0 ? "true" : "false"} data-low={score < 0.75} /></span></div>)}
         <p className="bias-gap">{scoreA - scoreB > 0.1 ? `A ${Math.round((scoreA - scoreB) * 100)}-point gap. The model mostly learned what ripe looks like on Farm A.` : "The gap is small. Representative data helped the model work for both farms."}</p>
         <p className="bias-key"><span className="key-dot" /> Farm A <span className="key-square" /> Farm B · <span className="key-ripe">filled = ripe</span></p>
       </div>

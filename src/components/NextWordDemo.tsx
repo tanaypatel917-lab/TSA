@@ -89,7 +89,7 @@ export function NextWordDemo() {
         <button type="button" className="demo-reset" onClick={() => choose(starter)} disabled={!added.length}>Reset</button>
       </div>
     </div>
-    <p className="demo-note">A tiny model we trained on {predictorCorpus.length} sentences. Real language models learn from trillions of words and can still be confidently wrong. <Link href="/modules/ai-foundations/lessons/language-models" className="text-link">How language models work <span aria-hidden="true">↗</span></Link></p>
+    <p className="demo-note">A tiny model we trained on {predictorCorpus.length} sentences. Real language models learn from trillions of words and can still be confidently wrong. <Link href="/modules/ai-foundations/lessons/language-models" className="text-link text-link--arrow"><span className="text-link-label">How language models work </span><span aria-hidden="true">↗</span></Link></p>
     <SourceLine tool="predictor" />
   </section>;
 }

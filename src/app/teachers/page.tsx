@@ -48,7 +48,7 @@ export default function TeachersPage() {
     <section className="shell teachers-section teachers-sources" aria-labelledby="teacher-sources-title">
       <h2 id="teacher-sources-title">Frameworks behind this toolkit</h2>
       <ul>{teacherSources.map((id) => { const reference = referenceById(id)!; return <li key={id}><Link href={`/references#ref-${id}`}><span>[{referenceNumber(id)}]</span> {reference.title}</Link><small>{reference.publisher}</small></li>; })}</ul>
-      <Link href="/references" className="text-link">All references <span aria-hidden="true">↗</span></Link>
+      <Link href="/references" className="text-link text-link--arrow"><span className="text-link-label">All references </span><span aria-hidden="true">↗</span></Link>
     </section>
   </div>;
 }

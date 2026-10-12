@@ -67,7 +67,7 @@ export function ChapterPlans() {
           <p>The chapter quiz has {current.module.quiz.length} questions with an explanation after each answer. A score of 70% or more completes the chapter.</p>
           <h4>Extension</h4>
           <p>{current.plan.extension}</p>
-          <Link href={`/modules/${current.module.slug}`} className="text-link">Open the chapter <span aria-hidden="true">↗</span></Link>
+          <Link href={`/modules/${current.module.slug}`} className="text-link text-link--arrow"><span className="text-link-label">Open the chapter </span><span aria-hidden="true">↗</span></Link>
         </div>
       </div>
     </section>

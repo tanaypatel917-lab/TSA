@@ -27,5 +27,5 @@ export function ResumeLearning() {
   const { state, hydrated } = useProgress();
   if (!hydrated || !state.startedAt) return null;
   const task = nextLearningTask(state);
-  return <div className="resume-learning"><Link className="text-link" href={task.href}>Continue learning <span aria-hidden="true">↗</span></Link><span>{task.label}</span></div>;
+  return <div className="resume-learning"><Link className="text-link text-link--arrow" href={task.href}><span className="text-link-label">Continue learning </span><span aria-hidden="true">↗</span></Link><span>{task.label}</span></div>;
 }

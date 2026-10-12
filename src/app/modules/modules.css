@@ -141,7 +141,7 @@ html[data-motion="full"] .system-arrow i { animation: system-flow 700ms linear i
 .token[data-tone="4"] { background: #F2D2BC; }
 
 .bias-grid { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 24px; align-items: center; margin-top: 8px; }
-.bias-plot { display: block; width: 100%; height: auto; border: 1.5px solid var(--ink); border-radius: 8px; }
+.bias-plot { display: block; width: 100%; height: auto; border: 1.5px solid var(--ink); border-radius: 8px; box-shadow: 3px 3px 0 var(--ink); }
 .plot-bg { fill: #EFE4D6; }
 .plot-line { stroke: var(--ink); stroke-width: 3; stroke-dasharray: 10 6; }
 .plot-dot { fill: var(--paper); stroke: var(--ink); stroke-width: 1.5; }
@@ -149,14 +149,21 @@ html[data-motion="full"] .system-arrow i { animation: system-flow 700ms linear i
 .plot-axis { font-size: 11px; font-weight: 700; fill: var(--muted); }
 .bias-results { display: grid; gap: 12px; }
 .bias-bar { display: grid; gap: 6px; font-size: 15px; font-weight: 600; }
-.bias-bar strong { font-family: var(--font-display), sans-serif; font-size: 22px; }
-.bias-track { display: block; height: 14px; overflow: hidden; border: 1.5px solid var(--ink); border-radius: 7px; background: var(--paper); }
+.bias-bar strong { font-family: var(--font-display), sans-serif; font-size: 22px; text-shadow: 1px 1px 0 var(--clay), 2px 2px 0 #B8694A; }
+.bias-track { display: block; height: 14px; overflow: hidden; border: 1.5px solid var(--ink); border-radius: 7px; background: #EFE4D6; box-shadow: inset 0 2px 0 rgba(28, 42, 67, .14); }
 .bias-track i { display: block; height: 100%; background: var(--sky); transition: width 420ms var(--ease-out), background-color 200ms ease; }
+.bias-track i[data-filled="true"] { box-shadow: inset -2px 0 0 var(--ink); }
 .bias-track i[data-low="true"] { background: var(--clay); }
 .bias-gap { padding: 10px 12px; border-radius: 6px; background: #EFE4D6; font-size: 15px; line-height: 1.5; }
 .bias-key { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
 .key-dot, .key-square { display: inline-block; width: 11px; height: 11px; border: 1.5px solid var(--ink); background: var(--clay); }
 .key-dot { border-radius: 50%; }
+
+@media (forced-colors: active) {
+  .bias-plot { box-shadow: none; }
+  .bias-bar strong { text-shadow: none; }
+  .bias-track, .bias-track i { box-shadow: none; }
+}
 
 .claim-prompt { font-size: 15px; }
 .claim-prompt span { margin-right: 8px; padding: 2px 8px; border-radius: 3px; background: var(--ink); color: var(--paper); font-size: 12px; font-weight: 700; text-transform: uppercase; }

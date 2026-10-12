@@ -520,7 +520,7 @@ export function WorldGame() {
       <p>{card.token.definition}</p>
       <div className="word-card-actions">
         {!collected.has(card.token.term) && <button type="button" className="button-primary" onClick={() => collect(card.token, false)}>Collect · +{WORLD_XP.word} XP</button>}
-        <Link href={`/glossary/#term-${termSlug(card.token.term)}`} className="text-link">In the glossary <span aria-hidden="true">↗</span></Link>
+        <Link href={`/glossary/#term-${termSlug(card.token.term)}`} className="text-link text-link--arrow"><span className="text-link-label">In the glossary </span><span aria-hidden="true">↗</span></Link>
         <button type="button" className="word-card-close" onClick={() => setCard(null)} aria-label="Close word card">×</button>
       </div>
     </aside>}
