@@ -1163,13 +1163,12 @@ html[data-motion="reduced"] .learning-path li { animation: none !important; }
   .answer-choice[data-state="correct"] { translate: 0 1px; box-shadow: 0 1px 0 var(--ink), inset 0 3px 0 rgba(0, 0, 0, .1); }
   .answer-letter { border: 1.5px solid var(--ink); border-radius: 4px; background: var(--paper); box-shadow: 0 3px 0 var(--ink); translate: 0 -1px; }
   .station-choices .answer-choice { translate: none; box-shadow: none; }
-@media (min-width: 900px) {
   .brief-steps .step-number, .field-toggle .step-number { font-size: 34px; color: var(--ink); text-shadow: 1px 1px 0 var(--clay), 2px 2px 0 var(--clay), 3px 3px 0 #B8694A, 4px 4px 0 #8E5037; }
   .brief-steps textarea, .field-body textarea { box-shadow: 5px 5px 0 var(--line); transition: box-shadow .25s var(--ease-out), translate .25s var(--ease-out); }
   .brief-steps textarea:focus, .field-body textarea:focus { translate: -3px -3px; box-shadow: 8px 8px 0 var(--clay); }
   .field-state { background: var(--paper); box-shadow: 0 3px 0 var(--ink); translate: 0 -1px; }
   .field-case[data-written="true"] .field-state { rotate: -6deg; box-shadow: 0 1px 0 var(--ink); translate: 0 1px; }
-}
+@media (max-width: 899px) { .brief-steps .step-number, .field-toggle .step-number { font-size: 24px; text-shadow: 1px 1px 0 var(--clay), 2px 2px 0 #B8694A; } }
 @supports (animation-timeline: view()) {
   @media (min-width: 900px) {
     html[data-motion="full"] .brief-steps li { animation: takeaway-flip linear both; animation-timeline: view(); animation-range: entry 0% entry 70%; transform-origin: 50% 100%; }
