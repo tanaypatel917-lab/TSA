@@ -277,3 +277,7 @@ html[data-intro-page="true"][data-motion="full"] { scroll-behavior: smooth; }
   .intro-experience .hero-copy .button-primary { order: 2; align-self: flex-start; margin-top: 22px; }
   .intro-experience .hero-copy .hero-contents { order: 3; margin-top: 24px; }
 }
+@media (min-width: 900px) {
+  .intro-marquee { bottom: -3vh; bottom: -3svh; }
+  .intro-marquee-track { font-size: clamp(96px, 10vw, 170px); }
+}
