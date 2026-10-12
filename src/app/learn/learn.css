@@ -157,3 +157,9 @@ html[data-motion="reduced"] .map-step[data-next="true"]::after { animation: none
   html[data-motion="full"] .mini-badges li[data-earned="true"]:hover .mini-mark { translate: -2px -3px; }
   html[data-motion="full"] .mini-badges li[data-earned="false"]:hover { border-color: var(--ink); }
 }
+.learn-certificate[data-complete="false"] .cert-preview { opacity: 1; }
+.learn-certificate[data-complete="false"] .cert-preview::before { border-style: dashed; border-color: rgba(28, 42, 67, .45); }
+.learn-certificate[data-complete="false"] .cert-preview strong, .learn-certificate[data-complete="false"] .cert-preview span:last-child { color: var(--muted); }
+@media (min-width: 900px) {
+  .cert-mark { font-size: 76px; text-shadow: 1px 1px 0 #B8694A, 2px 2px 0 #B8694A, 3px 3px 0 #A35C40, 4px 4px 0 #A35C40, 5px 5px 0 #8E5037, 9px 11px 10px rgba(28, 42, 67, .2); }
+}

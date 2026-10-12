@@ -1192,3 +1192,7 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
   .quiz-aside .quiz-count { font-size: 84px; font-weight: 650; letter-spacing: -.03em; color: var(--ink); text-shadow: 1px 1px 0 var(--clay), 2px 2px 0 var(--clay), 3px 3px 0 var(--clay), 4px 4px 0 #B8694A, 5px 5px 0 #B8694A, 6px 6px 0 #8E5037, 9px 12px 10px rgba(28, 42, 67, .18); }
   .quiz-count span { text-shadow: none; }
 }
+@media (min-width: 900px) {
+  .closing-mark { text-shadow: 3px 3px 0 #B8694A, 6px 6px 0 #B8694A, 9px 9px 0 #A35C40, 12px 12px 0 #A35C40, 15px 15px 0 #8E5037, 18px 18px 0 #8E5037, 30px 36px 28px rgba(28, 42, 67, .25); }
+  .home-closing h2 { text-shadow: 2px 2px 0 #B8694A, 4px 4px 0 #A35C40, 6px 6px 0 #8E5037, 10px 14px 14px rgba(28, 42, 67, .18); }
+}
