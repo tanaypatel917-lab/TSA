@@ -262,3 +262,7 @@ html[data-motion="full"] .system-arrow i { animation: system-flow 700ms linear i
   .program-route > li[data-next="true"] .step-number { box-shadow: 0 4px 0 var(--ink), 0 0 0 7px rgba(175, 203, 227, .55); }
   html[data-motion="full"] .program-route > li:not([data-done="true"]):hover .step-number { translate: 0 -7px; rotate: -8deg; box-shadow: 0 8px 0 var(--ink), 0 14px 12px rgba(28, 42, 67, .18); }
 }
+.lab-choices button { box-shadow: 0 3px 0 var(--ink); transition: background-color 150ms ease, color 150ms ease, translate 140ms var(--ease-out), box-shadow 140ms var(--ease-out); }
+.lab-choices button:not(:disabled):not([aria-pressed="true"]) { background: var(--paper); }
+.lab-choices button[aria-pressed="true"] { translate: 0 2px; box-shadow: 0 1px 0 var(--ink), inset 0 2px 0 rgba(0, 0, 0, .18); }
+.lab-choices button:active:not(:disabled) { transform: none; translate: 0 3px; box-shadow: 0 0 0 var(--ink); }
