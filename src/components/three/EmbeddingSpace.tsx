@@ -5,6 +5,7 @@ import { glossary } from "@/content/glossary";
 import { useMotionPreference } from "../MotionPreferences";
 
 const CHIP = 0.66;
+const FLOAT_CLEARANCE = 0.04;
 
 const CLUSTERS: { center: [number, number, number]; fill: string; terms: string[] }[] = [
   { center: [-3.2, 0.9, 0], fill: "#AFCBE3", terms: ["AI", "Machine learning", "Model", "LLM", "Token", "Training data", "Algorithm", "Classifier", "Generative AI"] },
@@ -64,7 +65,7 @@ export function EmbeddingSpace() {
       const font = getComputedStyle(document.body).getPropertyValue("--font-body").trim() || "sans-serif";
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
-      camera.position.set(0, 0, 24.5);
+      camera.position.set(0, 0, 26);
       const space = new THREE.Group();
       scene.add(space);
 
@@ -84,19 +85,19 @@ export function EmbeddingSpace() {
         space.add(sprite);
         nodes.push({ sprite, home, width, links: [] });
       }));
-      for (let pass = 0; pass < 120; pass += 1) nodes.forEach((node, index) => nodes.forEach((other, otherIndex) => {
+      for (let pass = 0; pass < 60; pass += 1) nodes.forEach((node, index) => nodes.forEach((other, otherIndex) => {
         if (otherIndex <= index) return;
         const dx = other.home.x - node.home.x;
         const dy = other.home.y - node.home.y;
-        const overlapX = (node.width + other.width) * 0.26 + 0.3 - Math.abs(dx);
-        const overlapY = 0.86 - Math.abs(dy);
+        const overlapX = node.width * CHIP / 2 + 0.12 + other.width * CHIP / 2 + 0.12 - Math.abs(dx);
+        const overlapY = CHIP / 2 + 0.1 + CHIP / 2 + 0.1 + FLOAT_CLEARANCE - Math.abs(dy);
         if (overlapX <= 0 || overlapY <= 0) return;
         if (overlapY < overlapX) {
-          const push = (overlapY / 2 + 0.01) * (dy >= 0 ? 1 : -1);
+          const push = (overlapY / 2 + 0.001) * (dy >= 0 ? 1 : -1);
           node.home.y -= push;
           other.home.y += push;
         } else {
-          const push = (overlapX / 2 + 0.01) * (dx >= 0 ? 1 : -1);
+          const push = (overlapX / 2 + 0.001) * (dx >= 0 ? 1 : -1);
           node.home.x -= push;
           other.home.x += push;
         }
