@@ -1344,3 +1344,6 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
 .draft-toolbar button:active:not(:disabled) { translate: 2px 2px; box-shadow: 0 0 0 var(--ink); }
 .draft-toolbar button:disabled { box-shadow: none; border-style: dashed; color: #525C6E; }
 @media (hover: hover) and (pointer: fine) { .draft-toolbar button:hover:not(:disabled) { background: var(--sky); } }
+.hero-tour { display: inline-flex; align-items: center; gap: 10px; padding: 12px 22px; border: 1.5px solid var(--ink); border-radius: 4px; background: var(--paper); box-shadow: 3px 3px 0 var(--ink); text-decoration: none; transition: transform 140ms var(--ease-out), box-shadow 140ms var(--ease-out), background-color 160ms ease; }
+.hero-tour:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--ink); }
+@media (hover: hover) and (pointer: fine) { .hero-tour:hover { background: var(--sky); text-decoration: none; } }
