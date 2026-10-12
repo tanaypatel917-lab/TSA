@@ -3,6 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { hasSeenIntro, markIntroSeen, rememberIntroReturn } from "@/engine/intro";
+import { VoxelGlyph } from "./three/VoxelGlyph";
 
 export function IntroGate() {
   const pathname = usePathname();
@@ -58,5 +59,5 @@ export function IntroGate() {
   }
 
   if (!open) return null;
-  return <div className="intro-gate" role="dialog" aria-modal="true" aria-labelledby="intro-gate-title" aria-describedby="intro-gate-copy" ref={dialog}><div className="intro-gate-card"><p className="section-index">First visit</p><h1 id="intro-gate-title" className="intro-gate-title" tabIndex={-1}>A question wants to move.</h1><p id="intro-gate-copy">Take a short scroll-driven introduction to Wordplay. It uses decorative 3D, keeps your progress on this device, and can be skipped at any time.</p><div className="intro-gate-actions"><button className="button-primary" onClick={play}>Play the introduction <span aria-hidden="true">↗</span></button><button className="button-secondary" onClick={skip}>Enter Wordplay</button></div><p className="small-note">Reduced-motion and narrow-screen visitors receive a still version.</p><span className="intro-gate-mark" aria-hidden="true">?</span></div></div>;
+  return <div className="intro-gate" role="dialog" aria-modal="true" aria-labelledby="intro-gate-title" aria-describedby="intro-gate-copy" ref={dialog}><div className="intro-gate-card"><p className="section-index">First visit</p><h1 id="intro-gate-title" className="intro-gate-title" tabIndex={-1}>A question wants to move.</h1><p id="intro-gate-copy">Take a short scroll-driven introduction to Wordplay. It uses decorative 3D, keeps your progress on this device, and can be skipped at any time.</p><div className="intro-gate-actions"><button className="button-primary" onClick={play}>Play the introduction <span aria-hidden="true">↗</span></button><button className="button-secondary" onClick={skip}>Enter Wordplay</button></div><p className="small-note">Reduced-motion and narrow-screen visitors receive a still version.</p><span className="intro-gate-mark" aria-hidden="true">?</span><div className="intro-gate-voxel-wrap" aria-hidden="true"><VoxelGlyph mark="?" className="intro-gate-voxel" /></div></div></div>;
 }

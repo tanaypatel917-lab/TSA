@@ -1181,3 +1181,10 @@ html[data-motion="reduced"] .learning-path li { animation: none !important; }
 }
 @media (prefers-reduced-motion: reduce) { .brief-steps li { animation: none !important; } }
 html[data-motion="reduced"] .brief-steps li { animation: none !important; }
+.intro-gate-voxel-wrap { display: none; }
+@media (min-width: 900px) {
+  .intro-gate-voxel-wrap { position: absolute; z-index: 0; right: 36px; top: 50%; translate: 0 -50%; display: grid; width: 230px; height: 300px; place-items: center; pointer-events: none; }
+  .intro-gate-voxel > .chapter-glyph { font-size: 250px; line-height: 1; color: var(--clay); opacity: 0; }
+  .intro-gate-card:has(.intro-gate-voxel[data-on="true"]) .intro-gate-mark { opacity: 0; }
+  .intro-gate-mark { transition: opacity .5s var(--ease-out); }
+}
