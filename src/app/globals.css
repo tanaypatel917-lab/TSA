@@ -453,12 +453,18 @@ body:has(.intro-experience) .site-footer { display: none; }
 .intro-gate-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 32px; }
 .intro-gate-card .small-note { max-width: 360px; margin-top: 22px; }
 .intro-gate-mark { position: absolute; z-index: 0; right: -28px; bottom: -86px; font-family: var(--font-display), sans-serif; font-size: 285px; line-height: 1; color: var(--clay); transform: rotate(14deg); }
+.escape-keycap { display: none; padding: 1px 4px 2px; border: 1px solid var(--ink); border-bottom-width: 2px; border-radius: 3px; background: var(--paper); color: var(--ink); box-shadow: 0 2px 0 var(--ink); font-family: var(--font-body), sans-serif; font-size: 10px; font-weight: 700; line-height: 1; }
 @media (max-width: 767px) {
   .intro-gate { padding: 16px; }
   .intro-gate-card { padding: 28px 22px; box-shadow: 7px 7px 0 var(--ink); }
   .intro-gate-title { font-size: 47px; }
   .intro-gate-actions > * { width: 100%; }
-  .intro-gate-mark { font-size: 185px; right: -40px; bottom: -52px; }
+  .intro-gate-mark { font-size: 48px; right: 20px; bottom: 8px; }
+}
+@media (hover: hover) and (pointer: fine) {
+  .escape-keycap { display: inline-block; }
+  .badge-toast button { display: flex; align-items: center; justify-content: center; gap: 3px; width: auto; min-width: 30px; padding-inline: 4px; }
+  .tour-close, .word-card-close { display: inline-flex; align-items: center; justify-content: center; gap: 4px; width: auto; min-width: 40px; padding-inline: 4px; }
 }
 
 .page-hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--ink); background: var(--paper); }

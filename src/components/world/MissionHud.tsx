@@ -24,6 +24,6 @@ export function MissionHud({ mission, run, boost = idleBoost, onQuit, inline, so
     {!inline && <div className="mission-hud-boost" data-active={boost.active} aria-label={`Boost ${boost.ready ? "ready" : boost.active ? "active" : "recharging"}`}>
       <span>Boost</span><span className="mission-hud-boost-track" aria-hidden="true"><i style={{ transform: `scaleX(${boost.charge})` }} /></span>
     </div>}
-    <div className="mission-hud-buttons">{onSound && <button type="button" className="mission-quit" aria-pressed={sound} onClick={onSound}>{sound ? "Sound on" : "Sound off"}</button>}<button type="button" className="mission-quit" onClick={onQuit}>Quit <span aria-hidden="true">Esc</span></button></div>
+    <div className="mission-hud-buttons">{onSound && <button type="button" className="mission-quit" aria-pressed={sound} onClick={onSound}>{sound ? "Sound on" : "Sound off"}</button>}<button type="button" className="mission-quit" aria-keyshortcuts="Escape" onClick={onQuit}>Quit <span aria-hidden="true">Esc</span></button></div>
   </div>;
 }

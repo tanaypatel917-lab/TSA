@@ -105,6 +105,9 @@ export function WorldGame() {
   const [boostView, setBoostView] = useState<BoostState>(() => boostState(0, null));
   const [banner, setBanner] = useState<string | null>(null);
   const [card, setCard] = useState<Card | null>(null);
+  const cardRef = useRef<Card | null>(null);
+  const cardOpener = useRef<HTMLElement | null>(null);
+  cardRef.current = card;
   const [earned, setEarned] = useState(0);
   const sceneUrl = questionScene.url.trim();
   const capable = device.checked && !!sceneUrl && !reduced && device.wide && device.webgl;
@@ -134,8 +137,27 @@ export function WorldGame() {
 
   const showCard = useCallback((next: Card, linger: boolean) => {
     window.clearTimeout(cardTimer.current);
+    if (!cardRef.current) {
+      const active = document.activeElement;
+      cardOpener.current = active instanceof HTMLElement && active !== document.body ? active : stage.current;
+    }
+    cardRef.current = next;
     setCard(next);
-    if (linger) cardTimer.current = window.setTimeout(() => setCard(null), 6000);
+    if (linger) cardTimer.current = window.setTimeout(() => {
+      if (cardRef.current !== next) return;
+      cardRef.current = null;
+      cardOpener.current = null;
+      setCard(null);
+    }, 6000);
+  }, []);
+
+  const closeCard = useCallback(() => {
+    window.clearTimeout(cardTimer.current);
+    cardRef.current = null;
+    setCard(null);
+    const target = cardOpener.current;
+    cardOpener.current = null;
+    if (target?.isConnected) window.requestAnimationFrame(() => target.focus({ preventScroll: true }));
   }, []);
 
   const pop = useCallback((text: string, tone: Popup["tone"]) => {
@@ -228,6 +250,7 @@ export function WorldGame() {
   useEffect(() => {
     const down = (event: KeyboardEvent) => {
       const current = live.current;
+      if (event.key === "Escape" && cardRef.current) { event.preventDefault(); closeCard(); return; }
       if (event.key === "Escape" && mission.current && !current.paused) { event.preventDefault(); endDrive(); return; }
       if (!current.drive || current.paused) return;
       const typing = event.target instanceof HTMLElement && event.target.closest("input, textarea, select");
@@ -248,7 +271,7 @@ export function WorldGame() {
     window.addEventListener("keyup", up);
     window.addEventListener("blur", clear);
     return () => { window.removeEventListener("keydown", down); window.removeEventListener("keyup", up); window.removeEventListener("blur", clear); };
-  }, [openBriefing, endDrive, activateBoost]);
+  }, [openBriefing, endDrive, activateBoost, closeCard]);
 
   useEffect(() => {
     if (!capable || !canvasHost.current) return;
@@ -448,7 +471,10 @@ export function WorldGame() {
       data-hit={hitFlash ? "bad" : undefined}
       tabIndex={drive ? 0 : -1}
       role={drive ? "application" : undefined}
-      aria-label={drive ? "Wordplay World. Use the arrow keys or W A S D to move. Press Shift to boost." : undefined}
+      aria-label={drive ? device.coarse
+        ? "Wordplay World. Move with the pad. Drive to a station and tap Start mission. Collect words on the way."
+        : "Wordplay World. Use the arrow keys or W A S D to move. Press Shift to boost. Drive to a station and press Enter to start its mission. Collect words on the way. Press Escape to close a card."
+        : undefined}
       aria-describedby="world-help"
     >
       <div ref={canvasHost} className="world-canvas" hidden={!drive} />
@@ -502,7 +528,10 @@ export function WorldGame() {
 
     {drive && !active && <WorldMap variant="mini" collected={collected} stamped={stamped} player={hud} near={near} />}
 
-    {!active && <p id="world-help" className="world-help">{drive ? <>Move with <kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> or <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>. Press <kbd>Shift</kbd> to boost. Drive to a station and press <kbd>Enter</kbd> to start its mission. Collect words on the way.</> : <>{reason && <strong>{reason} </strong>}Choose a station to play its mission, or a word to read and collect it.</>}</p>}
+    {!active && <p id="world-help" className="world-help">{drive ? device.coarse
+      ? "Move with the pad. Drive to a station and tap Start mission. Collect words on the way."
+      : <>Move with <kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> or <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>. Press <kbd>Shift</kbd> to boost. Drive to a station and press <kbd>Enter</kbd> to start its mission. Collect words on the way. Press <kbd>Esc</kbd> to close a card.</>
+      : <>{reason && <strong>{reason} </strong>}Choose a station to play its mission, or a word to read and collect it.</>}</p>}
 
     {drive && near === "daily" && dailyMission && !active && !dialogOpen && <div className="world-prompt is-daily">
       <p><span>Daily challenge · {today}</span> {dailyMission.title}</p>
@@ -521,7 +550,7 @@ export function WorldGame() {
       <div className="word-card-actions">
         {!collected.has(card.token.term) && <button type="button" className="button-primary" onClick={() => collect(card.token, false)}>Collect · +{WORLD_XP.word} XP</button>}
         <Link href={`/glossary/#term-${termSlug(card.token.term)}`} className="text-link text-link--arrow"><span className="text-link-label">In the glossary </span><span aria-hidden="true">↗</span></Link>
-        <button type="button" className="word-card-close" onClick={() => setCard(null)} aria-label="Close word card">×</button>
+        <button type="button" className="word-card-close" onClick={closeCard} aria-label="Close word card" aria-keyshortcuts="Escape">×<kbd className="escape-keycap" aria-hidden="true">Esc</kbd></button>
       </div>
     </aside>}
 

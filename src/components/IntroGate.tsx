@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { hasSeenIntro, markIntroSeen, rememberIntroReturn } from "@/engine/intro";
+import { hasSeenIntro, markIntroSeen, rememberIntroReturn, shouldOfferIntro } from "@/engine/intro";
 import { VoxelGlyph } from "./three/VoxelGlyph";
 
 export function IntroGate() {
@@ -13,11 +13,10 @@ export function IntroGate() {
   const restoreFocus = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    if (pathname.startsWith("/intro")) { setOpen(false); return; }
-    if (!hasSeenIntro()) {
+    if (shouldOfferIntro(pathname) && !hasSeenIntro()) {
       restoreFocus.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
       setOpen(true);
-    }
+    } else setOpen(false);
   }, [pathname]);
 
   useEffect(() => {

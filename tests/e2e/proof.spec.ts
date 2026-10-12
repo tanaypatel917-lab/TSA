@@ -94,12 +94,14 @@ test("the first badge uses a persistent live region and final dismissal returns 
   await expect(toast).toContainText("New badge unlocked");
   await expect(toast).toContainText("First Steps");
   const dismiss = live.getByRole("button", { name: "Dismiss badge notification" });
+  await expect(dismiss).toHaveAttribute("aria-keyshortcuts", "Escape");
+  await expect(dismiss.locator("kbd")).toBeVisible();
   await dismiss.focus();
   await expect(dismiss).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(toast).toContainText("Prompt Engineer");
   await expect(dismiss).toBeFocused();
-  while (await toast.count()) await page.keyboard.press("Enter");
+  await page.keyboard.press("Escape");
   await expect(toast).toHaveCount(0);
   await expect(page.locator("#main")).toBeFocused();
 });

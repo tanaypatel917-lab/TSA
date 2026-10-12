@@ -153,6 +153,19 @@ test("locked badges show how close you are and the closest one is marked", async
   await expect(page.locator(".badge-patch", { hasText: "Foundation Builder" }).locator(".badge-progress")).toHaveCount(0);
 });
 
+test("Escape closes the glossary term card while keeping focus on its term", async ({ page }) => {
+  await seed(page);
+  const lesson = foundations.lessons.find((item) => item.id === "strengths-and-limits")!;
+  await page.goto(`/modules/${foundations.slug}/lessons/${lesson.id}/`);
+  const trigger = page.locator(".term-trigger").first();
+  await trigger.focus();
+  await expect(trigger).toHaveAttribute("aria-keyshortcuts", "Escape");
+  await expect(page.locator(".term-card")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.locator(".term-card")).toHaveCount(0);
+  await expect(trigger).toBeFocused();
+});
+
 test("About shows exactly what this browser holds and can clear it", async ({ page }) => {
   await seed(page, returning, { [draftKey]: JSON.stringify({ version: 1, activities: { "tools/prompt-lab": "Act as a tutor" } }) });
   await page.goto("/about/");

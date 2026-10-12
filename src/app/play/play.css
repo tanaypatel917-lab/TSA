@@ -29,7 +29,7 @@
 
 .world-help { position: absolute; z-index: 2; left: var(--hud); bottom: var(--hud); max-width: min(620px, calc(100% - 2 * var(--hud) - 180px)); padding: 10px 14px; border-radius: 6px; background: var(--ink); font-size: 14px; line-height: 1.7; color: rgba(246, 239, 229, .86); }
 .world-help strong { color: var(--paper); }
-.world kbd { display: inline-block; min-width: 24px; margin: 0 2px; padding: 0 6px; border: 1px solid rgba(246, 239, 229, .55); border-bottom-width: 2px; border-radius: 4px; font-family: var(--font-body), sans-serif; font-size: 12px; font-weight: 700; line-height: 20px; text-align: center; }
+.world kbd:not(.escape-keycap) { display: inline-block; min-width: 24px; margin: 0 2px; padding: 0 6px; border: 1px solid rgba(246, 239, 229, .55); border-bottom-width: 2px; border-radius: 4px; font-family: var(--font-body), sans-serif; font-size: 12px; font-weight: 700; line-height: 20px; text-align: center; }
 
 .world-prompt { position: absolute; z-index: 3; left: 50%; bottom: calc(var(--hud) + 104px); display: flex; align-items: center; gap: 20px; padding: 14px 14px 14px 22px; border: 2px solid var(--ink); background: var(--paper); color: var(--ink); box-shadow: 8px 8px 0 var(--sky); transform: translateX(-50%); animation: world-rise 260ms var(--ease-out); }
 .world-prompt p { font-size: 17px; font-weight: 600; white-space: nowrap; }

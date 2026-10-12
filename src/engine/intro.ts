@@ -1,6 +1,10 @@
 export const INTRO_KEY = "wordplay:intro:v1";
 export const INTRO_RETURN_KEY = "wordplay:intro:return:v1";
 
+export function shouldOfferIntro(pathname: string): boolean {
+  return pathname === "" || pathname === "/";
+}
+
 export function hasSeenIntro(storage?: Pick<Storage, "getItem">): boolean {
   try { return !!(storage ?? window.localStorage).getItem(INTRO_KEY); }
   catch { return true; }

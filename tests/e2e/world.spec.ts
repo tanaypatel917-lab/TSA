@@ -53,6 +53,50 @@ test("collecting a word shows its definition, awards XP once, and saves it", asy
   await expect(page.locator(".word-card").getByRole("button", { name: /Collect/ })).toHaveCount(0);
 });
 
+test("Escape closes a word card and returns focus to its opener", async ({ page }) => {
+  await seed(page);
+  await page.goto("/play/");
+  const opener = page.locator(".world-word-list").getByRole("button", { name: "Hallucination" });
+  await opener.click();
+  const card = page.locator(".word-card");
+  const close = card.getByRole("button", { name: "Close word card" });
+  await expect(close).toHaveAttribute("aria-keyshortcuts", "Escape");
+  await expect(close.locator("kbd")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(card).toHaveCount(0);
+  await expect(opener).toBeFocused();
+});
+
+test("Escape closes a mission briefing and returns focus to its station", async ({ page }) => {
+  await seed(page);
+  await page.goto("/play/");
+  const opener = page.locator(".world-station-list").getByRole("button", { name: /AI Foundations/ });
+  await opener.click();
+  const briefing = page.getByRole("dialog", { name: "Train the spam filter" });
+  await expect(briefing.getByRole("heading", { level: 2 })).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(briefing).toHaveCount(0);
+  await expect(opener).toBeFocused();
+});
+
+test("drive controls and help match coarse and fine pointers when 3D is available", async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 820, height: 1180 }, isMobile: true, hasTouch: true });
+  const page = await context.newPage();
+  await seed(page);
+  await page.goto("/play/");
+  const world = page.locator(".world");
+  if (await world.getAttribute("data-scene-state") === "disabled") {
+    await context.close();
+    test.skip(true, "The E2E static export disables Spline, so drive mode cannot be reached.");
+  }
+  await expect(world).toHaveAttribute("data-scene-state", "ready", { timeout: 45000 });
+  if (await world.getAttribute("data-mode") !== "drive") await page.getByRole("button", { name: "3D view" }).click();
+  await expect(world).toHaveAttribute("data-mode", "drive");
+  await expect(page.locator("#world-help")).toHaveText("Move with the pad. Drive to a station and tap Start mission. Collect words on the way.");
+  await expect(page.locator(".world-stage")).toHaveAttribute("aria-label", "Wordplay World. Move with the pad. Drive to a station and tap Start mission. Collect words on the way.");
+  await context.close();
+});
+
 async function playMission(page: Page, moduleId: string, answer: (gate: string, gates: string[]) => string) {
   const mission = missions.find((item) => item.moduleId === moduleId)!;
   const dialog = page.getByRole("dialog");

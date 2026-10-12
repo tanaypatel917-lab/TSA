@@ -36,6 +36,9 @@ test("Escape ends the site tour and returns focus to its opener", async ({ page 
   const card = page.getByRole("complementary", { name: tourStops[0].title });
   await expect(card).toBeVisible();
   await expect(card.getByRole("heading", { level: 2 })).toBeFocused();
+  const close = card.getByRole("button", { name: "End the tour" });
+  await expect(close).toHaveAttribute("aria-keyshortcuts", "Escape");
+  await expect(close.locator("kbd")).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(card).toHaveCount(0);
   await expect(opener).toBeFocused();

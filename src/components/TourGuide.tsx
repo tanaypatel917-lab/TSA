@@ -77,7 +77,7 @@ export function TourGuide() {
 
   if (!stop || step === null) return null;
   const last = step === tourStops.length - 1;
-  return <aside className="tour-card" aria-labelledby="tour-title" data-here={here} onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); end(); } }}>
+  return <aside className="tour-card" aria-labelledby="tour-title" data-here={here} onKeyDown={(event) => { if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); end(); } }}>
     <div className="tour-progress" aria-hidden="true">{tourStops.map((item, index) => <span key={item.path} data-on={index <= step} />)}</div>
     <p className="tour-kicker">Tour · Stop {step + 1} of {tourStops.length}</p>
     <h2 id="tour-title" ref={heading} tabIndex={-1}>{stop.title}</h2>
@@ -87,7 +87,7 @@ export function TourGuide() {
       {!here ? <button type="button" className="button-primary" onClick={() => go(step)}>Go to this stop <span aria-hidden="true">→</span></button>
         : last ? <button type="button" className="button-primary" onClick={end}>Finish tour <span aria-hidden="true">✓</span></button>
         : <button type="button" className="button-primary" onClick={() => go(step + 1)}>Next stop <span aria-hidden="true">→</span></button>}
-      <button type="button" className="tour-close" onClick={end} aria-label="End the tour">×</button>
+      <button type="button" className="tour-close" onClick={end} aria-label="End the tour" aria-keyshortcuts="Escape">×<kbd className="escape-keycap" aria-hidden="true">Esc</kbd></button>
     </div>
   </aside>;
 }

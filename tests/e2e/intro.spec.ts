@@ -37,6 +37,48 @@ test("the first-visit gate traps focus, Escape enters Wordplay, and reload bypas
   await expect(page.getByRole("heading", { name: "Ask better. Think further.", exact: true })).toBeVisible();
 });
 
+for (const viewport of [{ width: 390, height: 844 }, { width: 1440, height: 900 }]) {
+  test(`a fresh Play deep link skips the intro at ${viewport.width}px, then home offers it`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    await page.goto("/play/");
+
+    await expect(page.getByRole("heading", { level: 1, name: "Wordplay World" })).toBeVisible();
+    await expect(page.getByRole("dialog", { name: "A question wants to move." })).toHaveCount(0);
+    expect(await page.locator("html").getAttribute("data-intro-gate")).toBeNull();
+    expect(await page.evaluate((key) => localStorage.getItem(key), introKey)).toBeNull();
+
+    await page.goto("/");
+    await expect(page.getByRole("dialog", { name: "A question wants to move." })).toBeVisible();
+  });
+}
+
+for (const viewport of [{ width: 360, height: 740 }, { width: 390, height: 844 }]) {
+  test(`the phone intro mark stays clear of content at ${viewport.width}px`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    await page.goto("/");
+    await expect(page.getByRole("dialog", { name: "A question wants to move." })).toBeVisible();
+
+    const bounds = await page.evaluate(() => {
+      const rect = (selector: string) => {
+        const { left, top, right, bottom } = document.querySelector(selector)!.getBoundingClientRect();
+        return { left, top, right, bottom };
+      };
+      const mark = rect(".intro-gate-mark");
+      const intersects = (a: typeof mark, b: typeof mark) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+      const card = rect(".intro-gate-card");
+      return {
+        inside: mark.left >= card.left && mark.top >= card.top && mark.right <= card.right && mark.bottom <= card.bottom,
+        titleOverlap: intersects(mark, rect(".intro-gate-title")),
+        actionsOverlap: intersects(mark, rect(".intro-gate-actions"))
+      };
+    });
+
+    expect(bounds.inside).toBe(true);
+    expect(bounds.titleOverlap).toBe(false);
+    expect(bounds.actionsOverlap).toBe(false);
+  });
+}
+
 test("playing the intro opens the scroll film and Enter returns with persistence", async ({ page }) => {
   const scenes: string[] = [];
   page.on("request", (request) => { if (request.url().includes(".splinecode")) scenes.push(request.url()); });

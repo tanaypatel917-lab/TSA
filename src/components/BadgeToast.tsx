@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { BADGES } from "@/engine/badges";
 import { useProgress } from "@/state/ProgressProvider";
 import { useMotionPreference } from "./MotionPreferences";
@@ -29,11 +29,26 @@ export function BadgeToast() {
   const { reduced } = useMotionPreference();
   const first = newBadgeToast[0];
   useEffect(() => { if (!first || reduced) return; window.setTimeout(thud, 260); }, [first, reduced]);
+  const dismiss = useCallback(() => {
+    const last = newBadgeToast.length === 1;
+    dismissBadgeToast();
+    if (last) document.getElementById("main")?.focus({ preventScroll: true });
+  }, [dismissBadgeToast, newBadgeToast.length]);
+  useEffect(() => {
+    if (!first) return;
+    const keydown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape" || event.defaultPrevented) return;
+      event.preventDefault();
+      dismiss();
+    };
+    document.addEventListener("keydown", keydown);
+    return () => document.removeEventListener("keydown", keydown);
+  }, [dismiss, first]);
   const badge = BADGES.find((item) => item.id === first);
   return <div className="badge-toast-live" aria-live="polite" aria-atomic="true">
     {first && <>
       {!reduced && <div key={first} className="badge-stamp" aria-hidden="true"><BadgeBurst mark={badge?.mark ?? "*"} name={badge?.name ?? ""} /><span className="badge-stamp-disc"><span>{badge?.mark ?? "*"}</span><small>{badge?.name}</small></span></div>}
-      <div className="badge-toast"><p>New badge unlocked</p><strong>{badge?.name ?? first}</strong><p>{badge?.description}</p><button aria-label="Dismiss badge notification" onClick={() => { const last = newBadgeToast.length === 1; dismissBadgeToast(); if (last) document.getElementById("main")?.focus({ preventScroll: true }); }}>×</button></div>
+      <div className="badge-toast"><p>New badge unlocked</p><strong>{badge?.name ?? first}</strong><p>{badge?.description}</p><button aria-label="Dismiss badge notification" aria-keyshortcuts="Escape" onClick={dismiss}>×<kbd className="escape-keycap" aria-hidden="true">Esc</kbd></button></div>
     </>}
   </div>;
 }

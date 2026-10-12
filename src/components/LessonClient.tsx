@@ -45,7 +45,7 @@ export function LessonClient({ module, lesson, index, sources, terms }: { module
     let last = 0;
     for (const term of marks) {
       parts.push(text.slice(last, term.start));
-      parts.push(<button key={term.slug} type="button" className="term-trigger" data-open={card?.slug === term.slug} aria-describedby={`term-note-${term.slug}`} onMouseEnter={(event) => openTerm(term.slug, event.currentTarget)} onMouseLeave={() => setCard(null)} onFocus={(event) => openTerm(term.slug, event.currentTarget)} onBlur={() => setCard(null)} onClick={(event) => openTerm(term.slug, event.currentTarget)} onKeyDown={(event) => { if (event.key === "Escape") setCard(null); }}>{text.slice(term.start, term.end)}</button>);
+      parts.push(<button key={term.slug} type="button" className="term-trigger" data-open={card?.slug === term.slug} aria-describedby={`term-note-${term.slug}`} aria-keyshortcuts="Escape" onMouseEnter={(event) => openTerm(term.slug, event.currentTarget)} onMouseLeave={() => setCard(null)} onFocus={(event) => openTerm(term.slug, event.currentTarget)} onBlur={() => setCard(null)} onClick={(event) => openTerm(term.slug, event.currentTarget)} onKeyDown={(event) => { if (event.key === "Escape") setCard(null); }}>{text.slice(term.start, term.end)}</button>);
       last = term.end;
     }
     parts.push(text.slice(last));
