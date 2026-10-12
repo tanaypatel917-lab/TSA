@@ -456,10 +456,11 @@ body:has(.intro-experience) .site-footer { display: none; }
 .escape-keycap { display: none; padding: 1px 4px 2px; border: 1px solid var(--ink); border-bottom-width: 2px; border-radius: 3px; background: var(--paper); color: var(--ink); box-shadow: 0 2px 0 var(--ink); font-family: var(--font-body), sans-serif; font-size: 10px; font-weight: 700; line-height: 1; }
 @media (max-width: 767px) {
   .intro-gate { padding: 16px; }
-  .intro-gate-card { padding: 28px 22px; box-shadow: 7px 7px 0 var(--ink); }
+  .intro-gate-card { padding: 28px 22px 72px; box-shadow: 7px 7px 0 var(--ink); }
+  .intro-gate-card .small-note { max-width: calc(100% - 90px); }
   .intro-gate-title { font-size: 47px; }
   .intro-gate-actions > * { width: 100%; }
-  .intro-gate-mark { font-size: 48px; right: 20px; bottom: 8px; }
+  .intro-gate-mark { font-size: 120px; right: 22px; bottom: 18px; }
 }
 @media (hover: hover) and (pointer: fine) {
   .escape-keycap { display: inline-block; }
