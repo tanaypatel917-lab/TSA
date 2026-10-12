@@ -42,6 +42,24 @@ function pencil() {
   return cells;
 }
 
+function asterisk(): Cell[] {
+  const canvas = document.createElement("canvas");
+  canvas.width = GRID * 2;
+  canvas.height = GRID;
+  const context = canvas.getContext("2d", { willReadFrequently: true })!;
+  context.translate(GRID, GRID / 2);
+  context.fillStyle = "#000";
+  for (const angle of [90, 30, 150]) {
+    context.save();
+    context.rotate((angle * Math.PI) / 180);
+    context.fillRect(-17, -2.5, 34, 5);
+    context.restore();
+  }
+  const { data } = context.getImageData(0, 0, GRID * 2, GRID);
+  const cells: Cell[] = [];
+  for (let y = 0; y < GRID; y += 1) for (let x = 0; x < GRID * 2; x += 1) if (data[(y * GRID * 2 + x) * 4 + 3] > 120) cells.push([x - GRID, GRID / 2 - y]);
+  return cells;
+}
 
 function sample(mark: string, font: string) {
   const canvas = document.createElement("canvas");
@@ -80,7 +98,7 @@ export function VoxelGlyph({ mark, className = "" }: { mark: string; className?:
       renderer.setPixelRatio(Math.min(2, window.devicePixelRatio));
       element.appendChild(renderer.domElement);
       const font = getComputedStyle(document.body).getPropertyValue("--font-display").trim() || "sans-serif";
-      const cells = mark === "✎" ? pencil() : sample(mark, font);
+      const cells = mark === "✎" ? pencil() : mark === "*" ? asterisk() : sample(mark, font);
       const color = getComputedStyle(text).color;
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(30, 1, 1, 400);
