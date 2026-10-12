@@ -123,3 +123,6 @@ html[data-motion="reduced"] .align-yes { animation: none !important; }
 .plan-print { background: var(--paper); box-shadow: 3px 3px 0 var(--ink); transition: transform 140ms var(--ease-out), box-shadow 140ms var(--ease-out), background-color 160ms ease; }
 .plan-print:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--ink); }
 @media (hover: hover) and (pointer: fine) { .plan-print:hover { background: var(--sky); } }
+
+.policy-field input, .policy-field textarea { box-shadow: 3px 3px 0 var(--ink); transition: translate 160ms var(--ease-out), box-shadow 160ms var(--ease-out); }
+.policy-field input:focus, .policy-field textarea:focus { translate: -2px -2px; box-shadow: 5px 5px 0 var(--clay); }

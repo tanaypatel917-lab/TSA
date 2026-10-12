@@ -328,3 +328,10 @@ html[data-motion="full"] .world-toggle:hover:not([aria-pressed="true"]) { transl
 .map-station-button[data-stamped="true"] { box-shadow: 0 0 0 5px var(--sky), 0 0 0 7px var(--ink), 0 9px 0 var(--ink); }
 .map-word-button:not([data-collected="true"]) { box-shadow: 3px 0 0 var(--ink); }
 .world-prompt .button-primary { white-space: nowrap; }
+
+@media (min-width: 900px) and (max-width: 1199px) {
+  .world[data-mode="drive"] .world-heading { padding: 12px 14px 14px; }
+  .world[data-mode="drive"] .world-heading h1 { margin: 2px 0 10px; font-size: 28px; }
+  .world[data-mode="drive"] .world-counts > div { min-width: 76px; padding: 6px 10px 7px; }
+  .world[data-mode="drive"] .world-counts dd { font-size: 22px; }
+}
