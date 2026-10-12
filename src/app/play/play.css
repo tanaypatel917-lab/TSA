@@ -189,6 +189,7 @@ html:not([data-motion="full"]) .world-hit-flash { display: none; }
 .mission-hud-boost[data-active="true"] { color: var(--clay); }
 html[data-motion="full"] .mission-hud-boost-track i { transition: transform 120ms linear; }
 .mission-quit { min-height: 40px; padding: 8px 12px; border: 1.5px solid rgba(246, 239, 229, .5); border-radius: 4px; background: transparent; color: var(--paper); font-size: 14px; font-weight: 700; }
+.mission-quit { white-space: nowrap; }
 .mission-quit span { margin-left: 6px; font-size: 11px; opacity: .7; }
 .mission-quit:focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; }
 .mission-toast { position: absolute; left: 50%; top: calc(var(--hud) + 92px); max-width: min(680px, calc(100% - 2 * var(--hud))); padding: 12px 18px; border: 2px solid var(--ink); background: var(--sky); color: var(--ink); font-size: 16px; font-weight: 600; line-height: 1.5; transform: translateX(-50%); animation: world-rise 240ms var(--ease-out); }
@@ -252,7 +253,8 @@ html[data-motion="full"] .results-stars > span[data-on="true"]::before { content
   .mission-hud-stats { grid-column: 1 / -1; justify-content: space-between; }
 }
 @media (max-width: 767px) {
-  .mission-hud.is-inline { grid-template-columns: 1fr auto; }
+  .mission-hud.is-inline { grid-template-columns: minmax(0, 1fr) auto; }
+  .mission-hud.is-inline .mission-hud-buttons { grid-column: 1 / -1; }
   .mission-hud-title strong { white-space: normal; }
   .mission-hud-stats { gap: 10px; }
   .mission-hud-stats dd { font-size: 20px; }
