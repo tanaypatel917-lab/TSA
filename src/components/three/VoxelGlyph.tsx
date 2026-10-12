@@ -56,17 +56,11 @@ export function VoxelGlyph({ mark, className = "" }: { mark: string; className?:
       const group = new THREE.Group();
       group.rotation.z = TURNS[mark] ?? 0;
       scene.add(group);
-      const geometry = new THREE.BoxGeometry(1.06, 1.06, 4);
-      const normals = geometry.attributes.normal;
-      for (let index = 0; index < normals.count; index += 1)
-        if (Math.abs(normals.getZ(index)) < 0.5) {
-          normals.setXYZ(index, 0, 0, 1);
-          if (geometry.attributes.position.getZ(index) > 0) geometry.attributes.position.setZ(index, 1.9);
-        }
+      const face = new THREE.PlaneGeometry(1.06, 1.06).translate(0, 0, 2);
       const material = new THREE.MeshLambertMaterial({ color });
-      const mesh = new THREE.InstancedMesh(geometry, material, cells.length);
+      const mesh = new THREE.InstancedMesh(face, material, cells.length);
       group.add(mesh);
-      const shadow = new THREE.InstancedMesh(geometry, new THREE.MeshBasicMaterial({ color: "#1C2A43" }), cells.length);
+      const shadow = new THREE.InstancedMesh(face, new THREE.MeshBasicMaterial({ color: "#1C2A43" }), cells.length);
       shadow.position.set(1.4, -1.4, -2.5);
       group.add(shadow);
       const scatter = cells.map(() => [(Math.random() - 0.5) * 110, (Math.random() - 0.5) * 80, (Math.random() - 0.5) * 80 + 30, Math.random() * 0.6]);
@@ -144,7 +138,7 @@ export function VoxelGlyph({ mark, className = "" }: { mark: string; className?:
         seen.disconnect();
         hero.removeEventListener("pointermove", move);
         hero.removeEventListener("pointerleave", leave);
-        geometry.dispose();
+        face.dispose();
         material.dispose();
         (shadow.material as InstanceType<typeof THREE.Material>).dispose();
         mesh.dispose();
