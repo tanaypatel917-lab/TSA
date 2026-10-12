@@ -1272,3 +1272,6 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
 .motion-setting select { box-shadow: 3px 3px 0 var(--ink); transition: translate 140ms var(--ease-out), box-shadow 140ms var(--ease-out), background-color 160ms ease; }
 .motion-setting select:active { translate: 3px 3px; box-shadow: 0 0 0 var(--ink); }
 @media (hover: hover) and (pointer: fine) { .motion-setting select:hover { background-color: var(--sky); } }
+@media (max-width: 899px) {
+  .glossary-group h2 { text-shadow: 1px 1px 0 var(--clay), 2px 2px 0 var(--clay), 3px 3px 0 var(--clay), 4px 4px 0 #B8694A, 6px 8px 8px rgba(28, 42, 67, .18); }
+}
