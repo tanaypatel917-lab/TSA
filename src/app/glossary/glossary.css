@@ -33,3 +33,11 @@
 html[data-motion="full"] .flashcard { transform: perspective(1400px) rotateX(var(--ty, 0deg)) rotateY(var(--tx, 0deg)); transition: transform .35s var(--ease-out); animation: card-deal 560ms var(--ease-out) backwards; }
 @keyframes card-deal { from { opacity: 0; transform: perspective(1400px) translate(60px, 80px) rotate(9deg) scale(.9); } }
 @media (max-width: 899px) { .flashcard::before { transform: translate(8px, 7px) rotate(1.2deg); } .flashcard::after { display: none; } }
+
+.flashcard { margin-right: 30px; }
+.flashcard-front p { text-shadow: 1px 1px 0 #B8694A, 2px 2px 0 #B8694A, 3px 3px 0 #A35C40, 4px 4px 0 #A35C40, 5px 5px 0 #8E5037, 9px 11px 10px rgba(28, 42, 67, .2); }
+.study-shuffle { padding: 7px 14px; border: 1.5px solid var(--ink); border-radius: 4px; background: var(--paper); box-shadow: 3px 3px 0 var(--ink); text-decoration: none; transition: transform .16s var(--ease-out), box-shadow .16s var(--ease-out), background-color .16s; }
+.study-shuffle:hover { background: var(--sky); transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--ink); }
+.study-shuffle:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--ink); }
+@media (max-width: 899px) { .flashcard { margin-right: 10px; } }
+@media (prefers-reduced-motion: reduce) { .study-shuffle, .study-shuffle:hover, .study-shuffle:active { transition: none; transform: none; } }
