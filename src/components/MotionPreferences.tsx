@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
 type Preference = "system" | "reduced" | "full";
-type MotionValue = { preference: Preference; reduced: boolean; setPreference: (value: Preference) => void; error: string };
+type MotionValue = { preference: Preference; reduced: boolean; ready: boolean; setPreference: (value: Preference) => void; error: string };
 const MotionContext = createContext<MotionValue | null>(null);
 export const MOTION_KEY = "wordplay:motion:v1";
 const KEY = MOTION_KEY;
@@ -32,7 +32,7 @@ export function MotionProvider({ children }: { children: React.ReactNode }) {
     try { localStorage.setItem(KEY, value); setError(""); }
     catch { setError("Motion preference is available for this visit only."); }
   }
-  return <MotionContext.Provider value={{ preference, reduced, setPreference, error }}>{children}</MotionContext.Provider>;
+  return <MotionContext.Provider value={{ preference, reduced, ready, setPreference, error }}>{children}</MotionContext.Provider>;
 }
 
 export function useMotionPreference() {

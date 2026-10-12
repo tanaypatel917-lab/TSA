@@ -2,6 +2,7 @@ import { expect, test, type Page } from "@playwright/test";
 import { introActs } from "../../src/content/intro";
 
 const introKey = "wordplay:intro:v1";
+const motionKey = "wordplay:motion:v1";
 
 async function openIntro(page: Page) {
   await page.goto("/intro/");
@@ -24,7 +25,13 @@ test("the first-visit gate traps focus, Escape enters Wordplay, and reload bypas
   await page.keyboard.press("Tab");
   await expect(enter).toBeFocused();
   await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: "[ Calm mode ]", exact: true })).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: "[ Full 3D ]", exact: true })).toBeFocused();
+  await page.keyboard.press("Tab");
   await expect(play).toBeFocused();
+  await page.keyboard.press("Shift+Tab");
+  await expect(page.getByRole("button", { name: "[ Full 3D ]", exact: true })).toBeFocused();
 
   await page.keyboard.press("Escape");
   await expect(dialog).toHaveCount(0);
@@ -197,6 +204,40 @@ test("the intro remains keyboard-operable and Skip intro restores navigation", a
   await expect(page).toHaveURL(/\/$/);
   expect(await page.evaluate((key) => localStorage.getItem(key), introKey)).toBeTruthy();
   await expect(page.locator(".site-header")).toBeVisible();
+});
+
+test("the gate and header Calm button share the saved motion preference", async ({ page }) => {
+  await page.goto("/");
+  const calmChoice = page.getByRole("button", { name: "[ Calm mode ]", exact: true });
+  const fullChoice = page.getByRole("button", { name: "[ Full 3D ]", exact: true });
+  await expect(calmChoice).toBeVisible();
+  await calmChoice.click();
+  await expect(page.locator("html")).toHaveAttribute("data-motion", "reduced");
+  await expect(calmChoice).toHaveAttribute("aria-pressed", "true");
+  await expect(fullChoice).toHaveAttribute("aria-pressed", "false");
+  expect(await page.evaluate((key) => localStorage.getItem(key), motionKey)).toBe("reduced");
+
+  await page.getByRole("button", { name: "Enter Wordplay", exact: true }).click();
+  const headerCalm = page.getByRole("button", { name: "Calm", exact: true });
+  await expect(headerCalm).toHaveAttribute("aria-pressed", "true");
+  await headerCalm.click();
+  await expect(page.locator("html")).toHaveAttribute("data-motion", "full");
+  await expect(headerCalm).toHaveAttribute("aria-pressed", "false");
+  expect(await page.evaluate((key) => localStorage.getItem(key), motionKey)).toBe("full");
+  await expect(page.getByLabel("Motion")).toHaveValue("full");
+
+  await page.getByLabel("Motion").selectOption("reduced");
+  await expect(page.locator("html")).toHaveAttribute("data-motion", "reduced");
+  await expect(headerCalm).toHaveAttribute("aria-pressed", "true");
+});
+
+test("the mobile navigation menu contains the Calm toggle", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.addInitScript(() => localStorage.setItem("wordplay:intro:v1", "seen"));
+  await page.goto("/");
+  await page.getByRole("button", { name: /Menu/ }).click();
+  const navigation = page.getByRole("navigation", { name: "Main navigation" });
+  await expect(navigation.getByRole("button", { name: "Calm", exact: true })).toBeVisible();
 });
 
 test("the mobile still version is readable, does not load a canvas, and exits cleanly", async ({ page }) => {
