@@ -1072,3 +1072,17 @@ html[data-motion="full"] :is(.section-heading h2, .spine h2, .human-judgment h2,
   .principle-voxel > .chapter-glyph { padding: 0; font-size: 120px; letter-spacing: -.04em; color: var(--clay); }
   .about-principles li:has(.principle-voxel[data-on="true"]) > span { display: none; }
 }
+
+.badge-patch[data-earned="true"] { --r: -1.2deg; }
+.badge-patch[data-earned="true"]:nth-child(even) { --r: 1deg; }
+@media (min-width: 900px) {
+  html[data-motion="full"] .badge-patch { transition: transform .35s var(--ease-out), box-shadow .35s var(--ease-out); transform-style: preserve-3d; }
+  html[data-motion="full"] .badge-patch:hover { z-index: 2; transform: perspective(900px) rotateX(var(--ty, 0deg)) rotateY(var(--tx, 0deg)) rotate(var(--r, 0deg)) translateZ(10px); }
+  html[data-motion="full"] .badge-patch[data-earned="true"]:hover { box-shadow: 12px 14px 0 var(--ink); }
+  html[data-motion="full"] .badge-patch[data-earned="true"][data-tone="ink"]:hover { box-shadow: 12px 14px 0 var(--clay); }
+  .badge-patch[data-earned="true"] .badge-mark { text-shadow: 1px 1px 0 rgba(28, 42, 67, .55), 2px 2px 0 rgba(28, 42, 67, .55), 3px 3px 0 rgba(28, 42, 67, .55), 4px 4px 0 rgba(28, 42, 67, .55), 5px 5px 0 rgba(28, 42, 67, .55); }
+  .badge-patch[data-earned="true"][data-tone="ink"] .badge-mark { color: var(--clay); text-shadow: 1px 1px 0 var(--paper), 2px 2px 0 var(--paper), 3px 3px 0 var(--paper), 4px 4px 0 var(--paper); }
+  .badge-patch:not([data-earned="true"]) .badge-mark { color: rgba(28, 42, 67, .07); text-shadow: -1px -1px 0 rgba(255, 255, 255, .9), 1px 1px 0 rgba(28, 42, 67, .18); }
+  html[data-motion="full"] .badge-patch:hover .badge-mark { transform: translateZ(40px); }
+  .badge-mark { transition: transform .35s var(--ease-out); }
+}
