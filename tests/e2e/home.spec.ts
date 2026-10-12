@@ -35,6 +35,48 @@ test("with reduced motion, Let it write finishes the sentence at once", async ({
   await expect(demo.getByRole("button", { name: "Let it write" })).toBeDisabled();
 });
 
+test("the title guessing demo shows the settled word immediately with reduced motion", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const demo = page.locator(".title-guess");
+  await expect(page.locator("html")).toHaveAttribute("data-motion", "reduced");
+  await expect(demo).toHaveAttribute("data-finished", "true");
+  await expect(demo.locator(".title-guess-tile")).toHaveText(["W", "O", "R", "D", "P", "L", "A", "Y"]);
+  await expect(demo.locator(".title-guess-pill")).toHaveText("Most likely: WORDPLAY");
+  await expect(demo.getByRole("button", { name: "Replay" })).toHaveCount(0);
+});
+
+test("the title guessing demo animates through candidates, settles, and replays", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.addInitScript(() => localStorage.setItem("wordplay:motion:v1", "full"));
+  await page.goto("/");
+  const demo = page.locator(".title-guess");
+  await expect(page.locator("html")).toHaveAttribute("data-motion", "full");
+  await expect(demo.locator(".title-guess-tile")).toHaveText(["W", "O", "R", "D", "P", "L", "A", "Y"], { timeout: 5000 });
+  await expect(demo.locator(".title-guess-pill")).toHaveText("Most likely: WORDPLAY");
+  const replay = demo.getByRole("button", { name: "Replay", exact: true });
+  await expect(replay).toBeVisible();
+  await replay.click();
+  await expect(demo.locator(".title-guess-tile")).toHaveText(["M", "_", "_", "_", "_", "_", "_", "_"]);
+});
+
+test("the title guessing tiles fit their column from phone to desktop widths", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const row = page.locator(".title-guess-tiles");
+
+  for (const width of [360, 390, 820, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    const dimensions = await row.evaluate((element) => {
+      const bounds = element.getBoundingClientRect();
+      return { scrollWidth: element.scrollWidth, clientWidth: element.clientWidth, left: bounds.left, right: bounds.right, viewport: window.innerWidth };
+    });
+    expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth);
+    expect(dimensions.left).toBeGreaterThanOrEqual(0);
+    expect(dimensions.right).toBeLessThanOrEqual(dimensions.viewport);
+  }
+});
+
 test("the homepage shows the course at a glance and previews progress and badges", async ({ page }) => {
   await page.goto("/");
   const facts = page.locator(".hero-facts");

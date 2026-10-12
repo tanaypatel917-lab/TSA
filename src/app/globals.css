@@ -72,6 +72,19 @@ button:disabled { cursor: not-allowed; }
 .hero-baseline { position: relative; z-index: 3; border-top: 1px solid var(--ink); padding-top: 15px; }
 .resume-learning { margin-top: 18px; font-size: 14px; }
 .resume-learning > span { display: block; max-width: 245px; margin-top: 4px; font-size: 12px; }
+.title-guess { width: min(100%, 450px); margin-bottom: 14px; container-type: inline-size; }
+.title-guess-tiles { display: flex; gap: clamp(4px, .65vw, 8px); width: 100%; }
+.title-guess-tile { display: grid; flex: 1 1 0; min-width: 0; max-width: 46px; aspect-ratio: .82; place-items: center; border: 1.5px solid var(--ink); border-radius: 4px; background: var(--paper); box-shadow: 0 4px 0 var(--ink); color: var(--ink); font-family: var(--font-display), sans-serif; font-size: clamp(20px, 9.5cqi, 42px); font-weight: 650; line-height: 1; }
+html[data-motion="full"] .title-guess-tile[data-active="true"] { transform: translateY(-2px) rotate(-2deg); background: var(--sky); }
+.title-guess-pill { display: inline-flex; min-height: 24px; align-items: center; margin-top: 9px; padding: 2px 9px; border: 1px solid var(--ink); border-radius: 999px; background: var(--clay); font-size: 11px; font-weight: 700; line-height: 1.4; font-variant-numeric: tabular-nums; }
+.title-guess-note { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 8px; margin-top: 8px; }
+.title-guess-caption { flex: 1 1 200px; min-width: 0; max-width: 360px; color: var(--muted); font-size: 12px; line-height: 1.4; }
+.title-guess-replay { flex: none; min-height: 30px; padding: 3px 9px; border: 1.5px solid var(--ink); border-radius: 4px; background: var(--paper); box-shadow: 0 3px 0 var(--ink); font-size: 12px; font-weight: 700; line-height: 1.2; transition: translate 140ms var(--ease-out), box-shadow 140ms var(--ease-out), background-color 160ms ease; }
+.title-guess-replay:active { translate: 0 3px; box-shadow: none; }
+.title-guess-replay:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.title-guess-replay:hover { background: var(--sky); }
+.title-guess-tile { transition: transform 140ms var(--ease-out), background-color 160ms ease; }
+html[data-motion="reduced"] .title-guess-tile { transition: none; }
 .scene-viewport { position: absolute; z-index: 1; right: 3%; top: 83px; width: 310px; height: 310px; pointer-events: none; }
 .question-glyph { position: absolute; inset: 0; display: grid; place-items: center; }
 .question-glyph span { font-family: var(--font-display), sans-serif; font-size: 290px; font-weight: 650; line-height: 1; transform: rotate(15deg); }
@@ -895,6 +908,10 @@ html[data-motion="full"] .footer-giant .footer-dot { color: var(--clay); }
 .hero-facts { display: grid; grid-template-columns: repeat(4, auto); justify-content: start; gap: 0 36px; max-width: 540px; margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--ink); }
 .hero-facts dt { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
 .hero-facts dd { margin: 4px 0 0; font-family: var(--font-display), sans-serif; font-size: 38px; font-weight: 600; line-height: 1; }
+@media (min-width: 1024px) and (max-height: 760px) {
+  .hero-copy { position: relative; }
+  .hero-copy .title-guess { position: absolute; top: -145px; left: 0; margin: 0; }
+}
 .hero-demo { position: relative; }
 .hero-demo .scene-viewport { top: -92px; right: -30px; z-index: 3; width: 200px; height: 200px; }
 .hero-demo .question-glyph span { font-size: 170px; }
