@@ -62,7 +62,7 @@ export function ChapterOrbit() {
       const keep = <T extends { dispose: () => void }>(item: T) => { disposables.push(item); return item; };
 
       const system = new THREE.Group();
-      system.rotation.x = 0.32;
+      system.rotation.x = 0.5;
       system.rotation.z = -0.12;
       scene.add(system);
 
@@ -70,7 +70,7 @@ export function ChapterOrbit() {
       const shell = new THREE.Mesh(keep(new THREE.IcosahedronGeometry(1.95, 1)), keep(new THREE.MeshBasicMaterial({ color: INK, wireframe: true, transparent: true, opacity: 0.35 })));
       scene.add(core, shell);
 
-      const radiusX = 4.5, radiusZ = 3.4;
+      const radiusX = 4.9, radiusZ = 3.9;
       const ringPoints = Array.from({ length: 129 }, (_, index) => {
         const angle = (index / 128) * Math.PI * 2;
         return new THREE.Vector3(Math.cos(angle) * radiusX, 0, Math.sin(angle) * radiusZ);
@@ -79,7 +79,7 @@ export function ChapterOrbit() {
       ring.computeLineDistances();
       system.add(ring);
 
-      const geometry = keep(new THREE.CylinderGeometry(0.95, 0.95, 0.24, 48));
+      const geometry = keep(new THREE.CylinderGeometry(0.85, 0.85, 0.24, 48));
       geometry.rotateX(Math.PI / 2);
       const rim = keep(new THREE.MeshStandardMaterial({ color: INK, roughness: 0.4, metalness: 0.2 }));
       const planets = Object.values(moduleVisuals).map((visual, index, list) => {
@@ -135,7 +135,7 @@ export function ChapterOrbit() {
         const hit = ray.intersectObjects(planets.map((planet) => planet.mesh))[0]?.object;
         spin += delta * (hit ? 0.06 : 0.28);
         const intro = 1 - (1 - Math.min(1, time / 1.6)) ** 4;
-        system.rotation.x += (0.32 - tiltY * 0.18 - system.rotation.x) * 0.06;
+        system.rotation.x += (0.5 - tiltY * 0.18 - system.rotation.x) * 0.06;
         system.rotation.z += (-0.12 - tiltX * 0.12 - system.rotation.z) * 0.06;
         core.rotation.set(time * 0.35, time * 0.5, 0);
         shell.rotation.set(-time * 0.2, -time * 0.3, 0);

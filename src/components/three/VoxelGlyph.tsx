@@ -5,6 +5,8 @@ import { useMotionPreference } from "../MotionPreferences";
 
 const GRID = 40;
 
+const TURNS: Record<string, number> = { "✎": -Math.PI / 4 };
+
 function sample(mark: string, font: string) {
   const canvas = document.createElement("canvas");
   canvas.width = GRID * 2;
@@ -14,7 +16,9 @@ function sample(mark: string, font: string) {
   context.font = `650 ${GRID * 0.95}px ${font}`;
   context.textAlign = "center";
   context.textBaseline = "middle";
-  context.fillText(mark, GRID, GRID * 0.55);
+  context.translate(GRID, GRID * 0.5);
+  context.rotate(TURNS[mark] ?? 0);
+  context.fillText(mark, 0, GRID * 0.05);
   const { data } = context.getImageData(0, 0, GRID * 2, GRID);
   const cells: [number, number][] = [];
   for (let y = 0; y < GRID; y += 1) for (let x = 0; x < GRID * 2; x += 1) if (data[(y * GRID * 2 + x) * 4 + 3] > 120) cells.push([x - GRID, GRID / 2 - y]);
@@ -50,6 +54,7 @@ export function VoxelGlyph({ mark, className = "" }: { mark: string; className?:
       sun.position.set(-30, 40, 60);
       scene.add(sun);
       const group = new THREE.Group();
+      group.rotation.z = TURNS[mark] ?? 0;
       scene.add(group);
       const geometry = new THREE.BoxGeometry(1, 1, 4);
       const material = new THREE.MeshStandardMaterial({ color, roughness: 0.6 });
