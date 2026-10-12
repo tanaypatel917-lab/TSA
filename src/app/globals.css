@@ -1086,3 +1086,22 @@ html[data-motion="full"] :is(.section-heading h2, .spine h2, .human-judgment h2,
   html[data-motion="full"] .badge-patch:hover .badge-mark { transform: translateZ(40px); }
   .badge-mark { transition: transform .35s var(--ease-out); }
 }
+@media (min-width: 900px) {
+  .takeaways ul { display: grid; gap: 14px; margin-top: 18px; perspective: 1200px; }
+  .takeaways li { padding: 18px 22px 18px 58px; border: 1.5px solid var(--ink); border-radius: 4px; background: var(--paper); box-shadow: 5px 5px 0 var(--ink); transform: rotate(-.8deg); transition: transform .35s var(--ease-out), box-shadow .35s var(--ease-out); }
+  .takeaways li:nth-child(even) { transform: rotate(.7deg) translateX(14px); background: var(--sky); }
+  .takeaways li:nth-child(3n) { background: #F2C9B3; }
+  .takeaways li::before { left: 20px; top: 50%; translate: 0 -50%; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--ink); color: var(--paper); font-size: 13px; }
+  .takeaways li:hover { transform: translateY(-4px) rotate(0deg); box-shadow: 9px 10px 0 var(--clay); }
+}
+@supports (animation-timeline: view()) {
+  @media (min-width: 900px) {
+    html[data-motion="full"] .takeaways li { animation: takeaway-flip linear both; animation-timeline: view(); animation-range: entry 0% entry 90%; transform-origin: 50% 100%; }
+  }
+}
+@keyframes takeaway-flip {
+  from { opacity: 0; rotate: x -80deg; translate: 0 30px; }
+  to { opacity: 1; rotate: x 0deg; translate: 0 0; }
+}
+@media (prefers-reduced-motion: reduce) { .takeaways li { animation: none !important; } }
+html[data-motion="reduced"] .takeaways li { animation: none !important; }
