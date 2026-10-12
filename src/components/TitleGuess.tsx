@@ -93,7 +93,7 @@ export function TitleGuess() {
   return <div className="title-guess" ref={root} role="group" aria-labelledby="title-guess-label" data-finished={finished} data-active-index={activeIndex ?? ""}>
     <span className="sr-only" id="title-guess-label">Wordplay, spelled out by a guessing demo</span>
     <div className="title-guess-tiles" aria-hidden="true">
-      {letters.map((letter, index) => <span key={index} className="title-guess-tile" data-filled={letter === titleGuess[index].letter} data-active={activeIndex === index} data-option={activeIndex === index ? optionIndex : undefined}>{letter}</span>)}
+      {letters.map((letter, index) => <span key={index} className="title-guess-tile" data-filled={letter === titleGuess[index].letter} data-active={activeIndex === index} data-option={activeIndex === index ? optionIndex : undefined}><span className="title-guess-letter">{letter}</span></span>)}
     </div>
     <p className="title-guess-pill" aria-hidden="true" data-complete={finished}>{pillText}</p>
     <div className="title-guess-note">

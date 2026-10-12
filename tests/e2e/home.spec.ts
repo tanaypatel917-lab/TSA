@@ -77,6 +77,69 @@ test("the title guessing tiles fit their column from phone to desktop widths", a
   }
 });
 
+test("the title guessing letters have at least 2px inset at responsive widths", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const demo = page.locator(".title-guess");
+  await expect(demo).toHaveAttribute("data-finished", "true");
+
+  for (const width of [360, 390, 820, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    const insets = await demo.locator(".title-guess-tile").evaluateAll((tiles) => tiles.map((tile) => {
+      const text = tile.querySelector(".title-guess-letter");
+      const range = document.createRange();
+      range.selectNodeContents(text ?? tile);
+      const textRect = range.getBoundingClientRect();
+      const tileRect = tile.getBoundingClientRect();
+      return {
+        letter: text?.textContent,
+        left: textRect.left - tileRect.left,
+        right: tileRect.right - textRect.right,
+        top: textRect.top - tileRect.top,
+        bottom: tileRect.bottom - textRect.bottom,
+      };
+    }));
+
+    expect(insets).toHaveLength(8);
+    for (const inset of insets) {
+      expect(Math.min(inset.left, inset.right, inset.top, inset.bottom), `${inset.letter} at ${width}px`).toBeGreaterThanOrEqual(2);
+    }
+  }
+});
+
+test("the title guessing caption meets WCAG AA contrast on the clay hero", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const colors = await page.locator(".title-guess-caption").evaluate((caption) => {
+    const channels = (color: string) => {
+      const values = color.match(/[\d.]+/g);
+      if (!values || values.length < 3) throw new Error(`Unable to parse color ${color}`);
+      return values.slice(0, 3).map(Number);
+    };
+    const luminance = (rgb: number[]) => rgb
+      .map((value) => {
+        const channel = value / 255;
+        return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+      })
+      .reduce((sum, channel, index) => sum + channel * [0.2126, 0.7152, 0.0722][index], 0);
+
+    const foregroundColor = getComputedStyle(caption).color;
+    const backgroundColor = getComputedStyle(caption.closest(".home-hero")!).backgroundColor;
+    const opacity = Number(getComputedStyle(caption).opacity);
+    const background = channels(backgroundColor);
+    const foreground = channels(foregroundColor).map((channel, index) => channel * opacity + background[index] * (1 - opacity));
+    const foregroundLuminance = luminance(foreground);
+    const backgroundLuminance = luminance(background);
+    return {
+      opacity,
+      ratio: (Math.max(foregroundLuminance, backgroundLuminance) + 0.05) / (Math.min(foregroundLuminance, backgroundLuminance) + 0.05),
+    };
+  });
+
+  expect(colors.opacity).toBeGreaterThanOrEqual(0.85);
+  expect(colors.ratio).toBeGreaterThanOrEqual(4.5);
+});
+
 test("the homepage shows the course at a glance and previews progress and badges", async ({ page }) => {
   await page.goto("/");
   const facts = page.locator(".hero-facts");
