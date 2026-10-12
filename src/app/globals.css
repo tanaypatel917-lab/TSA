@@ -1230,3 +1230,11 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
   .poster-ethics .poster-art { right: -48px; bottom: 34px; font-size: 270px; color: var(--paper); text-shadow: 2px 2px 0 #E8DCCB, 4px 4px 0 #D9C7B0, 6px 6px 0 #B8694A, 8px 8px 0 #A35C40, 10px 10px 0 #8E5037, 12px 12px 0 #8E5037, 22px 26px 22px rgba(0, 0, 0, .22); }
 }
 .badge-patch:not([data-earned="true"]) .badge-mark { color: #E3D5C2; text-shadow: -1px -1px 0 rgba(142, 80, 55, .42), -2px -2px 0 rgba(142, 80, 55, .12), 1px 1px 0 rgba(255, 255, 255, .85); }
+@media (min-width: 900px) {
+  .prompt-brackets { font-size: 104px; font-weight: 650; color: var(--ink); text-shadow: 2px 2px 0 #B8694A, 4px 4px 0 #A35C40, 6px 6px 0 #A35C40, 8px 8px 0 #8E5037, 10px 10px 0 #8E5037, 18px 22px 18px rgba(28, 42, 67, .22); }
+  .prompt-brackets span { transition: translate .5s var(--ease-out), rotate .5s var(--ease-out); }
+  .prompt-brackets span:nth-child(2) { color: var(--paper); rotate: -8deg; }
+  html[data-motion="full"] .prompt-lab:focus-within .prompt-brackets span:first-child { translate: 64px 0; }
+  html[data-motion="full"] .prompt-lab:focus-within .prompt-brackets span:last-child { translate: -64px 0; }
+  html[data-motion="full"] .prompt-lab:focus-within .prompt-brackets span:nth-child(2) { rotate: 6deg; translate: 0 -8px; }
+}
