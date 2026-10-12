@@ -149,7 +149,6 @@ html[data-motion="reduced"] .map-step[data-next="true"]::after { animation: none
   .mini-badges { perspective: 1000px; }
   .mini-badges li { transition: translate .3s var(--ease-out), box-shadow .3s var(--ease-out), rotate .3s var(--ease-out); }
   .mini-badges .mini-mark { transition: translate .3s var(--ease-out); }
-  .mini-badges li[data-earned="false"] .mini-mark { color: #E3D5C2; text-shadow: -1px -1px 0 rgba(142, 80, 55, .42), -2px -2px 0 rgba(142, 80, 55, .12), 1px 1px 0 rgba(255, 255, 255, .85); }
   .mini-badges li[data-earned="true"] { translate: 0 -3px; box-shadow: 6px 6px 0 var(--ink); }
   .mini-badges li[data-earned="true"] .mini-mark { text-shadow: 1px 1px 0 rgba(28, 42, 67, .55), 2px 2px 0 rgba(28, 42, 67, .55), 3px 3px 0 rgba(28, 42, 67, .55); }
   .mini-badges li[data-earned="true"][data-tone="ink"] .mini-mark { text-shadow: 1px 1px 0 var(--clay), 2px 2px 0 var(--clay), 3px 3px 0 var(--clay); }
@@ -163,3 +162,4 @@ html[data-motion="reduced"] .map-step[data-next="true"]::after { animation: none
 @media (min-width: 900px) {
   .cert-mark { font-size: 76px; text-shadow: 1px 1px 0 #B8694A, 2px 2px 0 #B8694A, 3px 3px 0 #A35C40, 4px 4px 0 #A35C40, 5px 5px 0 #8E5037, 9px 11px 10px rgba(28, 42, 67, .2); }
 }
+.mini-badges li[data-earned="false"] .mini-mark { color: #E3D5C2; text-shadow: -1px -1px 0 rgba(142, 80, 55, .42), -2px -2px 0 rgba(142, 80, 55, .12), 1px 1px 0 rgba(255, 255, 255, .85); }

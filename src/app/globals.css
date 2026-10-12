@@ -332,7 +332,8 @@ button:disabled { cursor: not-allowed; }
   .poster-top { font-size: 12px; }
   .poster-bottom { max-width: 255px; padding-top: 80px; }
   .poster-bottom p { max-width: 260px; }
-  .poster-foundations .poster-art { font-size: 182px; right: -14px; top: 160px; }
+  .poster-foundations .poster-art { font-size: 140px; right: -26px; top: 150px; }
+  .poster-foundations .poster-bottom { max-width: 225px; }
   .poster-foundations .poster-art span:first-child { display: none; }
   .poster-tools .poster-art { font-size: 210px; right: 8px; bottom: 84px; }
   .poster-ethics .poster-art { font-size: 270px; right: -6px; bottom: 54px; }
@@ -1082,7 +1083,6 @@ html[data-motion="full"] :is(.section-heading h2, .spine h2, .human-judgment h2,
   html[data-motion="full"] .badge-patch[data-earned="true"][data-tone="ink"]:hover { box-shadow: 12px 14px 0 var(--clay); }
   .badge-patch[data-earned="true"] .badge-mark { text-shadow: 1px 1px 0 rgba(28, 42, 67, .55), 2px 2px 0 rgba(28, 42, 67, .55), 3px 3px 0 rgba(28, 42, 67, .55), 4px 4px 0 rgba(28, 42, 67, .55), 5px 5px 0 rgba(28, 42, 67, .55); }
   .badge-patch[data-earned="true"][data-tone="ink"] .badge-mark { color: var(--clay); text-shadow: 1px 1px 0 var(--paper), 2px 2px 0 var(--paper), 3px 3px 0 var(--paper), 4px 4px 0 var(--paper); }
-  .badge-patch:not([data-earned="true"]) .badge-mark { color: #E3D5C2; text-shadow: -1px -1px 0 rgba(142, 80, 55, .42), -2px -2px 0 rgba(142, 80, 55, .12), 1px 1px 0 rgba(255, 255, 255, .85); }
   html[data-motion="full"] .badge-patch:hover .badge-mark { transform: translateZ(40px); }
   .badge-mark { transition: transform .35s var(--ease-out); }
 }
@@ -1229,3 +1229,4 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
 @media (min-width: 1400px) {
   .poster-ethics .poster-art { right: -48px; bottom: 34px; font-size: 270px; color: var(--paper); text-shadow: 2px 2px 0 #E8DCCB, 4px 4px 0 #D9C7B0, 6px 6px 0 #B8694A, 8px 8px 0 #A35C40, 10px 10px 0 #8E5037, 12px 12px 0 #8E5037, 22px 26px 22px rgba(0, 0, 0, .22); }
 }
+.badge-patch:not([data-earned="true"]) .badge-mark { color: #E3D5C2; text-shadow: -1px -1px 0 rgba(142, 80, 55, .42), -2px -2px 0 rgba(142, 80, 55, .12), 1px 1px 0 rgba(255, 255, 255, .85); }
