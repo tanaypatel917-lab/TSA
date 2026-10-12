@@ -1293,3 +1293,6 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
   .chapter-status[data-state="complete"] { translate: 0 1px; box-shadow: 0 1px 0 var(--ink), inset 0 2px 0 rgba(0, 0, 0, .12); }
 }
 @media (max-width: 767px) { .chapter-number { font-size: 22px; padding-top: 6px; text-shadow: 1px 1px 0 #B8694A, 2px 2px 0 #8E5037, 3px 4px 4px rgba(28, 42, 67, .12); } }
+@media (max-width: 899px) {
+  .about-principles li > span { display: block; font-family: var(--font-display), sans-serif; font-size: 34px; font-weight: 650; line-height: 1; letter-spacing: -.03em; color: var(--paper); text-shadow: 1px 1px 0 var(--clay), 2px 2px 0 var(--clay), 3px 3px 0 #B8694A, 5px 6px 6px rgba(0, 0, 0, .25); }
+}
