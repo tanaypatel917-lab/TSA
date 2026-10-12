@@ -1361,3 +1361,7 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
 .hero-tour { display: inline-flex; align-items: center; gap: 10px; padding: 12px 22px; border: 1.5px solid var(--ink); border-radius: 4px; background: var(--paper); box-shadow: 3px 3px 0 var(--ink); text-decoration: none; transition: transform 140ms var(--ease-out), box-shadow 140ms var(--ease-out), background-color 160ms ease; }
 .hero-tour:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--ink); }
 @media (hover: hover) and (pointer: fine) { .hero-tour:hover { background: var(--sky); text-decoration: none; } }
+
+@media (min-width: 900px) {
+  .not-found:not(:has(.nf-voxel[data-on="true"])) .not-found-mark { color: var(--clay); opacity: 1; text-shadow: 5px 5px 0 #B8694A, 10px 10px 0 #A35C40, 15px 15px 0 #8E4E36, 24px 30px 30px rgba(28, 42, 67, .22); }
+}

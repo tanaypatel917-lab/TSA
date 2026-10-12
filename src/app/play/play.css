@@ -355,3 +355,5 @@ html[data-motion="full"] .world-toggle:hover:not([aria-pressed="true"]) { transl
   .results-figures > div { padding-inline: 4px; }
   .results-figures dd .results-best { padding-inline: 7px; font-size: 10px; }
 }
+
+.world-counts > div { background: rgba(10, 18, 32, .28); box-shadow: inset 0 3px 0 rgba(10, 18, 32, .45); }
