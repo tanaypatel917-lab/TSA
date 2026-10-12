@@ -51,8 +51,8 @@ export function VoxelGlyph({ mark, className = "" }: { mark: string; className?:
       scene.add(sun);
       const group = new THREE.Group();
       scene.add(group);
-      const geometry = new THREE.BoxGeometry(0.86, 0.86, 4);
-      const material = new THREE.MeshStandardMaterial({ color, roughness: 0.45, flatShading: true });
+      const geometry = new THREE.BoxGeometry(1, 1, 4);
+      const material = new THREE.MeshStandardMaterial({ color, roughness: 0.6 });
       const mesh = new THREE.InstancedMesh(geometry, material, cells.length);
       group.add(mesh);
       const shadow = new THREE.InstancedMesh(geometry, new THREE.MeshBasicMaterial({ color: "#1C2A43" }), cells.length);

@@ -1088,11 +1088,12 @@ html[data-motion="full"] :is(.section-heading h2, .spine h2, .human-judgment h2,
 }
 @media (min-width: 900px) {
   .takeaways ul { display: grid; gap: 14px; margin-top: 18px; perspective: 1200px; }
-  .takeaways li { padding: 18px 22px 18px 58px; border: 1.5px solid var(--ink); border-radius: 4px; background: var(--paper); box-shadow: 5px 5px 0 var(--ink); transform: rotate(-.8deg); transition: transform .35s var(--ease-out), box-shadow .35s var(--ease-out); }
-  .takeaways li:nth-child(even) { transform: rotate(.7deg) translateX(14px); background: var(--sky); }
+  .takeaways li { padding: 18px 22px 18px 58px; border: 1.5px solid var(--ink); border-radius: 4px; background: var(--paper); box-shadow: 5px 5px 0 var(--ink); transition: transform .35s var(--ease-out), box-shadow .35s var(--ease-out); }
+  .takeaways li:nth-child(even) { transform: translateX(14px); background: var(--sky); }
   .takeaways li:nth-child(3n) { background: #F2C9B3; }
   .takeaways li::before { left: 20px; top: 50%; translate: 0 -50%; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--ink); color: var(--paper); font-size: 13px; }
-  .takeaways li:hover { transform: translateY(-4px) rotate(0deg); box-shadow: 9px 10px 0 var(--clay); }
+  .takeaways li:hover { transform: translateY(-4px); box-shadow: 9px 10px 0 var(--clay); }
+  .takeaways li:nth-child(even):hover { transform: translate(14px, -4px); }
 }
 @supports (animation-timeline: view()) {
   @media (min-width: 900px) {
