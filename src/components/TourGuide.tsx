@@ -22,6 +22,7 @@ export function TourGuide() {
   const path = normalize(usePathname());
   const [step, setStep] = useState<number | null>(null);
   const heading = useRef<HTMLHeadingElement>(null);
+  const opener = useRef<HTMLElement | null>(null);
   const stop = step === null ? null : tourStops[step];
   const here = !!stop && normalize(stop.path) === path;
 
@@ -29,6 +30,14 @@ export function TourGuide() {
     setStep(next);
     try { if (next === null) sessionStorage.removeItem(TOUR_KEY); else sessionStorage.setItem(TOUR_KEY, String(next)); } catch {}
   }, []);
+
+  const end = useCallback(() => {
+    save(null);
+    const back = opener.current;
+    opener.current = null;
+    if (back?.isConnected) back.focus({ preventScroll: true });
+    else document.getElementById("main")?.focus({ preventScroll: true });
+  }, [save]);
 
   const go = useCallback((next: number) => {
     save(next);
@@ -41,7 +50,10 @@ export function TourGuide() {
       const saved = Number(sessionStorage.getItem(TOUR_KEY));
       if (sessionStorage.getItem(TOUR_KEY) !== null && saved >= 0 && saved < tourStops.length) setStep(saved);
     } catch {}
-    const begin = () => go(0);
+    const begin = () => {
+      opener.current = document.activeElement instanceof HTMLElement && document.activeElement !== document.body ? document.activeElement : null;
+      go(0);
+    };
     window.addEventListener(TOUR_EVENT, begin);
     return () => window.removeEventListener(TOUR_EVENT, begin);
   }, [go]);
@@ -65,7 +77,7 @@ export function TourGuide() {
 
   if (!stop || step === null) return null;
   const last = step === tourStops.length - 1;
-  return <aside className="tour-card" aria-labelledby="tour-title" data-here={here}>
+  return <aside className="tour-card" aria-labelledby="tour-title" data-here={here} onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); end(); } }}>
     <div className="tour-progress" aria-hidden="true">{tourStops.map((item, index) => <span key={item.path} data-on={index <= step} />)}</div>
     <p className="tour-kicker">Tour · Stop {step + 1} of {tourStops.length}</p>
     <h2 id="tour-title" ref={heading} tabIndex={-1}>{stop.title}</h2>
@@ -73,9 +85,9 @@ export function TourGuide() {
     <div className="tour-actions">
       {step > 0 && <button type="button" className="tour-back" onClick={() => go(step - 1)}>Back</button>}
       {!here ? <button type="button" className="button-primary" onClick={() => go(step)}>Go to this stop <span aria-hidden="true">→</span></button>
-        : last ? <button type="button" className="button-primary" onClick={() => save(null)}>Finish tour <span aria-hidden="true">✓</span></button>
+        : last ? <button type="button" className="button-primary" onClick={end}>Finish tour <span aria-hidden="true">✓</span></button>
         : <button type="button" className="button-primary" onClick={() => go(step + 1)}>Next stop <span aria-hidden="true">→</span></button>}
-      <button type="button" className="tour-close" onClick={() => save(null)} aria-label="End the tour">×</button>
+      <button type="button" className="tour-close" onClick={end} aria-label="End the tour">×</button>
     </div>
   </aside>;
 }

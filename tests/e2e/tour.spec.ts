@@ -29,6 +29,29 @@ test("the site tour walks judges through the best features and survives a reload
   expect(await page.evaluate(() => sessionStorage.getItem("wordplay:tour:v1"))).toBeNull();
 });
 
+test("Escape ends the site tour and returns focus to its opener", async ({ page }) => {
+  await page.goto("/");
+  const opener = page.getByRole("button", { name: /Take the 2-minute tour/ });
+  await opener.click();
+  const card = page.getByRole("complementary", { name: tourStops[0].title });
+  await expect(card).toBeVisible();
+  await expect(card.getByRole("heading", { level: 2 })).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(card).toHaveCount(0);
+  await expect(opener).toBeFocused();
+});
+
+test("ending the site tour returns focus to its opener", async ({ page }) => {
+  await page.goto("/");
+  const opener = page.getByRole("button", { name: /Take the 2-minute tour/ });
+  await opener.click();
+  const card = page.getByRole("complementary", { name: tourStops[0].title });
+  await expect(card.getByRole("heading", { level: 2 })).toBeFocused();
+  await card.getByRole("button", { name: "End the tour" }).click();
+  await expect(card).toHaveCount(0);
+  await expect(opener).toBeFocused();
+});
+
 test("the last stop finishes the tour on About, which explains how the site was built", async ({ page }) => {
   await page.goto("/about/");
   await expect(page.getByRole("heading", { level: 2, name: "How we built it." })).toBeVisible();
