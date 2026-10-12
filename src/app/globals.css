@@ -1203,3 +1203,8 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
   html[data-motion="full"] .chapter-pager a.is-next:hover strong { translate: -6px -5px; }
   html[data-motion="full"] .chapter-pager a:hover strong { text-decoration: none; }
 }
+@media (min-width: 900px) {
+  .not-found h1 { max-width: 9.5ch; }
+  .nf-voxel { right: 2%; top: 56%; }
+  .nf-voxel > .chapter-glyph { font-size: clamp(170px, 18vw, 290px); }
+}
