@@ -924,7 +924,7 @@ html[data-motion="full"] .demo-caret { animation: demo-caret 1s steps(2, start) 
 .demo-buttons .button-primary { min-height: 44px; gap: 10px; }
 .demo-buttons .button-primary:disabled { opacity: .5; cursor: default; }
 .demo-reset { min-height: 44px; padding: 8px 12px; border: 1.5px solid var(--ink); border-radius: 4px; background: transparent; font-weight: 700; }
-.demo-reset:disabled { opacity: .4; cursor: default; }
+.demo-reset:disabled { opacity: 1; background: rgba(246, 239, 229, .55); color: #525C6E; border: 1.5px dashed #8A93A3; box-shadow: inset 0 3px 0 rgba(28, 42, 67, .08); cursor: default; }
 .demo-note { margin-top: 14px; font-size: 13px; line-height: 1.5; color: var(--muted); }
 .demo-note .text-link { color: var(--ink); }
 @media (hover: hover) and (pointer: fine) {
@@ -1282,6 +1282,10 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
   .page-hero[data-stage] .page-hero-lede { max-width: min(520px, calc(50vw - 72px)); }
 }
 .page-hero-stats dd { text-shadow: 1px 1px 0 var(--clay), 2px 2px 0 var(--clay), 3px 3px 0 #B8694A, 6px 8px 8px rgba(28, 42, 67, .18); }
+.learn-hero .learn-figures dd strong, .learn-hero figcaption strong { text-shadow: 1px 1px 0 var(--clay), 2px 2px 0 var(--clay), 3px 3px 0 #B8694A, 6px 8px 8px rgba(28, 42, 67, .18); }
+@media (max-width: 899px) {
+  .learn-hero .learn-figures dd strong, .learn-hero figcaption strong { text-shadow: 1px 1px 0 var(--clay), 2px 2px 0 #B8694A; }
+}
 .chapter-facts dd { text-shadow: 1px 1px 0 #B8694A, 2px 2px 0 #A35C40, 3px 3px 0 #8E5037, 6px 7px 7px rgba(28, 42, 67, .14); }
 @media (max-width: 899px) { .chapter-facts dd { text-shadow: 1px 1px 0 #B8694A, 2px 2px 0 #8E5037, 4px 5px 6px rgba(28, 42, 67, .14); } }
 @media (max-width: 899px) {
