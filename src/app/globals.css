@@ -1238,3 +1238,6 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
   html[data-motion="full"] .prompt-lab:focus-within .prompt-brackets span:last-child { translate: -64px 0; }
   html[data-motion="full"] .prompt-lab:focus-within .prompt-brackets span:nth-child(2) { rotate: 6deg; translate: 0 -8px; }
 }
+@media (min-width: 900px) {
+  .hero-facts dd { text-shadow: 1px 1px 0 #B8694A, 2px 2px 0 #B8694A, 3px 3px 0 #A35C40, 4px 4px 0 #8E5037, 10px 12px 10px rgba(28, 42, 67, .18); }
+}

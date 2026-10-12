@@ -111,7 +111,7 @@ export function ReadingLayer() {
       if (term === focus) return;
       focus = term ?? null; draw();
     };
-    const scroll = () => { if (focus) draw(); };
+    const scroll = () => { if (!frame) frame = requestAnimationFrame(update); };
     const hide = () => { label.dataset.on = "false"; shown = ""; focus = null; draw(); };
     window.addEventListener("pointermove", move, { passive: true });
     document.addEventListener("pointerover", over);
