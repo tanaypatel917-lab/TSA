@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { glossary } from "@/content/glossary";
 import { useMotionPreference } from "../MotionPreferences";
 
+const CHIP = 0.66;
+
 const CLUSTERS: { center: [number, number, number]; fill: string; terms: string[] }[] = [
   { center: [-3.2, 0.9, 0], fill: "#AFCBE3", terms: ["AI", "Machine learning", "Model", "LLM", "Token", "Training data", "Algorithm", "Classifier", "Generative AI"] },
   { center: [3.3, 2.3, -1], fill: "#DD8962", terms: ["Prompt", "Context", "Prompt injection", "Verification", "Hallucination"] },
@@ -59,10 +61,10 @@ export function EmbeddingSpace() {
       renderer.setPixelRatio(Math.min(2, window.devicePixelRatio));
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       element.appendChild(renderer.domElement);
-      const font = getComputedStyle(document.body).getPropertyValue("--font-display").trim() || "sans-serif";
+      const font = getComputedStyle(document.body).getPropertyValue("--font-body").trim() || "sans-serif";
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
-      camera.position.set(0, 0, 23);
+      camera.position.set(0, 0, 24.5);
       const space = new THREE.Group();
       scene.add(space);
 
@@ -75,7 +77,7 @@ export function EmbeddingSpace() {
         texture.anisotropy = 4;
         const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false }));
         const width = (texture.image as HTMLCanvasElement).width / 84;
-        sprite.scale.set(width * 0.52, 0.52, 1);
+        sprite.scale.set(width * CHIP, CHIP, 1);
         const home = new THREE.Vector3(cluster.center[0] + jitter(term, 1) * 4.6, cluster.center[1] + jitter(term, 2) * 4.2, cluster.center[2] * 0.35 + jitter(term, 3) * 0.5);
         sprite.position.copy(home).multiplyScalar(0.05);
         sprite.userData.cluster = clusterIndex;
@@ -161,8 +163,8 @@ export function EmbeddingSpace() {
           node.sprite.position.set(node.home.x * grow, (node.home.y + float) * grow, node.home.z * grow);
           const linked = hot >= 0 && (index === hot || nodes[hot].links.includes(index) || node.links.includes(hot));
           const target = index === hot ? 1.3 : linked ? 1.1 : 1;
-          const scale = node.sprite.scale.y / 0.52 + (target - node.sprite.scale.y / 0.52) * 0.2;
-          node.sprite.scale.set(node.width * 0.52 * scale, 0.52 * scale, 1);
+          const scale = node.sprite.scale.y / CHIP + (target - node.sprite.scale.y / CHIP) * 0.2;
+          node.sprite.scale.set(node.width * CHIP * scale, CHIP * scale, 1);
           (node.sprite.material as InstanceType<typeof THREE.SpriteMaterial>).opacity = hot >= 0 && !linked ? 0.35 : 1;
         });
         pairs.forEach(([a, b], index) => {
