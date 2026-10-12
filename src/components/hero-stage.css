@@ -34,6 +34,7 @@
   .hero-stage[data-variant="echo"] .hero-stage-item[data-kind="solid"] { color: var(--ink); -webkit-text-stroke: 0; }
   .page-hero[data-tone="ink"] .hero-stage[data-variant="echo"] .hero-stage-item[data-kind="solid"] { color: var(--clay); }
   .page-hero[data-tone="clay"] .hero-stage[data-variant="echo"] .hero-stage-item[data-kind="solid"] { color: var(--paper); }
+  .page-hero[data-tone="sky"] .hero-stage[data-variant="echo"] .hero-stage-item[data-kind="solid"] { color: var(--clay); }
 }
 
 .hero-voxel { position: absolute; top: 52%; left: 50%; transform: translate(-50%, -50%); }
