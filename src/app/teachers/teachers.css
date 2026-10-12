@@ -126,3 +126,6 @@ html[data-motion="reduced"] .align-yes { animation: none !important; }
 
 .policy-field input, .policy-field textarea { box-shadow: 3px 3px 0 var(--ink); transition: translate 160ms var(--ease-out), box-shadow 160ms var(--ease-out); }
 .policy-field input:focus, .policy-field textarea:focus { translate: -2px -2px; box-shadow: 5px 5px 0 var(--clay); }
+
+.teachers-sources li a span { display: inline-block; font-family: var(--font-display), sans-serif; font-weight: 650; color: var(--ink); text-shadow: 1px 1px 0 var(--clay), 2px 3px 3px rgba(28, 42, 67, .12); transition: transform .3s var(--ease-out); }
+.teachers-sources li:hover a span { transform: translate(-1px, -2px) rotate(-4deg); }

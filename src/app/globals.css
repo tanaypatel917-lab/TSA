@@ -589,7 +589,7 @@ body:has(.intro-experience) .site-footer { display: none; }
 .about-access > div > p { margin-top: 12px; color: var(--muted); }
 .about-access ul { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--ink); }
 .about-access li { position: relative; padding: 16px 0 16px 34px; border-bottom: 1px solid var(--line); line-height: 1.6; }
-.about-access li::before { content: "↗"; position: absolute; left: 0; }
+.about-access li::before { content: "↗"; position: absolute; left: 0; top: 17px; display: grid; place-items: center; width: 22px; height: 22px; border: 1.5px solid var(--ink); border-radius: 4px; background: var(--clay); color: var(--ink); font-size: 12px; font-weight: 700; line-height: 1; box-shadow: 0 2px 0 var(--ink); }
 .about-credits { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px; padding-block: 30px 56px; border-top: 1px solid var(--ink); }
 .about-credits p { max-width: 36ch; font-family: var(--font-display), sans-serif; font-size: clamp(24px, 2.4vw, 32px); font-weight: 600; line-height: 1.2; }
 
