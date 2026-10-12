@@ -1160,7 +1160,6 @@ html[data-motion="reduced"] .learning-path li { animation: none !important; }
   .rubric-list li { border: 1.5px dashed var(--line); border-top-width: 3px; border-radius: 4px; transition: translate .3s var(--ease-out), box-shadow .3s var(--ease-out), background-color .2s ease; }
   .rubric-list li[data-passed="true"] { border-style: solid; translate: 0 -4px; box-shadow: 0 5px 0 var(--ink); }
 }
-@media (min-width: 900px) {
   :not(.station-choices) > .answer-choice, .answer-list .answer-choice { background: var(--paper); box-shadow: 0 4px 0 var(--ink); translate: 0 -2px; transition: translate 140ms var(--ease-out), box-shadow 140ms var(--ease-out), background-color 160ms ease; }
   .answer-choice:not(:disabled):hover { translate: 0 -5px; box-shadow: 0 7px 0 var(--ink), 0 14px 14px rgba(28, 42, 67, .12); }
   .answer-choice:not(:disabled):active { translate: 0 2px; box-shadow: 0 0 0 var(--ink); }
@@ -1168,7 +1167,6 @@ html[data-motion="reduced"] .learning-path li { animation: none !important; }
   .answer-choice[data-state="correct"] { translate: 0 1px; box-shadow: 0 1px 0 var(--ink), inset 0 3px 0 rgba(0, 0, 0, .1); }
   .answer-letter { border: 1.5px solid var(--ink); border-radius: 4px; background: var(--paper); box-shadow: 0 3px 0 var(--ink); translate: 0 -1px; }
   .station-choices .answer-choice { translate: none; box-shadow: none; }
-}
 @media (min-width: 900px) {
   .brief-steps .step-number, .field-toggle .step-number { font-size: 34px; color: var(--ink); text-shadow: 1px 1px 0 var(--clay), 2px 2px 0 var(--clay), 3px 3px 0 #B8694A, 4px 4px 0 #8E5037; }
   .brief-steps textarea, .field-body textarea { box-shadow: 5px 5px 0 var(--line); transition: box-shadow .25s var(--ease-out), translate .25s var(--ease-out); }
@@ -1280,3 +1278,4 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
 }
 .page-hero-stats dd { text-shadow: 1px 1px 0 var(--clay), 2px 2px 0 var(--clay), 3px 3px 0 #B8694A, 6px 8px 8px rgba(28, 42, 67, .18); }
 .chapter-facts dd { text-shadow: 1px 1px 0 #B8694A, 2px 2px 0 #B8694A, 3px 3px 0 #A35C40, 4px 4px 0 #8E5037, 8px 10px 9px rgba(28, 42, 67, .16); }
+@media (max-width: 767px) { .chapter-facts dd { text-shadow: 1px 1px 0 #B8694A, 2px 2px 0 #8E5037, 4px 5px 6px rgba(28, 42, 67, .14); } }

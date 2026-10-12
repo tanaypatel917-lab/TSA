@@ -256,12 +256,10 @@ html[data-motion="full"] .system-arrow i { animation: system-flow 700ms linear i
   html[data-motion="full"] .spine-block[data-read="true"] { box-shadow: 0 2px 0 #B8694A, 0 4px 0 #B8694A, 0 6px 0 #A35C40, 0 8px 0 #8E5037, 0 18px 18px rgba(0, 0, 0, .35); transform: translateY(-8px); }
   html[data-motion="full"] .spine-block:hover { transform: translateY(-14px) translateZ(30px); box-shadow: 0 2px 0 #8FB0CD, 0 4px 0 #8FB0CD, 0 6px 0 #7A9DBC, 0 8px 0 #6B8FB0, 0 10px 0 #5F86BA, 0 24px 22px rgba(0, 0, 0, .4); }
 }
-@media (min-width: 900px) {
   .program-route .step-number { translate: 0 -3px; box-shadow: 0 4px 0 var(--ink); font-weight: 650; transition: translate .25s var(--ease-out), box-shadow .25s var(--ease-out), rotate .25s var(--ease-out); }
   .program-route > li[data-done="true"] .step-number { translate: 0 1px; box-shadow: 0 0 0 var(--ink), inset 0 3px 0 rgba(0, 0, 0, .35); }
   .program-route > li[data-next="true"] .step-number { box-shadow: 0 4px 0 var(--ink), 0 0 0 7px rgba(175, 203, 227, .55); }
   html[data-motion="full"] .program-route > li:not([data-done="true"]):hover .step-number { translate: 0 -7px; rotate: -8deg; box-shadow: 0 8px 0 var(--ink), 0 14px 12px rgba(28, 42, 67, .18); }
-}
 .lab-choices button { box-shadow: 0 3px 0 var(--ink); transition: background-color 150ms ease, color 150ms ease, translate 140ms var(--ease-out), box-shadow 140ms var(--ease-out); }
 .lab-choices button:not(:disabled):not([aria-pressed="true"]) { background: var(--paper); }
 .lab-choices button[aria-pressed="true"] { translate: 0 2px; box-shadow: 0 1px 0 var(--ink), inset 0 2px 0 rgba(0, 0, 0, .18); }
