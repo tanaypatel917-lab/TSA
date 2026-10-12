@@ -209,5 +209,5 @@ export function VoxelGlyph({ mark, className = "" }: { mark: string; className?:
     return () => { disposed = true; cleanup(); setOn(false); };
   }, [mark, reduced]);
 
-  return <span className={`voxel-glyph ${className}`.trim()} data-on={on} aria-hidden="true"><span ref={glyph} className="chapter-glyph">{mark}</span><span ref={host} className="voxel-glyph-stage" /></span>;
+  return <span className={`voxel-glyph ${className}`.trim()} data-on={on} data-mark={mark} aria-hidden="true"><span ref={glyph} className="chapter-glyph">{mark}</span><span ref={host} className="voxel-glyph-stage" /></span>;
 }
