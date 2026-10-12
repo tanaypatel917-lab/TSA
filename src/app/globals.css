@@ -803,6 +803,7 @@ body:has(.intro-experience) .site-footer { display: none; }
 .map-word { stroke: var(--ink); stroke-width: 18; }
 .map-station { stroke: var(--ink); stroke-width: 34; transition: r 200ms var(--ease-out); }
 .map-station[data-stamped="true"] { stroke: var(--sky); stroke-width: 70; }
+.map-station, .map-word { filter: drop-shadow(0 3px 0 var(--ink)); }
 .map-player { fill: var(--ink); stroke: var(--paper); stroke-width: 34; stroke-linejoin: round; }
 
 .home-world { background: var(--ink); color: var(--paper); overflow: hidden; }
@@ -1317,7 +1318,7 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
   .rubric-list:not(.rubric-compact) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 @media (min-width: 900px) and (max-width: 1399px) {
-  .poster-ethics .poster-art { font-size: 220px; bottom: 36px; right: -10px; }
+  .poster-ethics .poster-art { font-size: 200px; bottom: 100px; right: -10px; }
 }
 @media (min-width: 900px) {
   .poster-tools .poster-art { font-size: 160px; bottom: 100px; right: -6px; }
