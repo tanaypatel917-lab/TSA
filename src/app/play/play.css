@@ -335,3 +335,6 @@ html[data-motion="full"] .world-toggle:hover:not([aria-pressed="true"]) { transl
   .world[data-mode="drive"] .world-counts > div { min-width: 76px; padding: 6px 10px 7px; }
   .world[data-mode="drive"] .world-counts dd { font-size: 22px; }
 }
+
+.station-stamp { color: var(--ink); box-shadow: inset 0 3px 0 rgba(28, 42, 67, .14), 0 0 0 6px var(--paper), 0 0 0 7.5px rgba(28, 42, 67, .22); text-shadow: 1px 1px 0 rgba(246, 239, 229, .9), 2px 2px 0 #B8694A, 3px 3px 0 #8E5037; }
+.station-stamp[data-stamped="true"] { box-shadow: 0 5px 0 var(--ink), 0 0 0 6px var(--paper); text-shadow: none; }

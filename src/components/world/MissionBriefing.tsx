@@ -29,7 +29,7 @@ export function MissionBriefing({ station, module, mission, stamped, bestStars =
       <p>{daily ? `Daily challenge · ${daily}` : `Station ${station.number} · ${visual.chapter}`}</p>
       <span className="station-stamp" data-stamped={stamped} aria-hidden="true">{daily ? "Daily" : stamped ? "Stamped" : visual.mark}</span>
       <h2 id="mission-title" tabIndex={-1} data-autofocus>{mission.title}</h2>
-      <p className="station-lede">{daily ? `Today’s challenge is the ${visual.chapter} mission, with the same crates for everyone today. ` : ""}{mission.brief}</p>
+      <p className="station-lede">{daily ? `Today’s challenge is the ${visual.chapter.replace(/^the /i, "")} mission, with the same crates for everyone today. ` : ""}{mission.brief}</p>
     </header>
     <div className="mission-gates" aria-label="The two gates">
       {mission.gates.map((gate) => <span key={gate.id} style={{ "--gate": gate.color } as React.CSSProperties}>{gate.label}</span>)}
