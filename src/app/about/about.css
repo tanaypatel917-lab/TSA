@@ -47,3 +47,5 @@
   .built-steps, .built-stack { grid-template-columns: 1fr; }
   .built-steps li, .built-steps li + li { padding: 18px 0 6px; border-left: 0; border-bottom: 1px solid var(--ink); }
 }
+.built-steps span { display: inline-block; font-size: clamp(40px, 4vw, 56px); line-height: 1; letter-spacing: -.04em; color: var(--ink); text-shadow: 1px 1px 0 var(--clay), 2px 2px 0 var(--clay), 3px 3px 0 var(--clay), 4px 4px 0 #B8694A, 6px 9px 10px rgba(28, 42, 67, .22); }
+.built-stack { box-shadow: 6px 6px 0 var(--ink); }
