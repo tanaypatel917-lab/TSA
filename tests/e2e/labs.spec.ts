@@ -19,6 +19,8 @@ test("Pip follows written keyword rules and exposes the fired rule", async ({ pa
   await page.goto("/modules/ai-foundations/lessons/rules-and-learning/");
   const pip = lab(page, pipTitle);
   const log = pip.getByRole("log", { name: "Conversation with Pip" });
+  await expect(pip.locator(".chatbot-window-header")).toContainText("Pip · school helper bot");
+  await expect(log.locator(".chatbot-window-header")).toHaveCount(0);
   await pip.getByRole("button", { name: "I'm not stressed at all" }).click();
   await expect(log.locator(".chatbot-turn[data-sender='pip']").last()).toContainText("counselor");
 
@@ -53,15 +55,14 @@ test("Pip's conversation and hood work with keyboard alone", async ({ page }) =>
   await expect(hood).toHaveAttribute("aria-expanded", "true");
   await page.keyboard.press("Shift+Tab");
   await page.keyboard.press("Shift+Tab");
-  await page.keyboard.press("Shift+Tab");
   const input = pip.getByRole("textbox", { name: "Message Pip" });
   await expect(input).toBeFocused();
   await page.keyboard.type("Can you explain photosynthesis?");
   await page.keyboard.press("Enter");
   await expect(log.locator(".chatbot-turn[data-sender='pip']").last()).toContainText("Sorry, I didn't get that.");
   await expect(pip.locator(".chatbot-fallback-row")).toHaveAttribute("data-fired", "true");
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
+  const reset = pip.getByRole("button", { name: "Start over" });
+  await tabUntilFocused(page, reset);
   await page.keyboard.press("Enter");
   await expect(log.locator(".chatbot-turn[data-sender='pip']")).toHaveCount(1);
 });

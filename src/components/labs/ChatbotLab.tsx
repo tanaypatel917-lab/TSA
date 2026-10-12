@@ -79,13 +79,19 @@ export function ChatbotLab() {
     hood={{ spec: hoodSpec, content: hoodContent }}
     onHoodOpenChange={setHoodOpen}
   >
-    <div className="chatbot-log" role="log" aria-live="polite" aria-label="Conversation with Pip">
-      {messages.map((message) => <article key={message.id} className="chatbot-turn" data-sender={message.sender}>
-        <span className="chatbot-speaker">{message.sender === "pip" ? "Pip" : "You"}</span>
-        <p className="chatbot-bubble">{message.reply.text}
-          {message.sender === "pip" && hoodOpen && <small className="chatbot-rule-tag">{message.reply.rule && message.reply.matched ? `Rule: ${message.reply.rule.id} · matched "${message.reply.matched}"` : "No rule matched"}</small>}
-        </p>
-      </article>)}
+    <div className="chatbot-window">
+      <div className="chatbot-window-header">
+        <span>Pip · school helper bot</span>
+        <button className="button-secondary chatbot-start-over" type="button" onClick={startOver}>Start over</button>
+      </div>
+      <div className="chatbot-log" role="log" aria-live="polite" aria-label="Conversation with Pip">
+        {messages.map((message) => <article key={message.id} className="chatbot-turn" data-sender={message.sender}>
+          <span className="chatbot-speaker">{message.sender === "pip" ? "Pip" : "You"}</span>
+          <p className="chatbot-bubble">{message.reply.text}
+            {message.sender === "pip" && hoodOpen && <small className="chatbot-rule-tag">{message.reply.rule && message.reply.matched ? `Rule: ${message.reply.rule.id} · matched "${message.reply.matched}"` : "No rule matched"}</small>}
+          </p>
+        </article>)}
+      </div>
     </div>
     <div className="lab-choices chatbot-suggestions" role="group" aria-label="Try a message">
       {pipSuggestions.map((suggestion) => <button key={suggestion} type="button" onClick={() => send(suggestion)}>{suggestion}</button>)}
@@ -94,6 +100,5 @@ export function ChatbotLab() {
       <label className="lab-field chatbot-message-field"><span>Message Pip</span><input type="text" value={draft} onChange={(event) => setDraft(event.target.value)} maxLength={200} /></label>
       <button className="button-primary" type="submit">Send <span aria-hidden="true">↗</span></button>
     </form>
-    <div className="chatbot-reset"><button className="button-secondary" type="button" onClick={startOver}>Start over</button></div>
   </LabFrame>;
 }
