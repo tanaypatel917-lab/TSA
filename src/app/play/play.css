@@ -338,3 +338,8 @@ html[data-motion="full"] .world-toggle:hover:not([aria-pressed="true"]) { transl
 
 .station-stamp { color: var(--ink); box-shadow: inset 0 3px 0 rgba(28, 42, 67, .14), 0 0 0 6px var(--paper), 0 0 0 7.5px rgba(28, 42, 67, .22); text-shadow: 1px 1px 0 rgba(246, 239, 229, .9), 2px 2px 0 #B8694A, 3px 3px 0 #8E5037; }
 .station-stamp[data-stamped="true"] { box-shadow: 0 5px 0 var(--ink), 0 0 0 6px var(--paper); text-shadow: none; }
+
+.mission-rules { counter-reset: rule; padding-left: 0; list-style: none; }
+.mission-rules li { counter-increment: rule; position: relative; padding-left: 42px; }
+.mission-rules li::before { content: counter(rule); position: absolute; left: 0; top: 0; display: grid; place-items: center; width: 27px; height: 27px; border: 1.5px solid var(--ink); border-radius: 5px; background: var(--paper); box-shadow: 0 3px 0 var(--clay); font-family: var(--font-display), sans-serif; font-size: 14px; font-weight: 700; line-height: 1; }
+.board-empty { padding: 14px 16px; border: 1.5px dashed rgba(28, 42, 67, .55); border-radius: 5px; }
