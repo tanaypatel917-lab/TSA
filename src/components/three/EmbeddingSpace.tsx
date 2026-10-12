@@ -62,7 +62,7 @@ export function EmbeddingSpace() {
       const font = getComputedStyle(document.body).getPropertyValue("--font-display").trim() || "sans-serif";
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
-      camera.position.set(0, 0, 19);
+      camera.position.set(0, 0, 21);
       const space = new THREE.Group();
       scene.add(space);
 
@@ -76,22 +76,31 @@ export function EmbeddingSpace() {
         const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false }));
         const width = (texture.image as HTMLCanvasElement).width / 84;
         sprite.scale.set(width * 0.52, 0.52, 1);
-        const home = new THREE.Vector3(cluster.center[0] + jitter(term, 1) * 4.6, cluster.center[1] + jitter(term, 2) * 4.2, cluster.center[2] + jitter(term, 3) * 5);
+        const home = new THREE.Vector3(cluster.center[0] + jitter(term, 1) * 4.6, cluster.center[1] + jitter(term, 2) * 4.2, cluster.center[2] + jitter(term, 3) * 1.6);
         sprite.position.copy(home).multiplyScalar(0.05);
         sprite.userData.cluster = clusterIndex;
         space.add(sprite);
         nodes.push({ sprite, home, width, links: [] });
       }));
-      for (let pass = 0; pass < 80; pass += 1) nodes.forEach((node, index) => nodes.forEach((other, otherIndex) => {
+      for (let pass = 0; pass < 120; pass += 1) nodes.forEach((node, index) => nodes.forEach((other, otherIndex) => {
         if (otherIndex <= index) return;
-        const gap = node.home.distanceTo(other.home);
-        const want = (node.width + other.width) * 0.2 + 0.6;
-        if (gap >= want) return;
-        const shift = other.home.clone().sub(node.home).normalize().multiplyScalar((want - gap) / 2 + 0.01);
-        if (!Number.isFinite(shift.x)) shift.set(0.1, 0.1, 0);
-        node.home.sub(shift);
-        other.home.add(shift);
+        const dx = other.home.x - node.home.x;
+        const dy = other.home.y - node.home.y;
+        const overlapX = (node.width + other.width) * 0.26 + 0.3 - Math.abs(dx);
+        const overlapY = 0.8 - Math.abs(dy);
+        if (overlapX <= 0 || overlapY <= 0) return;
+        if (overlapY < overlapX) {
+          const push = (overlapY / 2 + 0.01) * (dy >= 0 ? 1 : -1);
+          node.home.y -= push;
+          other.home.y += push;
+        } else {
+          const push = (overlapX / 2 + 0.01) * (dx >= 0 ? 1 : -1);
+          node.home.x -= push;
+          other.home.x += push;
+        }
       }));
+      const middle = nodes.reduce((sum, node) => sum.add(node.home), new THREE.Vector3()).divideScalar(Math.max(1, nodes.length));
+      nodes.forEach((node) => { node.home.x -= middle.x; node.home.y -= middle.y - 0.3; });
       nodes.forEach((node, index) => {
         node.links = nodes.map((other, otherIndex) => ({ otherIndex, distance: otherIndex === index ? Infinity : node.home.distanceTo(other.home) })).sort((a, b) => a.distance - b.distance).slice(0, 2).map((item) => item.otherIndex);
       });
@@ -122,7 +131,7 @@ export function EmbeddingSpace() {
       const hero = element.closest(".page-hero") ?? element;
       const pointer = new THREE.Vector2(9, 9);
       const ray = new THREE.Raycaster();
-      let tx = 0, ty = 0, visible = true, spin = 0;
+      let tx = 0, ty = 0, visible = true;
       const move = (event: Event) => {
         const { clientX, clientY } = event as PointerEvent;
         const rect = element.getBoundingClientRect();
@@ -142,8 +151,7 @@ export function EmbeddingSpace() {
         if (!visible) return;
         const time = (now - started) / 1000;
         const grow = 1 - (1 - Math.min(1, time / 1.6)) ** 4;
-        spin += 0.0022;
-        space.rotation.y += (spin + tx * 0.6 - space.rotation.y) * 0.05;
+        space.rotation.y += (Math.sin(time * 0.3) * 0.28 + tx * 0.35 - space.rotation.y) * 0.05;
         space.rotation.x += (-ty * 0.3 - space.rotation.x) * 0.05;
         ray.setFromCamera(pointer, camera);
         const hit = pointer.x < 5 ? ray.intersectObjects(nodes.map((node) => node.sprite))[0]?.object : undefined;

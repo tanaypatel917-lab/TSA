@@ -39,7 +39,8 @@ export function ProgressTower({ chapters }: Props) {
       const box = new THREE.BoxGeometry(1, 0.62, 1);
       const edges = new THREE.EdgesGeometry(box);
       const line = new THREE.LineBasicMaterial({ color: INK });
-      const ghostLine = new THREE.LineBasicMaterial({ color: "#F6EFE5", transparent: true, opacity: 0.35 });
+      const ghostLine = new THREE.LineBasicMaterial({ color: "#F6EFE5", transparent: true, opacity: 0.3 });
+      const ghost = new THREE.MeshStandardMaterial({ color: "#33466A", roughness: 0.8, flatShading: true });
       const blocks: { mesh: InstanceType<typeof THREE.Object3D>; target: number; delay: number }[] = [];
       const radius = 2.1;
       chapters.forEach((steps, column) => {
@@ -50,7 +51,10 @@ export function ProgressTower({ chapters }: Props) {
           if (step.done) {
             group.add(new THREE.Mesh(box, material));
             group.add(new THREE.LineSegments(edges, line));
-          } else group.add(new THREE.LineSegments(edges, ghostLine));
+          } else {
+            group.add(new THREE.Mesh(box, ghost));
+            group.add(new THREE.LineSegments(edges, ghostLine));
+          }
           const target = row * 0.66 - 2.4;
           group.position.set(Math.sin(angle) * radius, target + 6, Math.cos(angle) * radius);
           group.rotation.y = angle;
