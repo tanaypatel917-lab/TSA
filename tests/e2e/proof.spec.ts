@@ -158,6 +158,12 @@ test("quiz advances once, focuses the next question and reviews incorrect answer
   expect(await page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? "{}").xp, progressKey)).toBe(40);
 });
 
+test("answering a quiz question focuses Next question", async ({ page }) => {
+  await page.goto(`/modules/${foundations.slug}/quiz/`);
+  await page.locator(".answer-choice").first().click();
+  await expect(page.getByRole("button", { name: "Next question" })).toBeFocused();
+});
+
 test("motion preference persists and public copy is available without JavaScript", async ({ page, browser }) => {
   await page.goto("/");
   await page.getByLabel("Motion", { exact: true }).selectOption("reduced");

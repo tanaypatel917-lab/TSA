@@ -17,6 +17,8 @@ export function QuizRunner({ module }: { module: Module }) {
   const advancedIndex = useRef<number | null>(null);
   const moveFocus = useRef(false);
   const heading = useRef<HTMLHeadingElement>(null);
+  const nextButton = useRef<HTMLButtonElement>(null);
+  const focusNext = useRef(false);
   const question = module.quiz[index];
   const selected = answers[index];
   const correctCount = answers.filter((answer, position) => answer === module.quiz[position].answerIndex).length;
@@ -29,9 +31,17 @@ export function QuizRunner({ module }: { module: Module }) {
     if (moveFocus.current) { heading.current?.focus(); moveFocus.current = false; }
   }, [index, finished]);
 
+  useEffect(() => {
+    if (focusNext.current && selected !== undefined) {
+      focusNext.current = false;
+      nextButton.current?.focus();
+    }
+  }, [selected]);
+
   function choose(choice: number) {
     if (!hydrated || finished || chosenIndex.current === index) return;
     chosenIndex.current = index;
+    focusNext.current = true;
     setAnswers((current) => [...current, choice]);
   }
   function next() {
@@ -58,5 +68,5 @@ export function QuizRunner({ module }: { module: Module }) {
     const status = selected === undefined ? "unanswered" : choiceIndex === question.answerIndex ? "correct" : choiceIndex === selected ? "incorrect" : "unselected";
     const statusText = status === "correct" ? "Correct" : status === "incorrect" ? "Incorrect" : status === "unselected" ? "Not selected" : "";
     return <button key={`${question.id}-${choiceIndex}`} className="answer-choice" data-state={status} aria-pressed={choiceIndex === selected} disabled={!hydrated || selected !== undefined} onClick={() => choose(choiceIndex)}><span className="answer-letter" aria-hidden="true">{String.fromCharCode(65 + choiceIndex)}</span><span>{choice}</span>{statusText && <span className="answer-status">{statusText}</span>}</button>;
-  })}</div>{selected !== undefined && <div className="answer-feedback" data-good={selected === question.answerIndex}><span className="answer-stamp" aria-hidden="true">{selected === question.answerIndex ? streak >= 2 ? `×${streak}` : "✓" : "✕"}</span><div role="status" aria-live="polite"><strong>{selected === question.answerIndex ? "Correct!" : "Not quite."}</strong><p>{question.explanation}</p>{selected !== question.answerIndex && <p className="small-note mt-2">Correct answer: {question.choices[question.answerIndex]}</p>}</div><button className="button-primary" onClick={next}>{index === module.quiz.length - 1 ? "See results" : "Next question"}</button></div>}{storageError && <p className="storage-warning" role="status">{storageError}</p>}</section></div>;
+  })}</div>{selected !== undefined && <div className="answer-feedback" data-good={selected === question.answerIndex}><span className="answer-stamp" aria-hidden="true">{selected === question.answerIndex ? streak >= 2 ? `×${streak}` : "✓" : "✕"}</span><div role="status" aria-live="polite"><strong>{selected === question.answerIndex ? "Correct!" : "Not quite."}</strong><p>{question.explanation}</p>{selected !== question.answerIndex && <p className="small-note mt-2">Correct answer: {question.choices[question.answerIndex]}</p>}</div><button ref={nextButton} className="button-primary" onClick={next}>{index === module.quiz.length - 1 ? "See results" : "Next question"}</button></div>}{storageError && <p className="storage-warning" role="status">{storageError}</p>}</section></div>;
 }
