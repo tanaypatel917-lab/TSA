@@ -1227,14 +1227,10 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
   html[data-motion="full"] .prompt-lab:focus-within .prompt-brackets span:last-child { translate: -64px 0; }
   html[data-motion="full"] .prompt-lab:focus-within .prompt-brackets span:nth-child(2) { rotate: 6deg; translate: 0 -8px; }
 }
-@media (min-width: 900px) {
   .hero-facts dd { text-shadow: 1px 1px 0 #B8694A, 2px 2px 0 #B8694A, 3px 3px 0 #A35C40, 4px 4px 0 #8E5037, 10px 12px 10px rgba(28, 42, 67, .18); }
-}
-@media (min-width: 900px) {
   .outline-terms a, .chapter-terms a { display: inline-block; background: var(--paper); box-shadow: 0 3px 0 var(--ink); transition: translate .2s var(--ease-out), box-shadow .2s var(--ease-out), background-color .2s ease; }
   html[data-motion="full"] .outline-terms a:hover, html[data-motion="full"] .chapter-terms a:hover { translate: 0 -3px; box-shadow: 0 6px 0 var(--clay); background: var(--sky); }
   .outline-terms a:active, .chapter-terms a:active { translate: 0 2px; box-shadow: 0 1px 0 var(--ink); }
-}
 
 .tour-card { box-shadow: 8px 8px 0 var(--ink), 12px 12px 0 var(--clay); }
 .tour-back { background: var(--paper); box-shadow: 3px 3px 0 var(--ink); transition: transform 140ms var(--ease-out), box-shadow 140ms var(--ease-out); }
