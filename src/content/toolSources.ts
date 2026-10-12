@@ -1,6 +1,7 @@
 export const toolSources = {
   system: ["touretzky-2019", "google-mlcc"],
   rules: ["google-mlcc"],
+  chatbot: ["weizenbaum-1966"],
   tokens: ["openai-tokens", "sennrich-2016"],
   bias: ["buolamwini-2018", "dastin-2018"],
   claims: ["toureiffel-history", "toureiffel-330", "toureiffel-paint", "ji-2022"],

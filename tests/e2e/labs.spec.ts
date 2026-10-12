@@ -5,6 +5,79 @@ test.beforeEach(async ({ page }) => {
 });
 
 const lab = (page: Page, title: string) => page.getByRole("figure", { name: title });
+const pipTitle = "Meet Pip. Is it thinking, or following a menu?";
+
+async function tabUntilFocused(page: Page, target: ReturnType<Page["getByRole"]>) {
+  for (let index = 0; index < 100; index += 1) {
+    if (await target.evaluate((element) => element === document.activeElement)) return;
+    await page.keyboard.press("Tab");
+  }
+  throw new Error("Could not reach the target using Tab");
+}
+
+test("Pip follows written keyword rules and exposes the fired rule", async ({ page }) => {
+  await page.goto("/modules/ai-foundations/lessons/rules-and-learning/");
+  const pip = lab(page, pipTitle);
+  const log = pip.getByRole("log", { name: "Conversation with Pip" });
+  await pip.getByRole("button", { name: "I'm not stressed at all" }).click();
+  await expect(log.locator(".chatbot-turn[data-sender='pip']").last()).toContainText("counselor");
+
+  const hood = pip.getByRole("button", { name: "Look under the hood" });
+  await hood.click();
+  await expect(hood).toHaveAttribute("aria-expanded", "true");
+  await expect(pip.locator(".chatbot-rule-table tr").filter({ hasText: "feelings" })).toHaveAttribute("data-fired", "true");
+  await expect(log.locator(".chatbot-rule-tag").last()).toContainText('Rule: feelings · matched "stressed"');
+
+  const input = pip.getByRole("textbox", { name: "Message Pip" });
+  await input.fill("Can you explain photosynthesis?");
+  await input.press("Enter");
+  await expect(log.locator(".chatbot-turn[data-sender='pip']").last()).toContainText("Sorry, I didn't get that.");
+  await expect(pip.locator(".chatbot-fallback-row")).toHaveAttribute("data-fired", "true");
+  await pip.getByRole("button", { name: "Start over" }).click();
+  await expect(log.locator(".chatbot-turn[data-sender='pip']")).toHaveCount(1);
+  await expect(log.locator(".chatbot-turn[data-sender='student']")).toHaveCount(0);
+});
+
+test("Pip's conversation and hood work with keyboard alone", async ({ page }) => {
+  await page.goto("/modules/ai-foundations/lessons/rules-and-learning/");
+  const pip = lab(page, pipTitle);
+  const feeling = pip.getByRole("button", { name: "I'm not stressed at all" });
+  await tabUntilFocused(page, feeling);
+  await page.keyboard.press("Enter");
+  const log = pip.getByRole("log", { name: "Conversation with Pip" });
+  await expect(log.locator(".chatbot-turn[data-sender='pip']").last()).toContainText("counselor");
+
+  const hood = pip.getByRole("button", { name: "Look under the hood" });
+  await tabUntilFocused(page, hood);
+  await page.keyboard.press("Enter");
+  await expect(hood).toHaveAttribute("aria-expanded", "true");
+  await page.keyboard.press("Shift+Tab");
+  await page.keyboard.press("Shift+Tab");
+  await page.keyboard.press("Shift+Tab");
+  const input = pip.getByRole("textbox", { name: "Message Pip" });
+  await expect(input).toBeFocused();
+  await page.keyboard.type("Can you explain photosynthesis?");
+  await page.keyboard.press("Enter");
+  await expect(log.locator(".chatbot-turn[data-sender='pip']").last()).toContainText("Sorry, I didn't get that.");
+  await expect(pip.locator(".chatbot-fallback-row")).toHaveAttribute("data-fired", "true");
+  await page.keyboard.press("Tab");
+  await page.keyboard.press("Tab");
+  await page.keyboard.press("Enter");
+  await expect(log.locator(".chatbot-turn[data-sender='pip']")).toHaveCount(1);
+});
+
+test("the chatbot hood stacks at 360px and the rules hood counts flagged messages", async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 844 });
+  await page.goto("/modules/ai-foundations/lessons/rules-and-learning/");
+  const pip = lab(page, pipTitle);
+  await pip.getByRole("button", { name: "Look under the hood" }).click();
+  const widths = await page.evaluate(() => ({ viewport: window.innerWidth, document: document.documentElement.scrollWidth }));
+  expect(widths.document).toBe(widths.viewport);
+
+  const rules = lab(page, "Write a spam rule. Watch it break.");
+  await rules.getByRole("button", { name: "Look under the hood" }).click();
+  await expect(rules.locator(".rule-keyword-counts li").filter({ hasText: "win" })).toContainText("2 messages flagged");
+});
 
 test("foundation lessons explain systems, rules and tokens hands-on", async ({ page }) => {
   await page.goto("/modules/ai-foundations/lessons/what-is-ai/");

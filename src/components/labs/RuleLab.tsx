@@ -20,7 +20,14 @@ export function RuleLab() {
   const keywords = text.split(",").map((word) => word.trim()).filter(Boolean);
   const results = messages.map((message) => ({ ...message, flagged: ruleFlags(message.text, keywords) }));
   const correct = results.filter((result) => result.flagged === result.spam).length;
-  return <LabFrame id="lab-rules" sources="rules" title="Write a spam rule. Watch it break." note="Hand-written rules only catch the patterns someone predicted, and they misfire on innocent messages. Machine learning finds patterns from thousands of labeled examples instead, though it can learn the wrong pattern too.">
+  const keywordCounts = keywords.map((keyword) => ({ keyword, count: messages.filter((message) => ruleFlags(message.text, [keyword])).length }));
+  return <LabFrame id="lab-rules" sources="rules" title="Write a spam rule. Watch it break." note="Hand-written rules only catch the patterns someone predicted, and they misfire on innocent messages. Machine learning finds patterns from thousands of labeled examples instead, though it can learn the wrong pattern too." hood={{
+    spec: "Model: your keyword list · Data: 8 example messages · Runs on your device",
+    content: <>
+      <p>Each message is checked for your words. Any match means spam:</p>
+      <ul className="rule-keyword-counts">{keywordCounts.map(({ keyword, count }) => <li key={keyword}><code>{keyword}</code> <span>{count} {count === 1 ? "message" : "messages"} flagged</span></li>)}</ul>
+    </>
+  }}>
     <label className="lab-field"><span>Flag a message if it contains any of these words (separate with commas)</span><input type="text" value={text} onChange={(event) => setText(event.target.value)} spellCheck={false} /></label>
     <p className="lab-score" aria-live="polite"><strong>{correct} of {messages.length}</strong> messages sorted correctly</p>
     <ul className="rule-list">
