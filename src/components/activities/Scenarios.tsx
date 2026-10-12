@@ -12,12 +12,21 @@ export function Scenarios({ activity, moduleId }: { activity: Extract<Activity, 
   const [done, setDone] = useState(false);
   const focusTarget = useRef<HTMLHeadingElement>(null);
   const moveFocus = useRef(false);
+  const nextButton = useRef<HTMLButtonElement>(null);
+  const focusNext = useRef(false);
   const scenario = activity.scenarios[index];
   const total = activity.scenarios.length;
   const option = chosen === null ? null : scenario.options[chosen];
   useEffect(() => { if (moveFocus.current) { focusTarget.current?.focus(); moveFocus.current = false; } }, [index, done]);
+  useEffect(() => {
+    if (focusNext.current && chosen !== null) {
+      focusNext.current = false;
+      nextButton.current?.focus();
+    }
+  }, [chosen]);
   function choose(position: number) {
     if (chosen !== null) return;
+    focusNext.current = true;
     setChosen(position);
     if (scenario.options[position].ok) setDefensible((value) => value + 1);
   }
@@ -31,5 +40,5 @@ export function Scenarios({ activity, moduleId }: { activity: Extract<Activity, 
     const state = chosen === null ? "unanswered" : item.ok ? "correct" : position === chosen ? "incorrect" : "unselected";
     const status = state === "correct" ? "Defensible" : state === "incorrect" ? "Reconsider" : "";
     return <button key={item.text} className="answer-choice" data-state={state} aria-pressed={position === chosen} disabled={chosen !== null} onClick={() => choose(position)}><span className="answer-letter" aria-hidden="true">{String.fromCharCode(65 + position)}</span><span>{item.text}</span>{status && <span className="answer-status">{status}</span>}</button>;
-  })}</div>{option && <div className="answer-feedback"><div role="status" aria-live="polite"><strong>{option.ok ? "A choice you can defend." : "Worth reconsidering."}</strong><p>{option.feedback}</p></div><button className="button-primary" onClick={next}>{index === total - 1 ? "Finish" : "Next scenario"}</button></div>}</div>;
+  })}</div>{option && <div className="answer-feedback"><div role="status" aria-live="polite"><strong>{option.ok ? "A choice you can defend." : "Worth reconsidering."}</strong><p>{option.feedback}</p></div><button ref={nextButton} className="button-primary" onClick={next}>{index === total - 1 ? "Finish" : "Next scenario"}</button></div>}</div>;
 }

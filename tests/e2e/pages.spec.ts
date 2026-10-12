@@ -149,6 +149,13 @@ test("scenario feedback names the verdict and moves focus to the next situation"
   await expect(page.getByRole("heading", { level: 2, name: /lower recommendation scores/ })).toBeFocused();
 });
 
+test("choosing a scenario option focuses Next scenario", async ({ page }) => {
+  await seed(page);
+  await page.goto("/modules/ethical-ai/activity/");
+  await page.locator(".answer-choice").first().click();
+  await expect(page.getByRole("button", { name: "Next scenario" })).toBeFocused();
+});
+
 test("redesigned pages fit a 390px screen without horizontal scrolling", async ({ browser }) => {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
   await context.addInitScript((key) => localStorage.setItem(key, "seen"), introKey);
