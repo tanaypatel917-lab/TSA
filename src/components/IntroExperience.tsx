@@ -273,6 +273,9 @@ export function IntroExperience() {
     let shownAct = -1;
     let shownAuto = -1;
     let shownPresence = -1;
+    const faded: number[] = [];
+    const frames = sections.map((section) => section.querySelector<HTMLElement>(".intro-act-frame"));
+    const copies = sections.map((section) => section.querySelector<HTMLElement>(".act-copy"));
     const tick = (time: number) => {
       frame = requestAnimationFrame(tick);
       const title = letters.length && smoothY < window.innerHeight * 1.2 ? heroTitle.current?.getBoundingClientRect() : undefined;
@@ -289,6 +292,15 @@ export function IntroExperience() {
       const from = Math.min(LAST_ACT, Math.floor(snapped));
       const frac = snapped - from;
       const ease = easeInOutCubic(frac);
+      sections.forEach((section, index) => {
+        let fade = 1;
+        const box = index === from && from < LAST_ACT ? frames[index]?.getBoundingClientRect() : undefined;
+        if (box && box.top < -1) {
+          const rest = (copies[index]?.getBoundingClientRect().top ?? box.top + 200) - box.top;
+          fade = Math.round(clamp(1 + box.top / Math.max(60, rest - 30)) ** 2 * 100) / 100;
+        }
+        if (faded[index] !== fade) { faded[index] = fade; section.style.setProperty("--copy-fade", String(fade)); }
+      });
       const next = reduced ? mixHex(introActs[from].background, introActs[Math.min(LAST_ACT, from + 1)].background, ease) : introActs[from].background;
       if (next !== color) { color = next; stage.style.backgroundColor = next; }
       const sheet = fold.current;

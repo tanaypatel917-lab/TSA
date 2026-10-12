@@ -292,3 +292,4 @@ html[data-intro-page="true"][data-motion="full"] { scroll-behavior: smooth; }
 .act-suggest button { box-shadow: 0 2px 0 var(--clay); transition: background-color 150ms ease, color 150ms ease, translate 140ms var(--ease-out), box-shadow 140ms var(--ease-out); }
 .act-suggest button[aria-pressed="true"] { translate: 0 1px; box-shadow: 0 1px 0 var(--ink), inset 0 2px 0 rgba(28, 42, 67, .2); }
 .act-suggest button:active { transform: none; translate: 0 2px; box-shadow: 0 0 0 var(--clay); }
+.act-copy { opacity: var(--copy-fade, 1); }
