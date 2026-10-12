@@ -217,7 +217,7 @@ html[data-intro-page="true"][data-motion="full"] { scroll-behavior: smooth; }
   .intro-stage[data-act="4"][data-claim="checked"] .glyph-bang { transform: translate(-104%, 6vh) rotate(42deg); }
   .glyph-star { font-size: 44vw; }
   .intro-stage[data-act="5"] .glyph-star { transform: translate(-6%, calc(-50% - 24vh)) rotate(var(--spin, 0deg)); }
-    .fallback-stack { top: 10vh; right: 20px; bottom: auto; left: auto; }
+  .fallback-stack { position: absolute; top: 18vh; right: 20px; display: grid; gap: 8px; opacity: 0; transition: opacity 400ms ease; pointer-events: none; }
   .fallback-stack i { width: 34vw; height: 5vw; }
 }
 
@@ -293,3 +293,6 @@ html[data-intro-page="true"][data-motion="full"] { scroll-behavior: smooth; }
 .act-suggest button[aria-pressed="true"] { translate: 0 1px; box-shadow: 0 1px 0 var(--ink), inset 0 2px 0 rgba(28, 42, 67, .2); }
 .act-suggest button:active { transform: none; translate: 0 2px; box-shadow: 0 0 0 var(--clay); }
 .act-copy { opacity: var(--copy-fade, 1); }
+@media (max-width: 767px) {
+  .intro-topbar { padding-bottom: 26px; background: linear-gradient(var(--stage-bg, transparent) 68%, transparent); }
+}

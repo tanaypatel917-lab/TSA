@@ -294,7 +294,7 @@ export function IntroExperience() {
       const ease = easeInOutCubic(frac);
       sections.forEach((section, index) => {
         let fade = 1;
-        const box = index === from && from < LAST_ACT ? frames[index]?.getBoundingClientRect() : undefined;
+        const box = index === from && from < LAST_ACT && window.innerWidth >= 768 ? frames[index]?.getBoundingClientRect() : undefined;
         if (box && box.top < -1) {
           const rest = (copies[index]?.getBoundingClientRect().top ?? box.top + 200) - box.top;
           fade = Math.round(clamp(1 + box.top / Math.max(60, rest - 30)) ** 2 * 100) / 100;
@@ -302,7 +302,7 @@ export function IntroExperience() {
         if (faded[index] !== fade) { faded[index] = fade; section.style.setProperty("--copy-fade", String(fade)); }
       });
       const next = reduced ? mixHex(introActs[from].background, introActs[Math.min(LAST_ACT, from + 1)].background, ease) : introActs[from].background;
-      if (next !== color) { color = next; stage.style.backgroundColor = next; }
+      if (next !== color) { color = next; stage.style.backgroundColor = next; root.style.setProperty("--stage-bg", next); }
       const sheet = fold.current;
       if (sheet) {
         const turning = !reduced && frac > 0.002 && from < LAST_ACT;
