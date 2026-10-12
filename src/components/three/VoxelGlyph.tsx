@@ -5,7 +5,43 @@ import { useMotionPreference } from "../MotionPreferences";
 
 const GRID = 40;
 
-const TURNS: Record<string, number> = { "✎": -Math.PI / 4 };
+const TURNS: Record<string, number> = { "✎": Math.PI / 4 };
+
+type Cell = [number, number, string?];
+
+const PENCIL = { body: "#DD8962", shine: "#EAA585", wood: "#EBD9C0", lead: "#1C2A43", ferrule: "#F6EFE5", eraser: "#B8694A" };
+
+function pencil() {
+  const canvas = document.createElement("canvas");
+  canvas.width = GRID * 2;
+  canvas.height = GRID;
+  const context = canvas.getContext("2d", { willReadFrequently: true })!;
+  const tri = (fill: string, points: number[]) => {
+    context.fillStyle = fill;
+    context.beginPath();
+    context.moveTo(points[0], points[1]);
+    for (let i = 2; i < points.length; i += 2) context.lineTo(points[i], points[i + 1]);
+    context.fill();
+  };
+  tri(PENCIL.wood, [26, 15, 12, 20, 26, 25]);
+  tri(PENCIL.lead, [17.5, 17.4, 11, 20, 17.5, 22.6]);
+  context.fillStyle = PENCIL.body; context.fillRect(26, 15, 30, 10);
+  context.fillStyle = PENCIL.shine; context.fillRect(26, 15, 30, 3);
+  context.fillStyle = PENCIL.ferrule; context.fillRect(56, 15, 5, 10);
+  context.fillStyle = PENCIL.eraser; context.fillRect(61, 15, 6, 10);
+  const palette = Object.values(PENCIL).map((hex) => [hex, parseInt(hex.slice(1, 3), 16), parseInt(hex.slice(3, 5), 16), parseInt(hex.slice(5, 7), 16)] as const);
+  const { data } = context.getImageData(0, 0, GRID * 2, GRID);
+  const cells: Cell[] = [];
+  for (let y = 0; y < GRID; y += 1) for (let x = 0; x < GRID * 2; x += 1) {
+    const at = (y * GRID * 2 + x) * 4;
+    if (data[at + 3] <= 120) continue;
+    const [r, g, b] = [data[at], data[at + 1], data[at + 2]].map((v) => v * 255 / data[at + 3]);
+    const tint = palette.filter((c) => (x < 26 ? c[0] === PENCIL.lead || c[0] === PENCIL.wood : c[0] !== PENCIL.eraser || x >= 50)).reduce((best, c) => ((c[1] - r) ** 2 + (c[2] - g) ** 2 + (c[3] - b) ** 2 < best[0] ? [(c[1] - r) ** 2 + (c[2] - g) ** 2 + (c[3] - b) ** 2, c[0]] as [number, string] : best), [Infinity, ""] as [number, string])[1];
+    cells.push([x - GRID, GRID / 2 - y, tint]);
+  }
+  return cells;
+}
+
 
 function sample(mark: string, font: string) {
   const canvas = document.createElement("canvas");
@@ -20,7 +56,7 @@ function sample(mark: string, font: string) {
   context.rotate(TURNS[mark] ?? 0);
   context.fillText(mark, 0, GRID * 0.05);
   const { data } = context.getImageData(0, 0, GRID * 2, GRID);
-  const cells: [number, number][] = [];
+  const cells: Cell[] = [];
   for (let y = 0; y < GRID; y += 1) for (let x = 0; x < GRID * 2; x += 1) if (data[(y * GRID * 2 + x) * 4 + 3] > 120) cells.push([x - GRID, GRID / 2 - y]);
   return cells;
 }
@@ -44,7 +80,7 @@ export function VoxelGlyph({ mark, className = "" }: { mark: string; className?:
       renderer.setPixelRatio(Math.min(2, window.devicePixelRatio));
       element.appendChild(renderer.domElement);
       const font = getComputedStyle(document.body).getPropertyValue("--font-display").trim() || "sans-serif";
-      const cells = sample(mark, font);
+      const cells = mark === "✎" ? pencil() : sample(mark, font);
       const color = getComputedStyle(text).color;
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(30, 1, 1, 400);
@@ -59,6 +95,11 @@ export function VoxelGlyph({ mark, className = "" }: { mark: string; className?:
       const face = new THREE.PlaneGeometry(1.06, 1.06).translate(0, 0, 2);
       const material = new THREE.MeshLambertMaterial({ color });
       const mesh = new THREE.InstancedMesh(face, material, cells.length);
+      if (cells[0]?.[2]) {
+        material.color.set("#ffffff");
+        cells.forEach((cell, index) => mesh.setColorAt(index, new THREE.Color(cell[2])));
+        mesh.instanceColor!.needsUpdate = true;
+      }
       group.add(mesh);
       const shadow = new THREE.InstancedMesh(face, new THREE.MeshBasicMaterial({ color: "#1C2A43" }), cells.length);
       shadow.position.set(1.4, -1.4, -2.5);
