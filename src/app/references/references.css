@@ -201,3 +201,10 @@
 @media (max-width: 767px) {
   .copyright-check dl > div { grid-template-columns: 1fr; }
 }
+@media screen and (min-width: 900px) {
+  .reference-number { font-size: 40px; color: var(--ink); text-shadow: 1px 1px 0 var(--clay), 2px 2px 0 var(--clay), 3px 3px 0 var(--clay), 4px 4px 0 #B8694A, 5px 5px 0 #B8694A, 7px 9px 8px rgba(28, 42, 67, .18); transition: transform .35s var(--ease-out); }
+  .reference-item:hover .reference-number { transform: translate(-3px, -3px) rotate(-4deg); }
+  .copy-citation { background: var(--paper); box-shadow: 0 4px 0 var(--ink); translate: 0 -2px; transition: translate 140ms var(--ease-out), box-shadow 140ms var(--ease-out), background-color 160ms ease; }
+  .copy-citation:hover { translate: 0 -4px; box-shadow: 0 6px 0 var(--ink); }
+  .copy-citation:active { transform: none; translate: 0 2px; box-shadow: 0 0 0 var(--ink); }
+}
