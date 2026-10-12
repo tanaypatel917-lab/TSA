@@ -30,7 +30,7 @@ button:disabled { cursor: not-allowed; }
   .button-secondary { background: var(--paper); color: var(--ink); }
   .button-primary:active:not(:disabled) { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--ink); }
   .button-secondary:active:not(:disabled) { transform: translateY(2px); }
-  .button-primary:disabled, .button-secondary:disabled { box-shadow: none; background: #DDD8D0; color: #525C6E; border-color: #8A93A3; }
+  .button-primary:disabled, .button-secondary:disabled { box-shadow: inset 0 3px 0 rgba(28, 42, 67, .08); background: rgba(246, 239, 229, .55); color: #525C6E; border: 1.5px dashed #8A93A3; }
 }
 .text-link { display: inline-flex; align-items: center; gap: 20px; font-weight: 700; text-decoration: underline; }
 .small-note { font-size: 14px; line-height: 1.6; color: var(--muted); }
