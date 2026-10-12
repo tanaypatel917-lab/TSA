@@ -1338,3 +1338,9 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
 }
 .motion-setting select:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
 :is([type="text"], [type="search"], [type="email"], [type="url"], [type="number"], textarea, select):focus-visible { border-color: var(--ink); outline: 3px solid var(--ink); outline-offset: 4px; --tw-ring-color: transparent; }
+.prompt-editor textarea { box-shadow: 5px 5px 0 var(--line); transition: box-shadow .25s var(--ease-out), translate .25s var(--ease-out); }
+.prompt-editor textarea:focus { translate: -3px -3px; box-shadow: 8px 8px 0 var(--clay); }
+.draft-toolbar button { padding: 6px 12px; border: 1.5px solid var(--ink); border-radius: 4px; background: var(--paper); box-shadow: 2px 2px 0 var(--ink); font-weight: 700; text-decoration: none; transition: translate 140ms var(--ease-out), box-shadow 140ms var(--ease-out), background-color 160ms ease; }
+.draft-toolbar button:active:not(:disabled) { translate: 2px 2px; box-shadow: 0 0 0 var(--ink); }
+.draft-toolbar button:disabled { box-shadow: none; border-style: dashed; color: #525C6E; }
+@media (hover: hover) and (pointer: fine) { .draft-toolbar button:hover:not(:disabled) { background: var(--sky); } }
