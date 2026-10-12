@@ -17,6 +17,7 @@ import { WORLD_XP, worldOf } from "@/engine/progress";
 import { boostState, MOVE_KEYS, distance, inputFrom, nearest, startMover, step, type BoostState, type Point } from "@/engine/world";
 import { useProgress } from "@/state/ProgressProvider";
 import { useMotionPreference } from "../MotionPreferences";
+import { TokenLoader } from "../TokenLoader";
 import { MapMission } from "./MapMission";
 import { MissionBriefing, Stars } from "./MissionBriefing";
 import { MissionHud } from "./MissionHud";
@@ -479,7 +480,9 @@ export function WorldGame() {
     >
       <div ref={canvasHost} className="world-canvas" hidden={!drive} />
       {hitFlash && <span key={hit} className="world-hit-flash" aria-hidden="true" />}
-      {drive && sceneState !== "ready" && <p className="world-loading" role="status">Building the island…</p>}
+      {drive && sceneState !== "ready" && <div className="world-loading" role="status">
+        <TokenLoader label="Building the island" tokens={["Build", "ing", " the", " is", "land"]} />
+      </div>}
       {!drive && <div className="world-map-view">
         <WorldMap variant="full" collected={collected} stamped={stamped} onStation={openBriefing} onWord={(token) => showCard({ token, fresh: !collected.has(token.term) }, false)} />
       </div>}

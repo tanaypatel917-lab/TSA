@@ -4,7 +4,16 @@
 .world[data-mode="drive"] .world-stage:focus-visible { box-shadow: inset 0 0 0 4px var(--sky); }
 .world-canvas, .world-canvas canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 .world-canvas canvas { display: block; touch-action: none; }
-.world-loading { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-display), sans-serif; font-size: clamp(28px, 4vw, 52px); font-weight: 600; color: var(--paper); animation: world-pulse 1.4s ease-in-out infinite alternate; }
+.world-loading { position: absolute; inset: 0; display: grid; place-items: center; padding: clamp(16px, 3vw, 40px); color: var(--paper); }
+.token-loader { display: grid; justify-items: center; gap: clamp(12px, 2vw, 20px); width: min(100%, 880px); text-align: center; }
+.token-loader-kicker { margin: 0; color: var(--paper); font-size: clamp(11px, 1vw, 13px); font-weight: 800; letter-spacing: .15em; text-transform: uppercase; }
+.token-loader-row { display: flex; flex-wrap: nowrap; align-items: center; justify-content: center; gap: clamp(5px, 1vw, 12px); width: 100%; padding: 0 2px 5px; }
+.token-loader-chip { display: inline-flex; flex: 0 1 auto; align-items: center; justify-content: center; min-width: 0; padding: clamp(8px, 1.2vw, 14px) clamp(8px, 1.5vw, 18px); border: 1.5px solid var(--ink); border-radius: 4px; background: var(--paper); box-shadow: 0 4px 0 var(--ink); color: var(--ink); font-family: var(--font-display), sans-serif; font-size: clamp(24px, 4.5vw, 58px); font-weight: 650; line-height: 1; white-space: nowrap; animation-name: var(--token-animation); animation-duration: var(--token-cycle); animation-delay: calc(var(--i) * 350ms); animation-iteration-count: infinite; animation-timing-function: linear; }
+.token-loader-space { margin-right: .08em; color: rgba(28, 42, 67, .4); }
+.token-loader-meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px 16px; }
+.token-loader-count { padding: 5px 10px; border: 1px solid var(--paper); border-radius: 999px; background: var(--sky); box-shadow: 0 3px 0 var(--paper); color: var(--ink); font-size: 12px; font-weight: 800; white-space: nowrap; }
+.token-loader-caption { max-width: 500px; margin: 0; color: var(--paper); font-size: clamp(13px, 1.1vw, 15px); line-height: 1.5; }
+html[data-motion="reduced"] .token-loader-chip { animation: none; background: var(--clay); }
 @keyframes world-pulse { from { opacity: .45; } to { opacity: 1; } }
 
 .world-hud { position: absolute; z-index: 2; top: var(--hud); left: var(--hud); right: var(--hud); display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; pointer-events: none; }
@@ -127,7 +136,8 @@
   .station-actions .text-link { align-self: center; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .world-loading, .world-prompt, .word-card, .station-backdrop, .station-panel, .station-stamp[data-stamped="true"] { animation: none; }
+  .token-loader-chip { animation: none; background: var(--clay); }
+  .world-prompt, .word-card, .station-backdrop, .station-panel, .station-stamp[data-stamped="true"] { animation: none; }
 }
 
 .world-stage[data-shake="a"] { animation: world-shake-a 340ms var(--ease-out); }
