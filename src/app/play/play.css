@@ -346,3 +346,12 @@ html[data-motion="full"] .world-toggle:hover:not([aria-pressed="true"]) { transl
 .board li:first-child, .board li[data-new="true"] { box-shadow: 3px 3px 0 var(--ink); }
 .board-rank { display: grid; place-items: center; width: 24px; height: 24px; border: 1.5px solid var(--ink); border-radius: 50%; background: var(--paper); box-shadow: 0 2px 0 var(--clay); font-size: 12px; line-height: 1; }
 .board li:first-child .board-rank { background: var(--clay); box-shadow: 0 2px 0 var(--ink); }
+.results-figures { border-radius: 4px; background: var(--paper); box-shadow: 5px 5px 0 var(--ink); }
+.results-figures dd { text-shadow: 1px 1px 0 #B8694A, 2px 2px 0 #8E5037, 4px 5px 5px rgba(28, 42, 67, .12); }
+.results-figures dd span { text-shadow: none; }
+.results-figures dd .results-best { white-space: nowrap; font-size: 12px; }
+.results-rank { box-shadow: 0 4px 0 var(--ink); translate: 0 -2px; }
+@media (max-width: 599px) {
+  .results-figures > div { padding-inline: 4px; }
+  .results-figures dd .results-best { padding-inline: 7px; font-size: 10px; }
+}
