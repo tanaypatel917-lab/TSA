@@ -391,6 +391,7 @@ button:disabled { cursor: not-allowed; }
   .lesson-reading .takeaways h2 { font-size: 30px; }
   .lesson-controls { flex-direction: column-reverse; align-items: stretch; gap: 20px; }
   .lesson-controls .button-primary { width: 100%; font-size: 15px; }
+  .lesson-controls .button-secondary { width: 100%; justify-content: center; }
   .prompt-lab { padding-top: 24px; }
   .prompt-grid { grid-template-columns: 1fr; gap: 27px; }
   .prompt-brief { padding: 24px; }
