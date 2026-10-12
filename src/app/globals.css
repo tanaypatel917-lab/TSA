@@ -1340,6 +1340,9 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
 @media (min-width: 900px) {
   .poster-tools .poster-art { font-size: 160px; bottom: 100px; right: -6px; }
 }
+@media (min-width: 1800px) {
+  .poster-tools .poster-art { font-size: 130px; bottom: 140px; right: 16px; }
+}
 
 :is(.demo-temperature, .lab-field) input[type="range"] { appearance: none; height: 24px; background: transparent; cursor: pointer; }
 :is(.demo-temperature, .lab-field) input[type="range"]::-webkit-slider-runnable-track { height: 10px; border: 1.5px solid var(--ink); border-radius: 999px; background: var(--paper); box-shadow: inset 0 2px 0 rgba(28, 42, 67, .14); }
