@@ -6,6 +6,8 @@ test.beforeEach(async ({ page }) => {
 
 const lab = (page: Page, title: string) => page.getByRole("figure", { name: title });
 const pipTitle = "Meet Pip. Is it thinking, or following a menu?";
+const fakePageTitle = "This page looks real. Is it?";
+const fakePageAddress = "brightside-news.example/science/naps-boost-scores";
 
 async function tabUntilFocused(page: Page, target: ReturnType<Page["getByRole"]>) {
   for (let index = 0; index < 100; index += 1) {
@@ -155,4 +157,77 @@ test("the privacy lesson only calls a prompt safe once every personal detail is 
   await expect(redact.locator(".lab-score")).toContainText("8 of 8");
   await redact.getByRole("button", { name: "Send to the chatbot" }).click();
   await expect(redact.getByRole("status")).toContainText("Safe to send");
+});
+
+test("the fake-page lab finds clues, reveals the fabrication, and resets", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/modules/ethical-ai/lessons/misinformation/");
+  const fakePage = lab(page, fakePageTitle);
+  const counter = fakePage.locator(".fakepage-counter");
+  const address = fakePage.getByRole("button", { name: fakePageAddress });
+  const byline = fakePage.getByRole("button", { name: "Dana Whitfield" });
+
+  await expect(fakePage.getByRole("button", { name: "Reveal the truth" })).toBeVisible();
+  await address.click();
+  await byline.click();
+  await expect(counter).toHaveText("2 of 5 clues found");
+  await expect(address).toHaveAttribute("aria-pressed", "true");
+  await expect(byline).toHaveAttribute("aria-pressed", "true");
+
+  await fakePage.getByRole("button", { name: "31% higher" }).click();
+  const stamp = fakePage.getByText("THIS DOESN'T EXIST.", { exact: true });
+  const revealHeading = fakePage.getByRole("heading", { name: "The truth" });
+  await expect(stamp).toBeVisible();
+  await expect(revealHeading).toBeFocused();
+  const review = fakePage.locator(".fakepage-review-list");
+  await expect(review.locator('[data-state="found"]')).toHaveCount(3);
+  await expect(review.locator('[data-state="missed"]')).toHaveCount(2);
+
+  await fakePage.getByRole("button", { name: "Try again" }).click();
+  await expect(counter).toHaveText("0 of 5 clues found");
+  await expect(stamp).toHaveCount(0);
+  await expect(address).toHaveAttribute("aria-pressed", "false");
+
+  await fakePage.getByRole("button", { name: "Reveal the truth" }).click();
+  await expect(stamp).toBeVisible();
+  await expect(revealHeading).toBeFocused();
+  await expect(review.locator('[data-state="found"]')).toHaveCount(0);
+  await expect(review.locator('[data-state="missed"]')).toHaveCount(5);
+  await fakePage.getByRole("button", { name: "Try again" }).click();
+
+  const hood = fakePage.getByRole("button", { name: "Look under the hood" });
+  await hood.click();
+  await expect(hood).toHaveAttribute("aria-expanded", "true");
+  await expect(fakePage.getByText("Every clue was planted on purpose:", { exact: true })).toBeVisible();
+  for (const name of ["Address", "Byline", "31% statistic", "Quote", "Share count"]) {
+    await expect(fakePage.getByText(name, { exact: true })).toBeVisible();
+  }
+});
+
+test("the fake-page lab works by keyboard with reduced motion at 360px", async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 844 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/modules/ethical-ai/lessons/misinformation/");
+  await expect(page.locator("html")).toHaveAttribute("data-motion", "reduced");
+  const fakePage = lab(page, fakePageTitle);
+  const address = fakePage.getByRole("button", { name: fakePageAddress });
+  const statistic = fakePage.getByRole("button", { name: "31% higher" });
+  const byline = fakePage.getByRole("button", { name: "Dana Whitfield" });
+
+  await tabUntilFocused(page, address);
+  await page.keyboard.press("Enter");
+  await page.keyboard.press("Tab");
+  await expect(statistic).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(fakePage.locator(".fakepage-counter")).toHaveText("2 of 5 clues found");
+  await page.keyboard.press("Tab");
+  await expect(byline).toBeFocused();
+  await page.keyboard.press("Enter");
+
+  const stamp = fakePage.getByText("THIS DOESN'T EXIST.", { exact: true });
+  await expect(stamp).toBeVisible();
+  await expect(fakePage.getByRole("heading", { name: "The truth" })).toBeFocused();
+  expect(await stamp.evaluate((element) => getComputedStyle(element).animationName)).toBe("none");
+  const widths = await page.evaluate(() => ({ viewport: window.innerWidth, document: document.documentElement.scrollWidth }));
+  expect(widths.document).toBeLessThanOrEqual(widths.viewport);
 });
