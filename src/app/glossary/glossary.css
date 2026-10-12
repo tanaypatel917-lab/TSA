@@ -41,3 +41,5 @@ html[data-motion="full"] .flashcard { transform: perspective(1400px) rotateX(var
 .study-shuffle:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--ink); }
 @media (max-width: 899px) { .flashcard { margin-right: 10px; } }
 @media (prefers-reduced-motion: reduce) { .study-shuffle, .study-shuffle:hover, .study-shuffle:active { transition: none; transform: none; } }
+.study-summary { background: var(--paper); }
+.study-summary h2 { text-shadow: 1px 1px 0 var(--clay), 2px 2px 0 var(--clay), 3px 3px 0 #B8694A, 4px 4px 0 #B8694A, 8px 10px 9px rgba(28, 42, 67, .18); }
