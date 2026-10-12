@@ -116,7 +116,8 @@
 }
 @media (max-width: 767px) {
   .world { min-height: calc(100svh - 65px); }
-  .world[data-mode="map"] { padding-top: 212px; }
+  .world[data-mode="map"] { display: flex; flex-direction: column; padding-top: var(--hud); }
+  .world[data-mode="map"] .world-hud { position: relative; inset: auto; order: -1; gap: 14px; margin-bottom: 24px; }
   .world-counts > div { min-width: 0; flex: 1 1 88px; }
   .world-hud { flex-direction: column; }
   .station-head { padding-right: 0; }
