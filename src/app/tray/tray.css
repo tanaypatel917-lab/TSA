@@ -1,0 +1,43 @@
+.tray-content { padding-block: clamp(44px, 6vw, 82px) 100px; }
+.tray-actions { display: flex; flex-wrap: wrap; gap: 14px; }
+.tray-status { margin-top: 28px; font-size: 14px; font-weight: 600; }
+.tray-error { margin-top: 12px; color: #8E3B2D; font-size: 14px; }
+.tray-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin: 24px 0 0; padding: 0; list-style: none; }
+.tray-term { min-width: 0; padding: clamp(20px, 2.4vw, 30px); border: 1.5px solid var(--ink); background: var(--paper); box-shadow: 7px 7px 0 var(--ink); }
+.tray-term-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
+.tray-term h2 { font-family: var(--font-display), sans-serif; font-size: clamp(28px, 3vw, 42px); font-weight: 650; line-height: 1.02; letter-spacing: -.035em; }
+.tray-definition { max-width: 48ch; margin-top: 15px; font-size: 17px; line-height: 1.6; }
+.tray-lesson-links { margin-top: 20px; font-size: 14px; line-height: 1.55; }
+.tray-lesson-links a { text-decoration: underline; text-underline-offset: 3px; }
+.tray-entry-remove { flex: none; padding: 5px 0; color: var(--ink); font-size: 13px; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.tray-empty { padding: 26px 0; border-top: 1.5px solid var(--ink); font-size: 20px; }
+.tray-empty .text-link { margin-top: 18px; }
+.tray-print-heading, .tray-own-words, .tray-print-footer { display: none; }
+@media (max-width: 767px) {
+  .tray-content { padding-block: 38px 72px; }
+  .tray-list { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .tray-term { padding: 20px; box-shadow: 5px 5px 0 var(--ink); }
+  .tray-definition { font-size: 16px; }
+}
+@media print {
+  @page { margin: 15mm; }
+  html, body { background: #fff !important; color: #000 !important; }
+  body, body * { box-shadow: none !important; text-shadow: none !important; }
+  .site-header, .site-footer, .skip-link, .badge-toast, .intro-gate, .tour-guide, .tray-page > .page-hero, .tray-actions, .tray-entry-remove, .tray-lesson-links { display: none !important; }
+  .tray-page, .tray-content { width: auto; max-width: none; margin: 0; padding: 0; }
+  .tray-content { color: #000 !important; }
+  .tray-print-heading { display: block; margin-bottom: 18pt; padding-bottom: 10pt; border-bottom: 1.5pt solid #000; }
+  .tray-print-heading .wordmark { display: block; color: #000; font-size: 18pt; }
+  .tray-print-heading h1 { margin-top: 10pt; color: #000; font-family: var(--font-display), sans-serif; font-size: 28pt; line-height: 1.05; }
+  .tray-status, .tray-error { display: none !important; }
+  .tray-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18pt 22pt; margin: 0; padding: 0; }
+  .tray-term { break-inside: avoid; min-width: 0; padding: 0 0 12pt; border: 0; border-bottom: 1pt solid #777; background: #fff; color: #000; }
+  .tray-term-heading { display: block; }
+  .tray-term h2 { color: #000; font-size: 18pt; }
+  .tray-definition { max-width: none; margin-top: 5pt; color: #000; font-size: 11pt; line-height: 1.4; }
+  .tray-own-words { display: flex; flex-direction: column; gap: 4pt; margin-top: 11pt; color: #000; font-size: 9.5pt; }
+  .tray-own-words > span:last-child { display: block; width: 100%; height: 13pt; border-bottom: 1pt solid #000; color: transparent; font-size: 0; }
+  .tray-print-footer { display: block; margin-top: 24pt; padding-top: 7pt; border-top: 1pt solid #000; color: #000; font-family: monospace; font-size: 8pt; letter-spacing: .06em; text-align: center; }
+  .tray-empty { display: block; color: #000; }
+  .tray-empty a { color: #000; }
+}
