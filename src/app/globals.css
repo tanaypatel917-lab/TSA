@@ -1320,3 +1320,10 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
 :is(.demo-temperature, .lab-field) input[type="range"]:active::-webkit-slider-thumb { translate: 0 2px; box-shadow: 0 1px 0 var(--ink); }
 :is(.demo-temperature, .lab-field) input[type="range"]:focus-visible { outline: 3px solid var(--clay); outline-offset: 4px; border-radius: 6px; }
 @media (forced-colors: active) { :is(.demo-temperature, .lab-field) input[type="range"] { appearance: auto; } }
+
+:is(.glossary-empty, .directory-empty, .study-empty):is(div, p) { position: relative; overflow: hidden; padding: 28px 132px 28px 28px; border: 2px dashed var(--ink); border-radius: 6px; background: rgba(246, 239, 229, .75); }
+:is(.glossary-empty, .directory-empty, .study-empty):is(div, p)::after { content: "?"; position: absolute; right: 30px; top: 50%; translate: 0 -54%; rotate: -8deg; font-family: var(--font-display), sans-serif; font-size: 104px; font-weight: 700; line-height: 1; color: var(--clay); text-shadow: 1px 1px 0 #B8694A, 2px 2px 0 #A35C40, 3px 3px 0 #8E5037, 4px 4px 0 #8E5037, 7px 9px 9px rgba(28, 42, 67, .18); pointer-events: none; }
+@media (max-width: 599px) {
+  :is(.glossary-empty, .directory-empty, .study-empty):is(div, p) { padding: 22px 88px 22px 20px; }
+  :is(.glossary-empty, .directory-empty, .study-empty):is(div, p)::after { right: 18px; font-size: 68px; text-shadow: 1px 1px 0 #B8694A, 2px 2px 0 #8E5037, 4px 5px 6px rgba(28, 42, 67, .14); }
+}
