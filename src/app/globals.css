@@ -1302,3 +1302,9 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
 @media (min-width: 768px) and (max-width: 899px) {
   .rubric-list:not(.rubric-compact) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
+@media (min-width: 900px) and (max-width: 1399px) {
+  .poster-ethics .poster-art { font-size: 220px; bottom: 36px; right: -10px; }
+}
+@media (min-width: 900px) {
+  .poster-tools .poster-art { font-size: 160px; bottom: 100px; right: -6px; }
+}
