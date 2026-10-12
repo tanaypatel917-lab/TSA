@@ -145,6 +145,11 @@ button:disabled { cursor: not-allowed; }
 .judgment-copy > p:not(.judgment-lead), .judgment-copy details p { font-size: 17px; line-height: 1.75; }
 .judgment-copy details { margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--clay); }
 .judgment-copy summary { font-weight: 600; }
+.judgment-copy summary, .device-raw summary, .mobile-contents summary { display: flex; align-items: center; gap: 12px; list-style: none; text-decoration: none; }
+.judgment-copy summary::-webkit-details-marker, .device-raw summary::-webkit-details-marker, .mobile-contents summary::-webkit-details-marker { display: none; }
+.judgment-copy summary::before, .device-raw summary::before, .mobile-contents summary::before { content: "+"; display: grid; place-items: center; flex: none; width: 26px; height: 26px; border: 1.5px solid var(--ink); border-radius: 6px; background: var(--paper); color: var(--ink); font-size: 18px; font-weight: 700; line-height: 1; box-shadow: 2px 2px 0 var(--clay); transition: translate .15s var(--ease-out), box-shadow .15s var(--ease-out), background-color .15s; }
+.judgment-copy summary:hover::before, .device-raw summary:hover::before, .mobile-contents summary:hover::before { background: var(--sky); }
+.judgment-copy details[open] > summary::before, .device-raw[open] > summary::before, .mobile-contents[open] > summary::before { content: "\2212"; translate: 1px 1px; box-shadow: 1px 1px 0 var(--clay); }
 .judgment-copy details p { margin-top: 18px; }
 .judgment-copy .text-link { margin-top: 20px; font-size: 14px; }
 .human-judgment :focus-visible { outline-color: var(--sky); }
