@@ -170,3 +170,14 @@ html[data-motion="reduced"] .align-yes { animation: none !important; }
 @media (forced-colors: active) {
   .policy-check input[type="checkbox"] { appearance: auto; }
 }
+
+.checker-error { box-shadow: 3px 3px 0 var(--ink); }
+.checker-table {
+  box-shadow: 5px 5px 0 var(--ink);
+  background:
+    linear-gradient(to left, var(--paper) 40%, rgba(246, 239, 229, 0)) right / 48px 100% no-repeat local,
+    radial-gradient(farthest-side at 100% 50%, rgba(28, 42, 67, .28), rgba(28, 42, 67, 0)) right / 16px 100% no-repeat scroll,
+    var(--paper);
+}
+.checker-table :is(th, td):first-child { position: sticky; left: 0; z-index: 1; background: var(--paper); box-shadow: inset -1.5px 0 0 var(--line); }
+.checker-table thead th:first-child { background: var(--ink); box-shadow: inset -1.5px 0 0 rgba(246, 239, 229, .25); }
