@@ -10,6 +10,7 @@ const fakePageTitle = "This page looks real. Is it?";
 const fakePageAddress = "brightside-news.example/science/naps-boost-scores";
 const juryTitle = "Meet the models. Why do they disagree?";
 const detectorTitle = "Can a detector really tell?";
+const diceTitle = "Roll a challenge. Write the prompt.";
 
 async function tabUntilFocused(page: Page, target: ReturnType<Page["getByRole"]>) {
   for (let index = 0; index < 100; index += 1) {
@@ -322,5 +323,52 @@ test("both ethics labs fit at 360px without horizontal overflow", async ({ page 
   await page.goto("/modules/ethical-ai/lessons/fairness/");
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(360);
   await page.goto("/modules/ethical-ai/lessons/academic-integrity/");
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(360);
+});
+
+test("prompt challenge dice checks a complete prompt and rerolls", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/modules/ai-tools/lessons/prompt-anatomy/");
+  const dice = lab(page, diceTitle);
+  const firstChallenge = "Explain photosynthesis to a 10-year-old in 3 sentences";
+  await expect(dice.locator(".prompt-dice-challenge")).toContainText(firstChallenge);
+  const input = dice.getByRole("textbox", { name: "Your prompt" });
+  await input.fill("Act as a friendly tutor. Explain photosynthesis to a 10-year-old in 3 sentences using simple words.");
+  await expect(dice.locator(".prompt-dice-meter-row strong")).toHaveText("5 of 5");
+  await expect(dice.locator(".prompt-dice-meter-copy")).toHaveText("Specific: a challenge you can check.");
+
+  await dice.getByRole("button", { name: "Roll the dice" }).click();
+  await expect(dice.locator(".prompt-dice-challenge")).not.toContainText(firstChallenge);
+  await expect(dice.getByRole("status")).toContainText("New challenge:");
+  const hood = dice.getByRole("button", { name: "Look under the hood" });
+  await hood.click();
+  await expect(hood).toHaveAttribute("aria-expanded", "true");
+  await expect(dice.locator(".prompt-dice-hood")).toContainText("act as / you are / as a");
+  await expect(dice.locator(".prompt-dice-hood")).toContainText("12 or more words");
+});
+
+test("prompt challenge dice works with keyboard only", async ({ page }) => {
+  await page.goto("/modules/ai-tools/lessons/prompt-anatomy/");
+  const dice = lab(page, diceTitle);
+  const challenge = dice.locator(".prompt-dice-challenge");
+  const firstChallenge = await challenge.innerText();
+  const input = dice.getByRole("textbox", { name: "Your prompt" });
+  await tabUntilFocused(page, input);
+  await page.keyboard.type("Act as a friendly tutor. Explain photosynthesis to a 10-year-old in 3 sentences using simple words.");
+  await expect(dice.locator(".prompt-dice-meter-row strong")).toHaveText("5 of 5");
+  const roll = dice.getByRole("button", { name: "Roll the dice" });
+  await tabUntilFocused(page, roll);
+  await page.keyboard.press("Enter");
+  await expect(challenge).not.toHaveText(firstChallenge);
+  const hood = dice.getByRole("button", { name: "Look under the hood" });
+  await tabUntilFocused(page, hood);
+  await page.keyboard.press("Enter");
+  await expect(hood).toHaveAttribute("aria-expanded", "true");
+});
+
+test("prompt challenge dice fits at 360px without horizontal overflow", async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 844 });
+  await page.goto("/modules/ai-tools/lessons/prompt-anatomy/");
+  await expect(lab(page, diceTitle)).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(360);
 });
