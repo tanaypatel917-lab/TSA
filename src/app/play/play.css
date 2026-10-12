@@ -305,12 +305,10 @@ html[data-motion="full"] .countdown:not(.is-banner)::after { content: ""; positi
   .countdown { animation: none; }
 }
 html[data-motion="reduced"] .countdown { animation: none; }
-@media (min-width: 900px) {
-  .world-toggle { box-shadow: 3px 4px 0 var(--clay); transition: background-color 160ms ease, color 160ms ease, transform 160ms ease, translate .2s var(--ease-out), box-shadow .2s var(--ease-out); }
-  .world-toggle[aria-pressed="true"] { translate: 2px 3px; box-shadow: 1px 1px 0 var(--clay), inset 0 3px 0 rgba(0, 0, 0, .25); }
-  .world-toggle + .world-toggle { margin-left: 8px; }
-  html[data-motion="full"] .world-toggle:hover:not([aria-pressed="true"]) { translate: -1px -2px; box-shadow: 5px 7px 0 var(--clay); }
-}
+.world-toggle { box-shadow: 3px 4px 0 var(--clay); transition: background-color 160ms ease, color 160ms ease, transform 160ms ease, translate .2s var(--ease-out), box-shadow .2s var(--ease-out); }
+.world-toggle[aria-pressed="true"] { translate: 2px 3px; box-shadow: 1px 1px 0 var(--clay), inset 0 3px 0 rgba(0, 0, 0, .25); }
+.world-toggle + .world-toggle { margin-left: 8px; }
+html[data-motion="full"] .world-toggle:hover:not([aria-pressed="true"]) { translate: -1px -2px; box-shadow: 5px 7px 0 var(--clay); }
 .mission-quit { border-color: var(--paper); box-shadow: 3px 3px 0 var(--clay); transition: background-color 160ms ease, color 160ms ease, translate .2s var(--ease-out), box-shadow .2s var(--ease-out); }
 .mission-quit[aria-pressed="true"] { translate: 2px 2px; box-shadow: 1px 1px 0 var(--clay), inset 0 3px 0 rgba(0, 0, 0, .25); }
 .mission-quit:active { translate: 3px 3px; box-shadow: 0 0 0 var(--clay); }
