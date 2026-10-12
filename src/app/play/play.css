@@ -327,3 +327,4 @@ html[data-motion="full"] .world-toggle:hover:not([aria-pressed="true"]) { transl
 .map-station-button[data-dark="true"] { box-shadow: 0 0 0 2px var(--ink), 0 5px 0 var(--ink); }
 .map-station-button[data-stamped="true"] { box-shadow: 0 0 0 5px var(--sky), 0 0 0 7px var(--ink), 0 9px 0 var(--ink); }
 .map-word-button:not([data-collected="true"]) { box-shadow: 3px 0 0 var(--ink); }
+.world-prompt .button-primary { white-space: nowrap; }

@@ -1287,3 +1287,9 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
   .badge-patch[data-earned="true"] .badge-mark { text-shadow: 1px 1px 0 rgba(28, 42, 67, .55), 2px 2px 0 rgba(28, 42, 67, .55), 3px 3px 0 rgba(28, 42, 67, .55); }
   .badge-patch[data-earned="true"][data-tone="ink"] .badge-mark { color: var(--clay); text-shadow: 1px 1px 0 var(--paper), 2px 2px 0 var(--paper), 3px 3px 0 var(--paper); }
 }
+@media (max-width: 899px) {
+  .chapter-number { font-family: var(--font-display), sans-serif; font-size: 30px; font-weight: 650; line-height: 1; padding-top: 4px; letter-spacing: -.03em; text-shadow: 1px 1px 0 #B8694A, 2px 2px 0 #A35C40, 3px 3px 0 #8E5037, 5px 6px 6px rgba(28, 42, 67, .14); }
+  .chapter-status { border-color: var(--ink); background: var(--paper); color: var(--ink); box-shadow: 0 3px 0 var(--ink); translate: 0 -2px; }
+  .chapter-status[data-state="complete"] { translate: 0 1px; box-shadow: 0 1px 0 var(--ink), inset 0 2px 0 rgba(0, 0, 0, .12); }
+}
+@media (max-width: 767px) { .chapter-number { font-size: 22px; padding-top: 6px; text-shadow: 1px 1px 0 #B8694A, 2px 2px 0 #8E5037, 3px 4px 4px rgba(28, 42, 67, .12); } }
