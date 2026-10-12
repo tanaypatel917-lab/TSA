@@ -286,3 +286,6 @@ html[data-intro-page="true"][data-motion="full"] { scroll-behavior: smooth; }
   html[data-motion="full"] .finale-actions .button-secondary:hover { translate: -2px -2px; box-shadow: 6px 6px 0 var(--ink); background: var(--sky); }
   .finale-actions .button-secondary:active { translate: 3px 3px; box-shadow: 1px 1px 0 var(--ink); }
 }
+.act-chips button { background: var(--paper); box-shadow: 3px 3px 0 var(--ink); transition: background-color 160ms ease, color 160ms ease, translate 140ms var(--ease-out), box-shadow 140ms var(--ease-out); }
+.act-chips button[aria-pressed="true"] { translate: 2px 2px; box-shadow: 1px 1px 0 var(--ink), inset 0 2px 0 rgba(0, 0, 0, .25); }
+.act-chips button:active { transform: none; translate: 3px 3px; box-shadow: 0 0 0 var(--ink); }

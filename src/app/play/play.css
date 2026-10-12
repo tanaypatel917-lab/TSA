@@ -314,3 +314,6 @@ html[data-motion="reduced"] .countdown { animation: none; }
 .mission-quit[aria-pressed="true"] { translate: 2px 2px; box-shadow: 1px 1px 0 var(--clay), inset 0 3px 0 rgba(0, 0, 0, .25); }
 .mission-quit:active { translate: 3px 3px; box-shadow: 0 0 0 var(--clay); }
 @media (hover: hover) and (pointer: fine) { .mission-quit:hover:not([aria-pressed="true"]) { background: rgba(246, 239, 229, .12); } }
+.world-word-list button { box-shadow: 0 3px 0 var(--clay); transition: background-color 160ms ease, color 160ms ease, translate 140ms var(--ease-out), box-shadow 140ms var(--ease-out); }
+.world-word-list button[data-collected="true"] { translate: 0 2px; box-shadow: 0 1px 0 var(--ink), inset 0 2px 0 rgba(28, 42, 67, .2); }
+.world-word-list button:active { transform: none; translate: 0 3px; box-shadow: 0 0 0 var(--clay); }
