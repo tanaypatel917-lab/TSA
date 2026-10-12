@@ -1365,3 +1365,6 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
 @media (min-width: 900px) {
   .not-found:not(:has(.nf-voxel[data-on="true"])) .not-found-mark { color: var(--clay); opacity: 1; text-shadow: 5px 5px 0 #B8694A, 10px 10px 0 #A35C40, 15px 15px 0 #8E4E36, 24px 30px 30px rgba(28, 42, 67, .22); }
 }
+
+.answer-choice[data-state="correct"] { background: var(--sky); }
+.answer-choice[data-state="incorrect"] { background: #F6DCCD; }
