@@ -1,7 +1,7 @@
 .teachers-basics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; margin-top: clamp(40px, 6vw, 72px); border-top: 2px solid var(--ink); }
 .teachers-basics article { padding: 24px 28px 8px 0; }
 .teachers-basics article + article { padding-left: 28px; border-left: 1px solid var(--ink); }
-.teachers-basics span { font-family: var(--font-display), sans-serif; font-size: 15px; font-weight: 700; color: var(--rust, #B5502B); }
+.teachers-basics span { display: block; font-family: var(--font-display), sans-serif; font-size: 34px; font-weight: 650; line-height: 1; letter-spacing: -.03em; color: var(--ink); text-shadow: 1px 1px 0 var(--clay), 2px 2px 0 var(--clay), 3px 3px 0 #B8694A, 5px 6px 6px rgba(28, 42, 67, .16); }
 .teachers-basics h2 { margin: 12px 0 8px; font-size: clamp(24px, 2.2vw, 32px); }
 .teachers-basics p { font-size: 16px; line-height: 1.6; color: var(--muted); }
 
