@@ -72,7 +72,7 @@ export function BadgeCoins({ earned }: { earned: string[] }) {
         const front = new THREE.MeshStandardMaterial({ map: texture, roughness: lit ? 0.35 : 0.9, metalness: lit ? 0.15 : 0, transparent: !lit, opacity: lit ? 1 : 0.8 });
         const mesh = new THREE.Mesh(geometry, [lit ? rimOn : rimOff, front, front]);
         const column = index % 5, row = Math.floor(index / 5);
-        const home = new THREE.Vector3((column - 2) * 2.1 + (row % 2 ? 0.5 : -0.25), (1 - row) * 2.2, lit ? 0.5 : 0);
+        const home = new THREE.Vector3((column - 2) * 2.1 + (row % 2 ? 0.375 : -0.375), (1 - row) * 2.2, lit ? 0.5 : 0);
         mesh.position.copy(home);
         wall.add(mesh);
         coins.push({ mesh, delay: index * 0.05, on: lit, flip: 0, home });
@@ -82,7 +82,7 @@ export function BadgeCoins({ earned }: { earned: string[] }) {
         const { width, height } = element.getBoundingClientRect();
         renderer.setSize(width, height, false);
         camera.aspect = width / Math.max(1, height);
-        camera.position.z = camera.aspect < 1.1 ? 22 : 18.5;
+        camera.position.z = Math.max(18.5, 6.1 / (Math.tan(Math.PI / 12) * camera.aspect));
         camera.updateProjectionMatrix();
       };
       size();

@@ -1275,3 +1275,6 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
 @media (max-width: 899px) {
   .glossary-group h2 { text-shadow: 1px 1px 0 var(--clay), 2px 2px 0 var(--clay), 3px 3px 0 var(--clay), 4px 4px 0 #B8694A, 6px 8px 8px rgba(28, 42, 67, .18); }
 }
+@media (min-width: 900px) {
+  .page-hero[data-stage] .page-hero-lede { max-width: min(520px, calc(50vw - 72px)); }
+}
