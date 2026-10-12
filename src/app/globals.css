@@ -1369,3 +1369,14 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
 .answer-choice[data-state="correct"] { background: var(--sky); }
 .answer-choice[data-state="incorrect"] { background: #F6DCCD; }
 .quiz-score:not(:has(.quiz-voxel[data-on="true"])) h2 { text-shadow: 2px 2px 0 var(--clay), 4px 4px 0 var(--clay), 6px 6px 0 #B8694A, 12px 14px 14px rgba(28, 42, 67, .14); }
+
+:is(.field-notes, .project-brief, .prompt-lab) .button-primary[aria-disabled="true"],
+:is(.field-notes, .project-brief, .prompt-lab) .button-primary[aria-disabled="true"]:hover,
+:is(.field-notes, .project-brief, .prompt-lab) .button-primary[aria-disabled="true"]:active {
+  background: var(--sky);
+  color: var(--ink);
+  box-shadow: inset 0 3px 0 rgba(28, 42, 67, .25);
+  transform: none;
+  translate: 0 3px;
+  cursor: default;
+}

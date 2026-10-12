@@ -92,9 +92,11 @@ test("Prompt Lab saves and clears a genuine local draft, with one completion", a
   await expect(page.getByRole("textbox", { name: "Your improved prompt" })).toHaveValue(prompt);
   await expect(page.getByRole("button", { name: "Complete prompt lab", exact: true })).toBeEnabled();
   await page.getByRole("button", { name: "Complete prompt lab", exact: true }).click();
-  await expect(page.getByRole("button", { name: "Activity complete", exact: true })).toBeDisabled();
+  const complete = page.getByRole("button", { name: "Activity complete", exact: true });
+  await expect(complete).toBeFocused();
+  await expect(complete).toHaveAttribute("aria-disabled", "true");
   await page.reload();
-  await expect(page.getByRole("button", { name: "Activity complete", exact: true })).toBeDisabled();
+  await expect(page.getByRole("button", { name: "Activity complete", exact: true })).toHaveAttribute("aria-disabled", "true");
   expect(await page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? "{}").xp, progressKey)).toBe(25);
   await page.getByRole("button", { name: "Clear draft", exact: true }).click();
   await expect(page.getByText("Draft cleared from this device.")).toBeVisible();
@@ -119,7 +121,9 @@ test("storage write failures retain editable text and truthful feedback", async 
   await expect(page.getByRole("textbox", { name: "Your improved prompt" })).toHaveValue(prompt);
   await expect(page.getByText(/Progress could not be saved on this device/)).toBeVisible();
   await page.getByRole("button", { name: "Complete prompt lab", exact: true }).click();
-  await expect(page.getByRole("button", { name: "Activity complete", exact: true })).toBeDisabled();
+  const complete = page.getByRole("button", { name: "Activity complete", exact: true });
+  await expect(complete).toBeFocused();
+  await expect(complete).toHaveAttribute("aria-disabled", "true");
 });
 
 test("home sampler checks the shared rubric without saving or completing activity", async ({ page }) => {

@@ -115,6 +115,35 @@ test("unknown routes show the designed 404 with recovery links", async ({ page }
   await expect(page).toHaveURL(/\/modules\/$/);
 });
 
+test("case-study completion keeps focus on the completion key", async ({ page }) => {
+  await seed(page);
+  await page.goto("/modules/ai-in-the-real-world/activity/");
+  const cases = page.locator(".field-case");
+  await expect(cases).toHaveCount(5);
+  for (let index = 0; index < 5; index += 1) {
+    if (index > 0) await cases.nth(index).locator(".field-toggle").click();
+    const field = cases.nth(index).locator("textarea");
+    await expect(field).toBeVisible();
+    await field.fill(`Reflection ${index + 1}`);
+  }
+  await page.getByRole("button", { name: "Complete case studies", exact: true }).click();
+  const complete = page.getByRole("button", { name: "Activity complete", exact: true });
+  await expect(complete).toBeFocused();
+  await expect(complete).toHaveAttribute("aria-disabled", "true");
+});
+
+test("capstone completion keeps focus on the completion key", async ({ page }) => {
+  await seed(page);
+  await page.goto("/modules/capstone/activity/");
+  const steps = page.locator(".brief-steps textarea");
+  await expect(steps).toHaveCount(5);
+  for (let index = 0; index < 5; index += 1) await steps.nth(index).fill(`Plan detail ${index + 1}`);
+  await page.getByRole("button", { name: "Complete capstone", exact: true }).click();
+  const complete = page.getByRole("button", { name: "Plan complete", exact: true });
+  await expect(complete).toBeFocused();
+  await expect(complete).toHaveAttribute("aria-disabled", "true");
+});
+
 test("the sorting activity keeps keyboard focus, reports each answer and completes once", async ({ page }) => {
   const activity = foundations.activity;
   if (activity.kind !== "classifier") throw new Error("AI Foundations should use the classifier activity");
