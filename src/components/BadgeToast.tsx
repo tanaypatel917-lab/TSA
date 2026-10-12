@@ -28,8 +28,12 @@ export function BadgeToast() {
   const { newBadgeToast, dismissBadgeToast } = useProgress();
   const { reduced } = useMotionPreference();
   const first = newBadgeToast[0];
-  useEffect(() => { if (first && !reduced) window.setTimeout(thud, 260); }, [first, reduced]);
-  if (!newBadgeToast.length) return null;
-  const badge = BADGES.find((item) => item.id === newBadgeToast[0]);
-  return <>{!reduced && <div key={first} className="badge-stamp" aria-hidden="true"><BadgeBurst mark={badge?.mark ?? "*"} name={badge?.name ?? ""} /><span className="badge-stamp-disc"><span>{badge?.mark ?? "*"}</span><small>{badge?.name}</small></span></div>}<div aria-live="polite" className="badge-toast"><p>New badge unlocked</p><strong>{badge?.name ?? newBadgeToast[0]}</strong><p>{badge?.description}</p><button aria-label="Dismiss badge notification" onClick={dismissBadgeToast}>×</button></div></>;
+  useEffect(() => { if (!first || reduced) return; window.setTimeout(thud, 260); }, [first, reduced]);
+  const badge = BADGES.find((item) => item.id === first);
+  return <div className="badge-toast-live" aria-live="polite" aria-atomic="true">
+    {first && <>
+      {!reduced && <div key={first} className="badge-stamp" aria-hidden="true"><BadgeBurst mark={badge?.mark ?? "*"} name={badge?.name ?? ""} /><span className="badge-stamp-disc"><span>{badge?.mark ?? "*"}</span><small>{badge?.name}</small></span></div>}
+      <div className="badge-toast"><p>New badge unlocked</p><strong>{badge?.name ?? first}</strong><p>{badge?.description}</p><button aria-label="Dismiss badge notification" onClick={() => { const last = newBadgeToast.length === 1; dismissBadgeToast(); if (last) document.getElementById("main")?.focus({ preventScroll: true }); }}>×</button></div>
+    </>}
+  </div>;
 }

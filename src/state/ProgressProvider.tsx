@@ -26,7 +26,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
   const [newBadgeToast, setNewBadgeToast] = useState<string[]>([]);
   const [storageError, setStorageError] = useState("");
   const [importFeedback, setImportFeedback] = useState("");
-  const dismissBadgeToast = useCallback(() => setNewBadgeToast([]), []);
+  const dismissBadgeToast = useCallback(() => setNewBadgeToast((current) => current.slice(1)), []);
 
   useEffect(() => {
     setState(loadProgress());

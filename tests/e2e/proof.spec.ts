@@ -83,6 +83,27 @@ test("the complete lesson preserves content, mobile outline and completion ident
   expect(await page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? "{}").xp, progressKey)).toBe(10);
 });
 
+test("the first badge uses a persistent live region and final dismissal returns focus", async ({ page }) => {
+  await page.addInitScript(({ key, state }) => localStorage.setItem(key, JSON.stringify(state)), { key: progressKey, state: { ...initialState, completedActivities: ["tools"] } });
+  await page.goto(lessonPath);
+  const live = page.locator(".badge-toast-live");
+  const toast = live.locator(".badge-toast");
+  await expect(live).toHaveAttribute("aria-live", "polite");
+  await expect(toast).toHaveCount(0);
+  await page.getByRole("button", { name: "Mark complete & continue" }).click();
+  await expect(toast).toContainText("New badge unlocked");
+  await expect(toast).toContainText("First Steps");
+  const dismiss = live.getByRole("button", { name: "Dismiss badge notification" });
+  await dismiss.focus();
+  await expect(dismiss).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(toast).toContainText("Prompt Engineer");
+  await expect(dismiss).toBeFocused();
+  while (await toast.count()) await page.keyboard.press("Enter");
+  await expect(toast).toHaveCount(0);
+  await expect(page.locator("#main")).toBeFocused();
+});
+
 test("Prompt Lab saves and clears a genuine local draft, with one completion", async ({ page }) => {
   await page.goto(promptPath);
   await page.getByRole("textbox", { name: "Your improved prompt" }).fill(prompt);
