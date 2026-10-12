@@ -275,3 +275,6 @@ html[data-motion="full"] .system-arrow i { animation: system-flow 700ms linear i
 .lesson-outline .outline-terms li { margin: 0; }
 .lesson-outline .outline-terms a { display: inline-block; }
 .lesson-outline .outline-terms a:hover { text-decoration: none; }
+@media (min-width: 900px) and (max-width: 1279px) {
+  .rail[data-mode="scrub"] .chapter-mark { top: 32%; font-size: clamp(170px, 30vh, 260px); }
+}
