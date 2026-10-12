@@ -1271,3 +1271,15 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
   .takeaways li:nth-child(even) { transform: translateX(8px); }
   .takeaways li:nth-child(even):hover { transform: translate(8px, -4px); }
 }
+@media (max-width: 899px) {
+  .learning-path li { position: relative; padding: 14px 14px 18px; border: 1.5px solid var(--ink); border-radius: 4px; background: var(--paper); box-shadow: 4px 4px 0 var(--ink); }
+  .learning-path li:nth-child(2) { background: var(--sky); }
+  .learning-path li:nth-child(4) { background: var(--clay); }
+  .learning-path li:nth-child(even) { margin-top: 16px; }
+  .learning-path li > span { display: block; font-family: var(--font-display), sans-serif; font-size: 40px; font-weight: 650; line-height: .9; letter-spacing: -.04em; color: var(--ink); text-shadow: 1px 1px 0 var(--clay), 2px 2px 0 var(--clay), 3px 3px 0 #B8694A, 5px 6px 6px rgba(28, 42, 67, .16); }
+  .learning-path li:nth-child(4) > span { color: var(--paper); text-shadow: 1px 1px 0 var(--ink), 2px 2px 0 var(--ink), 3px 3px 0 var(--ink); }
+  .learning-path h3 { font-size: 26px; margin-top: 12px; }
+  .learning-path li p { font-size: 14px; }
+  .closing-mark { text-shadow: 2px 2px 0 #B8694A, 4px 4px 0 #A35C40, 6px 6px 0 #8E5037, 12px 14px 12px rgba(28, 42, 67, .22); }
+  .home-closing h2 { text-shadow: 1px 1px 0 #B8694A, 2px 2px 0 #A35C40, 3px 3px 0 #8E5037, 6px 8px 8px rgba(28, 42, 67, .16); }
+}
