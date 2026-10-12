@@ -163,3 +163,4 @@ html[data-motion="reduced"] .map-step[data-next="true"]::after { animation: none
   .cert-mark { font-size: 76px; text-shadow: 1px 1px 0 #B8694A, 2px 2px 0 #B8694A, 3px 3px 0 #A35C40, 4px 4px 0 #A35C40, 5px 5px 0 #8E5037, 9px 11px 10px rgba(28, 42, 67, .2); }
 }
 .mini-badges li[data-earned="false"] .mini-mark { color: #E3D5C2; text-shadow: -1px -1px 0 rgba(142, 80, 55, .42), -2px -2px 0 rgba(142, 80, 55, .12), 1px 1px 0 rgba(255, 255, 255, .85); }
+.file-contents dd { text-shadow: 1px 1px 0 var(--clay), 2px 2px 0 var(--clay), 3px 3px 0 #B8694A, 6px 8px 8px rgba(28, 42, 67, .16); }
