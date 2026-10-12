@@ -228,6 +228,8 @@ html[data-motion="full"] .system-arrow i { animation: system-flow 700ms linear i
 .rail[data-mode="scrub"] .chapter-meta strong { font-size: 19px; }
 .rail[data-mode="scrub"] .chapter-row-facts { grid-area: side; align-self: end; padding-top: 16px; border-top: 1.5px solid currentColor; }
 .rail[data-mode="scrub"] .chapter-status { border-color: currentColor; }
+.rail[data-mode="scrub"] .chapter-status { border-color: var(--ink); background: var(--paper); color: var(--ink); box-shadow: 0 3px 0 #8E5037; translate: 0 -2px; }
+.rail[data-mode="scrub"] .chapter-status[data-state="complete"] { background: var(--sky); translate: 0 1px; box-shadow: 0 1px 0 #8E5037, inset 0 2px 0 rgba(0, 0, 0, .12); }
 .rail[data-mode="scrub"] .rail-lessons { grid-area: side; align-self: start; display: grid; gap: 8px; margin-top: clamp(120px, 20vh, 220px); font-size: 14px; line-height: 1.35; }
 .rail-lessons > span { display: grid; grid-template-columns: 28px 1fr; gap: 6px; }
 .rail-lessons b { font-variant-numeric: tabular-nums; }
