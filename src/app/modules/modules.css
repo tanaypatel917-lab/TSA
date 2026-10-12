@@ -272,3 +272,6 @@ html[data-motion="full"] .system-arrow i { animation: system-flow 700ms linear i
 .redact-chip { box-shadow: 0 2px 0 var(--ink); transition: background-color 150ms ease, color 150ms ease, translate 140ms var(--ease-out), box-shadow 140ms var(--ease-out); }
 .redact-chip[aria-pressed="true"] { translate: 0 1px; box-shadow: 0 1px 0 var(--clay), inset 0 2px 0 rgba(0, 0, 0, .3); }
 .redact-chip:active { translate: 0 2px; box-shadow: 0 0 0 var(--ink); }
+.lesson-outline .outline-terms li { margin: 0; }
+.lesson-outline .outline-terms a { display: inline-block; }
+.lesson-outline .outline-terms a:hover { text-decoration: none; }
