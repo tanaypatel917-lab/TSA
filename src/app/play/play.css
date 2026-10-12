@@ -322,3 +322,7 @@ html[data-motion="reduced"] .countdown { animation: none; }
 .world-station-list button[data-stamped="true"] .list-mark { box-shadow: 0 1px 0 var(--ink), inset 0 2px 0 rgba(28, 42, 67, .2); }
 .world-station-list button:active { transform: none; translate: 4px 4px; box-shadow: 0 0 0 rgba(10, 16, 28, .55); }
 @media (hover: hover) and (pointer: fine) { html[data-motion="full"] .world-station-list button:hover { translate: -2px -2px; box-shadow: 6px 6px 0 var(--clay); } }
+.map-station-button { box-shadow: 0 4px 0 var(--ink); }
+.map-station-button[data-dark="true"] { box-shadow: 0 0 0 2px var(--ink), 0 5px 0 var(--ink); }
+.map-station-button[data-stamped="true"] { box-shadow: 0 0 0 5px var(--sky), 0 0 0 7px var(--ink), 0 9px 0 var(--ink); }
+.map-word-button:not([data-collected="true"]) { box-shadow: 3px 0 0 var(--ink); }
