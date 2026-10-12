@@ -175,7 +175,7 @@
   .references-page .page-hero-grid { padding: 0 0 12pt; }
   .references-page .page-hero h1 { margin-top: 6pt; font-size: 28pt; }
   .references-page .page-hero-lede { font-size: 11pt; }
-  .references-page .page-hero-mark, .references-page .page-hero-stats, .publisher-marquee, .evidence, .directory-tools, .copy-citation, .reference-meta, .reference-title, .specimens { display: none !important; }
+  .references-page .page-hero-mark, .references-page .hero-stage, .references-page .page-hero-stats, .publisher-marquee, .evidence, .directory-tools, .copy-citation, .reference-meta, .reference-title, .specimens { display: none !important; }
   .source-directory { display: block; padding: 0; }
   .reference-group { padding-top: 10pt; border-color: #000; }
   .reference-group + .reference-group { margin-top: 14pt; }
