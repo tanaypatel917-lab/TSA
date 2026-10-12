@@ -114,8 +114,9 @@
 .cert-copy > p:not(.page-hero-label) { max-width: 46ch; font-size: 17px; line-height: 1.6; }
 .cert-form { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; margin-top: 20px; }
 .cert-form label { display: grid; flex: 1 1 240px; gap: 6px; font-size: 13px; font-weight: 700; letter-spacing: .04em; }
-.cert-form input { width: 100%; min-height: 48px; font-size: 17px; }
-.cert-form .button-primary:disabled { opacity: .5; cursor: default; }
+.cert-form input { width: 100%; min-height: 48px; font-size: 17px; box-shadow: 3px 3px 0 var(--ink); transition: translate .2s var(--ease-out), box-shadow .2s var(--ease-out); }
+.cert-form input:focus { translate: -2px -2px; box-shadow: 5px 5px 0 var(--clay); }
+.cert-form .button-primary:disabled { cursor: default; }
 .cert-preview { position: relative; display: grid; justify-items: center; gap: 8px; padding: 36px 24px; overflow: hidden; border: 1.5px solid var(--ink); background: var(--paper); text-align: center; }
 .cert-preview::before { content: ""; position: absolute; inset: 8px; border: 1px solid var(--ink); pointer-events: none; }
 .cert-mark { font-family: var(--font-display), sans-serif; font-size: 64px; font-weight: 700; line-height: 1; color: var(--clay); }
