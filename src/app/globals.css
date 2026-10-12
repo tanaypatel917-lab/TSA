@@ -1063,7 +1063,7 @@ html[data-motion="full"] :is(.section-heading h2, .spine h2, .human-judgment h2,
 }
 
 .stairs3d { height: 0; overflow: hidden; transition: height .6s var(--ease-out); }
-.stairs3d[data-on="true"] { height: 230px; margin: -10px 0 14px; }
+.stairs3d[data-on="true"] { height: 270px; margin: -6px 0 16px; }
 .stairs3d canvas { display: block; width: 100%; height: 100%; }
 
 .principle-voxel { display: none !important; }
@@ -1187,4 +1187,8 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
   .intro-gate-voxel > .chapter-glyph { font-size: 250px; line-height: 1; color: var(--clay); opacity: 0; }
   .intro-gate-card:has(.intro-gate-voxel[data-on="true"]) .intro-gate-mark { opacity: 0; }
   .intro-gate-mark { transition: opacity .5s var(--ease-out); }
+}
+@media (min-width: 900px) {
+  .quiz-aside .quiz-count { font-size: 84px; font-weight: 650; letter-spacing: -.03em; color: var(--ink); text-shadow: 1px 1px 0 var(--clay), 2px 2px 0 var(--clay), 3px 3px 0 var(--clay), 4px 4px 0 #B8694A, 5px 5px 0 #B8694A, 6px 6px 0 #8E5037, 9px 12px 10px rgba(28, 42, 67, .18); }
+  .quiz-count span { text-shadow: none; }
 }
