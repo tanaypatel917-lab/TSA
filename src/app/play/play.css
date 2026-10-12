@@ -267,11 +267,13 @@ html[data-motion="full"] .results-stars > span[data-on="true"]::before { content
 
 .mission-modes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 20px 0 0; padding: 0; border: 0; }
 .mission-modes legend { margin-bottom: 8px; padding: 0; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
-.mission-modes label { position: relative; display: block; padding: 12px 14px; border: 1.5px solid var(--ink); border-radius: 6px; font-size: 14px; line-height: 1.45; cursor: pointer; transition: background-color 150ms ease; }
-.mission-modes label[data-on="true"] { background: var(--ink); color: var(--paper); }
+.mission-modes label { position: relative; display: block; padding: 12px 14px; border: 1.5px solid var(--ink); border-radius: 6px; background: var(--paper); box-shadow: 0 4px 0 var(--ink); font-size: 14px; line-height: 1.45; cursor: pointer; transition: background-color 150ms ease, translate 120ms ease, box-shadow 120ms ease; }
+.mission-modes label:active { translate: 0 3px; box-shadow: 0 1px 0 var(--ink); }
+.mission-modes label[data-on="true"] { background: var(--ink); color: var(--paper); translate: 0 3px; box-shadow: inset 0 3px 0 rgba(0,0,0,.28), 0 1px 0 var(--clay); }
 .mission-modes input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
 .mission-modes label:has(input:focus-visible) { outline: 3px solid var(--ink); outline-offset: 3px; }
 .mission-modes strong { display: block; font-family: var(--font-display), sans-serif; font-size: 19px; font-weight: 600; }
+.mission-modes label[data-on="true"] strong { text-shadow: 1px 1px 0 var(--clay); }
 .mission-board { margin-top: 22px; }
 .mission-board h3 { margin-bottom: 8px; font-family: var(--font-body), sans-serif; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 .board { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
@@ -290,13 +292,26 @@ html[data-motion="full"] .results-stars > span[data-on="true"]::before { content
 .world-daily strong { display: block; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--sky); }
 .world-daily:focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; }
 .world-prompt.is-daily { box-shadow: 8px 8px 0 var(--clay); }
-@media (hover: hover) and (pointer: fine) { .world-daily:hover { background: rgba(175, 203, 227, .22); } }
+@media (hover: hover) and (pointer: fine) {
+  .world-daily:hover { background: rgba(175, 203, 227, .22); }
+  .mission-modes label:not([data-on="true"]):hover { translate: 0 -2px; box-shadow: 0 6px 0 var(--clay); }
+}
 @media (max-width: 767px) {
   .mission-modes { grid-template-columns: 1fr; }
   .world-daily { grid-template-columns: 44px minmax(0, 1fr); }
   .world-daily .list-state { grid-column: 2; }
   .board li { grid-template-columns: 24px minmax(0, 1fr) auto; }
   .board-day { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mission-modes label { transition: none; }
+  .mission-modes label:not([data-on="true"]):hover { translate: none; }
+}
+html[data-motion="reduced"] .mission-modes label { transition: none; }
+html[data-motion="reduced"] .mission-modes label:not([data-on="true"]):hover { translate: none; }
+@media (forced-colors: active) {
+  .mission-modes label { box-shadow: none; }
+  .mission-modes label[data-on="true"] { outline: 2px solid CanvasText; }
 }
 
 .countdown { perspective: 700px; text-shadow: 1px 1px 0 var(--ink), 2px 2px 0 var(--ink), 3px 3px 0 var(--ink), 4px 4px 0 var(--ink), 5px 5px 0 var(--ink), 6px 6px 0 var(--ink), 7px 7px 0 var(--ink), 8px 8px 0 var(--ink), 9px 9px 0 var(--ink), 10px 10px 0 var(--clay), 11px 11px 0 var(--clay), 12px 12px 0 var(--clay), 14px 22px 24px rgba(28, 42, 67, .35); animation-name: countdown-flip; animation-duration: 650ms; animation-timing-function: cubic-bezier(.2, 1.4, .4, 1); }
