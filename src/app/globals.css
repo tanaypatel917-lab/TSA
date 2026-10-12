@@ -1259,3 +1259,6 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
 .demo-guesses button { box-shadow: 3px 3px 0 var(--ink); transition: background-color 150ms ease, translate 140ms var(--ease-out), box-shadow 140ms var(--ease-out); }
 .demo-guesses button:active:not(:disabled) { transform: none; translate: 3px 3px; box-shadow: 0 0 0 var(--ink); }
 .demo-guesses button:disabled { box-shadow: none; }
+.choice span { background: var(--paper); box-shadow: 3px 3px 0 var(--ink); transition: background-color 160ms ease, color 160ms ease, translate 140ms var(--ease-out), box-shadow 140ms var(--ease-out); }
+.choice input:checked + span { translate: 2px 2px; box-shadow: 1px 1px 0 var(--clay), inset 0 2px 0 rgba(0, 0, 0, .25); }
+.choice span:active { transform: none; translate: 3px 3px; box-shadow: 0 0 0 var(--ink); }
