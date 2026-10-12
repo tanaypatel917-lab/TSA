@@ -52,12 +52,12 @@ function asterisk(): Cell[] {
   for (const angle of [90, 30, 150]) {
     context.save();
     context.rotate((angle * Math.PI) / 180);
-    context.fillRect(-17, -2.5, 34, 5);
+    context.fillRect(-13, -3, 26, 6);
     context.restore();
   }
   const { data } = context.getImageData(0, 0, GRID * 2, GRID);
   const cells: Cell[] = [];
-  for (let y = 0; y < GRID; y += 1) for (let x = 0; x < GRID * 2; x += 1) if (data[(y * GRID * 2 + x) * 4 + 3] > 120) cells.push([x - GRID, GRID / 2 - y]);
+  for (let y = 0; y < GRID; y += 1) for (let x = 0; x < GRID * 2; x += 1) if (data[(y * GRID * 2 + x) * 4 + 3] > 120) cells.push([x - GRID, GRID / 2 - y, "#F6EFE5"]);
   return cells;
 }
 
