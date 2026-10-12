@@ -8,6 +8,7 @@ export const toolSources = {
   prompt: ["openai-prompting", "openstax-bio"],
   vary: ["holtzman-2020"],
   redact: ["ed-privacy", "openai-data"],
+  detector: ["openai-classifier-2023"],
   predictor: ["touvron-2023", "holtzman-2020"],
   galaxy: ["mikolov-2013"]
 } as const;

@@ -8,6 +8,8 @@ const lab = (page: Page, title: string) => page.getByRole("figure", { name: titl
 const pipTitle = "Meet Pip. Is it thinking, or following a menu?";
 const fakePageTitle = "This page looks real. Is it?";
 const fakePageAddress = "brightside-news.example/science/naps-boost-scores";
+const juryTitle = "Meet the models. Why do they disagree?";
+const detectorTitle = "Can a detector really tell?";
 
 async function tabUntilFocused(page: Page, target: ReturnType<Page["getByRole"]>) {
   for (let index = 0; index < 100; index += 1) {
@@ -230,4 +232,95 @@ test("the fake-page lab works by keyboard with reduced motion at 360px", async (
   expect(await stamp.evaluate((element) => getComputedStyle(element).animationName)).toBe("none");
   const widths = await page.evaluate(() => ({ viewport: window.innerWidth, document: document.documentElement.scrollWidth }));
   expect(widths.document).toBeLessThanOrEqual(widths.viewport);
+});
+
+test("the model jury compares a three-model panel and shows its training biases", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/modules/ethical-ai/lessons/fairness/");
+  const jury = lab(page, juryTitle);
+  const max = jury.getByRole("button", { name: /^Max\./ });
+  const rex = jury.getByRole("button", { name: /^Rex\./ });
+  const bo = jury.getByRole("button", { name: /^Bo\./ });
+
+  await max.click();
+  await rex.click();
+  await bo.click();
+  await jury.getByRole("button", { name: "A fluffy cat on grass" }).click();
+  await jury.getByRole("button", { name: "Ask the panel" }).click();
+  await expect(jury.getByRole("heading", { name: "Panel tally" })).toBeFocused();
+  await expect(jury.locator(".jury-tally")).toHaveText("2 say Dog, 1 says Not a dog");
+  await expect(jury.locator(".jury-correct-answer")).toHaveText("Correct answer: Not a dog, it's a cat");
+  await expect(bo.locator(".jury-vote-correctness")).toHaveText("Right");
+  const hood = jury.getByRole("button", { name: "Look under the hood" });
+  await hood.click();
+  await expect(jury.locator(".jury-hood-list")).toContainText("Trained on: 500 photos of golden retrievers");
+  await expect(jury.locator(".jury-hood-list")).toContainText("Current vote reason: “Pointed ears and whiskers: a cat”");
+
+  await jury.getByRole("button", { name: /^Ivy\./ }).click();
+  await expect(jury.getByRole("status").filter({ hasText: "Your panel is full. Unpick one first." })).toBeVisible();
+});
+
+test("the jury can be run by keyboard alone", async ({ page }) => {
+  await page.goto("/modules/ethical-ai/lessons/fairness/");
+  const jury = lab(page, juryTitle);
+  const max = jury.getByRole("button", { name: /^Max\./ });
+  await tabUntilFocused(page, max);
+  await page.keyboard.press("Enter");
+  await page.keyboard.press("Tab");
+  await page.keyboard.press("Tab");
+  await page.keyboard.press("Enter");
+  await page.keyboard.press("Tab");
+  await page.keyboard.press("Enter");
+
+  const photo = jury.getByRole("button", { name: "A fluffy cat on grass" });
+  await tabUntilFocused(page, photo);
+  await page.keyboard.press("Enter");
+  const ask = jury.getByRole("button", { name: "Ask the panel" });
+  await tabUntilFocused(page, ask);
+  await page.keyboard.press("Enter");
+  await expect(jury.locator(".jury-tally")).toHaveText("2 say Dog, 1 says Not a dog");
+});
+
+test("TruthMeter scans passages with reduced motion", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/modules/ethical-ai/lessons/academic-integrity/");
+  await expect(page.locator("html")).toHaveAttribute("data-motion", "reduced");
+  const detector = lab(page, detectorTitle);
+  await detector.getByRole("button", { name: "Passage 1" }).click();
+  await detector.getByRole("button", { name: "Scan" }).click();
+  await expect(detector.getByText("87% AI", { exact: true })).toBeVisible();
+  await expect(detector.getByRole("meter", { name: "87% AI score" })).toBeVisible();
+  await expect(detector.locator(".detector-result").getByText("A person. It's the U.S. Declaration of Independence (1776), drafted by Thomas Jefferson.", { exact: true })).toBeVisible();
+  await expect(detector.getByRole("heading", { name: "Talk about it" })).toBeVisible();
+  await expect(detector.getByRole("status")).toContainText("Score: 87% AI");
+
+  const passageTwo = detector.getByRole("button", { name: "Passage 2" });
+  await tabUntilFocused(page, passageTwo);
+  await page.keyboard.press("Enter");
+  const scan = detector.getByRole("button", { name: "Scan" });
+  await tabUntilFocused(page, scan);
+  await page.keyboard.press("Enter");
+  await expect(detector.locator(".detector-score-label")).toHaveText("LIKELY HUMAN");
+});
+
+test("TruthMeter can be scanned by keyboard alone", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/modules/ethical-ai/lessons/academic-integrity/");
+  const detector = lab(page, detectorTitle);
+  const passage = detector.getByRole("button", { name: "Passage 1" });
+  await tabUntilFocused(page, passage);
+  await page.keyboard.press("Enter");
+  const scan = detector.getByRole("button", { name: "Scan" });
+  await tabUntilFocused(page, scan);
+  await page.keyboard.press("Enter");
+  await expect(detector.getByText("87% AI", { exact: true })).toBeVisible();
+  await expect(detector.getByRole("heading", { name: "Talk about it" })).toBeVisible();
+});
+
+test("both ethics labs fit at 360px without horizontal overflow", async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 844 });
+  await page.goto("/modules/ethical-ai/lessons/fairness/");
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(360);
+  await page.goto("/modules/ethical-ai/lessons/academic-integrity/");
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(360);
 });

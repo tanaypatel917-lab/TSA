@@ -1,4 +1,4 @@
-export type FigureKind = "system" | "rules" | "chatbot" | "tokens" | "predictor" | "bias" | "claims" | "prompt" | "vary" | "redact" | "fakepage";
+export type FigureKind = "system" | "rules" | "chatbot" | "tokens" | "predictor" | "bias" | "claims" | "prompt" | "vary" | "redact" | "fakepage" | "jury" | "detector";
 
 export const lessonFigures: Record<string, { after: number; kind: FigureKind }[]> = {
   "foundations/what-is-ai": [{ after: 0, kind: "system" }],
@@ -9,5 +9,7 @@ export const lessonFigures: Record<string, { after: number; kind: FigureKind }[]
   "tools/prompt-anatomy": [{ after: 1, kind: "prompt" }],
   "tools/iterate-verify": [{ after: 0, kind: "vary" }],
   "ethics/privacy": [{ after: 0, kind: "redact" }],
+  "ethics/fairness": [{ after: 0, kind: "jury" }],
+  "ethics/academic-integrity": [{ after: 1, kind: "detector" }],
   "ethics/misinformation": [{ after: 1, kind: "fakepage" }]
 };
