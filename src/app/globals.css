@@ -1125,3 +1125,27 @@ html[data-motion="reduced"] .takeaways li { animation: none !important; }
   html[data-motion="full"] .poster-real-world:hover { box-shadow: 12px 12px 0 var(--clay); }
   html[data-motion="full"] .poster-tools:hover .poster-art, html[data-motion="full"] .poster-ethics:hover .poster-art { opacity: .2; }
 }
+@media (min-width: 900px) {
+  .learning-path ol { align-items: start; perspective: 1400px; }
+  .learning-path li { position: relative; padding: 18px 22px 24px; border: 1.5px solid var(--ink); border-radius: 4px; background: var(--paper); box-shadow: 6px 6px 0 var(--ink); }
+  .learning-path li:nth-child(2) { margin-top: 18px; background: var(--sky); }
+  .learning-path li:nth-child(3) { margin-top: 36px; }
+  .learning-path li:nth-child(4) { margin-top: 54px; background: var(--clay); }
+  .learning-path li > span { display: block; font-family: var(--font-display), sans-serif; font-size: 64px; font-weight: 650; line-height: .9; letter-spacing: -.04em; color: var(--ink); text-shadow: 1px 1px 0 var(--clay), 2px 2px 0 var(--clay), 3px 3px 0 var(--clay), 4px 4px 0 #B8694A, 5px 5px 0 #B8694A, 6px 6px 0 #8E5037; }
+  .learning-path li:nth-child(4) > span { color: var(--paper); text-shadow: 1px 1px 0 var(--ink), 2px 2px 0 var(--ink), 3px 3px 0 var(--ink), 4px 4px 0 var(--ink), 5px 5px 0 var(--ink), 6px 6px 0 var(--ink); }
+  .learning-path h3 { margin-top: 18px; }
+  .learning-path .path-note, .learning-path ol + * { margin-top: 84px; }
+  html[data-motion="full"] .learning-path li { transition: transform .35s var(--ease-out), box-shadow .35s var(--ease-out); }
+  html[data-motion="full"] .learning-path li:hover { transform: translate(-4px, -6px) rotate(-1.2deg); box-shadow: 11px 12px 0 var(--ink); }
+}
+@supports (animation-timeline: view()) {
+  @media (min-width: 900px) {
+    html[data-motion="full"] .learning-path li { animation: takeaway-flip linear both; animation-timeline: view(); animation-range: entry 0% entry 80%; transform-origin: 50% 100%; }
+  }
+}
+@media (prefers-reduced-motion: reduce) { .learning-path li { animation: none !important; } }
+html[data-motion="reduced"] .learning-path li { animation: none !important; }
+@media (min-width: 900px) {
+  .badge-demo li[data-earned="true"] { box-shadow: 0 4px 0 var(--ink); translate: 0 -2px; }
+  .badge-demo li[data-earned="true"] span { text-shadow: 1px 1px 0 var(--clay), 2px 2px 0 var(--clay), 3px 3px 0 #B8694A; }
+}
