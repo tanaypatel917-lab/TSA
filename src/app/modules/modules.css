@@ -10,6 +10,8 @@
 .spine-block { display: block; height: 64px; border: 1px solid rgba(246, 239, 229, .38); border-radius: 3px; transition: transform 200ms var(--ease-out), background-color 160ms ease, border-color 160ms ease; }
 .spine-block[data-read="true"] { border-color: var(--clay); background: var(--clay); }
 .spine-block:active { transform: scale(.96); }
+.spine-block:not([data-read="true"]) { background: rgba(10, 18, 32, .28); box-shadow: inset 0 3px 0 rgba(10, 18, 32, .45); }
+.spine-block[data-read="true"] { box-shadow: 0 2px 0 #B8694A, 0 4px 0 #A35C40, 0 6px 0 #8E5037; transform: translateY(-5px); }
 .spine-caption { min-height: 1.6em; margin-top: 18px; font-size: 15px; color: rgba(246, 239, 229, .8); }
 .spine-caption strong { color: var(--paper); }
 
