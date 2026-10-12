@@ -1279,3 +1279,4 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
   .page-hero[data-stage] .page-hero-lede { max-width: min(520px, calc(50vw - 72px)); }
 }
 .page-hero-stats dd { text-shadow: 1px 1px 0 var(--clay), 2px 2px 0 var(--clay), 3px 3px 0 #B8694A, 6px 8px 8px rgba(28, 42, 67, .18); }
+.chapter-facts dd { text-shadow: 1px 1px 0 #B8694A, 2px 2px 0 #B8694A, 3px 3px 0 #A35C40, 4px 4px 0 #8E5037, 8px 10px 9px rgba(28, 42, 67, .16); }
