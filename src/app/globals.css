@@ -1082,7 +1082,7 @@ html[data-motion="full"] :is(.section-heading h2, .spine h2, .human-judgment h2,
   html[data-motion="full"] .badge-patch[data-earned="true"][data-tone="ink"]:hover { box-shadow: 12px 14px 0 var(--clay); }
   .badge-patch[data-earned="true"] .badge-mark { text-shadow: 1px 1px 0 rgba(28, 42, 67, .55), 2px 2px 0 rgba(28, 42, 67, .55), 3px 3px 0 rgba(28, 42, 67, .55), 4px 4px 0 rgba(28, 42, 67, .55), 5px 5px 0 rgba(28, 42, 67, .55); }
   .badge-patch[data-earned="true"][data-tone="ink"] .badge-mark { color: var(--clay); text-shadow: 1px 1px 0 var(--paper), 2px 2px 0 var(--paper), 3px 3px 0 var(--paper), 4px 4px 0 var(--paper); }
-  .badge-patch:not([data-earned="true"]) .badge-mark { color: rgba(28, 42, 67, .07); text-shadow: -1px -1px 0 rgba(255, 255, 255, .9), 1px 1px 0 rgba(28, 42, 67, .18); }
+  .badge-patch:not([data-earned="true"]) .badge-mark { color: #E3D5C2; text-shadow: -1px -1px 0 rgba(142, 80, 55, .42), -2px -2px 0 rgba(142, 80, 55, .12), 1px 1px 0 rgba(255, 255, 255, .85); }
   html[data-motion="full"] .badge-patch:hover .badge-mark { transform: translateZ(40px); }
   .badge-mark { transition: transform .35s var(--ease-out); }
 }
