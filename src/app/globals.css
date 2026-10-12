@@ -1283,3 +1283,7 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
   .closing-mark { text-shadow: 2px 2px 0 #B8694A, 4px 4px 0 #A35C40, 6px 6px 0 #8E5037, 12px 14px 12px rgba(28, 42, 67, .22); }
   .home-closing h2 { text-shadow: 1px 1px 0 #B8694A, 2px 2px 0 #A35C40, 3px 3px 0 #8E5037, 6px 8px 8px rgba(28, 42, 67, .16); }
 }
+@media (max-width: 899px) {
+  .badge-patch[data-earned="true"] .badge-mark { text-shadow: 1px 1px 0 rgba(28, 42, 67, .55), 2px 2px 0 rgba(28, 42, 67, .55), 3px 3px 0 rgba(28, 42, 67, .55); }
+  .badge-patch[data-earned="true"][data-tone="ink"] .badge-mark { color: var(--clay); text-shadow: 1px 1px 0 var(--paper), 2px 2px 0 var(--paper), 3px 3px 0 var(--paper); }
+}
