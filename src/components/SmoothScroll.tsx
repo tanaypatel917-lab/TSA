@@ -9,14 +9,17 @@ import "lenis/dist/lenis.css";
 let activeLenis: Lenis | null = null;
 
 export function scrollToElement(element: HTMLElement) {
+  const tall = element.offsetHeight > window.innerHeight * 0.85;
   if (activeLenis) {
-    activeLenis.scrollTo(element, { offset: -window.innerHeight / 2 + element.offsetHeight / 2 });
+    activeLenis.scrollTo(element, { offset: tall ? -24 : -window.innerHeight / 2 + element.offsetHeight / 2 });
     return;
   }
-  element.scrollIntoView({
-    behavior: document.documentElement.dataset.motion === "full" ? "smooth" : "auto",
-    block: "center"
-  });
+  const behavior: ScrollBehavior = document.documentElement.dataset.motion === "full" ? "smooth" : "auto";
+  if (tall) {
+    window.scrollTo({ top: element.getBoundingClientRect().top + window.scrollY - 24, behavior });
+    return;
+  }
+  element.scrollIntoView({ behavior, block: "center" });
 }
 
 export function SmoothScroll() {
