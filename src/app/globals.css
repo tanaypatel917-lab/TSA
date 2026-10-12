@@ -1179,7 +1179,7 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
   .intro-gate-card:has(.intro-gate-voxel[data-on="true"]) .intro-gate-mark { opacity: 0; }
   .intro-gate-mark { transition: opacity .5s var(--ease-out); }
 }
-@media (min-width: 900px) {
+@media (min-width: 768px) {
   .quiz-aside .quiz-count { font-size: 84px; font-weight: 650; letter-spacing: -.03em; color: var(--ink); text-shadow: 1px 1px 0 var(--clay), 2px 2px 0 var(--clay), 3px 3px 0 var(--clay), 4px 4px 0 #B8694A, 5px 5px 0 #B8694A, 6px 6px 0 #8E5037, 9px 12px 10px rgba(28, 42, 67, .18); }
   .quiz-count span { text-shadow: none; }
 }
@@ -1198,7 +1198,7 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
   .nf-voxel { right: 2%; top: 56%; }
   .nf-voxel > .chapter-glyph { font-size: clamp(170px, 18vw, 290px); }
 }
-@media (min-width: 900px) {
+@media (min-width: 768px) {
   .study-heading-mark {
     font-size: 108px;
     font-weight: 650;
@@ -1219,7 +1219,7 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
   .poster-ethics .poster-art { right: -48px; bottom: 34px; font-size: 270px; color: var(--paper); text-shadow: 2px 2px 0 #E8DCCB, 4px 4px 0 #D9C7B0, 6px 6px 0 #B8694A, 8px 8px 0 #A35C40, 10px 10px 0 #8E5037, 12px 12px 0 #8E5037, 22px 26px 22px rgba(0, 0, 0, .22); }
 }
 .badge-patch:not([data-earned="true"]) .badge-mark { color: #E3D5C2; text-shadow: -1px -1px 0 rgba(142, 80, 55, .42), -2px -2px 0 rgba(142, 80, 55, .12), 1px 1px 0 rgba(255, 255, 255, .85); }
-@media (min-width: 900px) {
+@media (min-width: 768px) {
   .prompt-brackets { font-size: 104px; font-weight: 650; color: var(--ink); text-shadow: 2px 2px 0 #B8694A, 4px 4px 0 #A35C40, 6px 6px 0 #A35C40, 8px 8px 0 #8E5037, 10px 10px 0 #8E5037, 18px 22px 18px rgba(28, 42, 67, .22); }
   .prompt-brackets span { transition: translate .5s var(--ease-out), rotate .5s var(--ease-out); }
   .prompt-brackets span:nth-child(2) { color: var(--paper); rotate: -8deg; }
@@ -1299,3 +1299,6 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
 .step-state { background: var(--paper); box-shadow: 0 3px 0 var(--ink); translate: 0 -2px; transition: translate .2s var(--ease-out), box-shadow .2s var(--ease-out); }
 .program-step:hover .step-state { translate: 0 -3px; box-shadow: 0 4px 0 var(--ink); }
 .program-step[data-done="true"] .step-state { translate: 0 1px; box-shadow: 0 1px 0 var(--ink), inset 0 2px 0 rgba(0, 0, 0, .12); }
+@media (min-width: 768px) and (max-width: 899px) {
+  .rubric-list:not(.rubric-compact) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
