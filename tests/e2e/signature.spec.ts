@@ -86,6 +86,43 @@ test("glossary terms in a lesson explain themselves on hover and focus", async (
   await expect(page.locator(".outline-terms").getByRole("link", { name: "Token", exact: true })).toHaveAttribute("href", /#term-token$/);
 });
 
+test("lesson term cards open above near the bottom and below with room", async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: "reduce" });
+  const page = await context.newPage();
+  await seed(page);
+  const lesson = foundations.lessons.find((item) => item.id === "strengths-and-limits")!;
+  await page.goto(`/modules/${foundations.slug}/lessons/${lesson.id}/`);
+  const trigger = page.locator(".term-trigger").first();
+  await trigger.evaluate((element) => {
+    const rect = element.getBoundingClientRect();
+    window.scrollTo(0, window.scrollY + rect.bottom - (window.innerHeight - 60));
+  });
+  await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())));
+  await trigger.focus();
+  const card = page.locator(".term-card");
+  await expect(card).toBeVisible();
+  await expect(card).toHaveAttribute("data-above", "true");
+  const above = await card.boundingBox();
+  if (!above) throw new Error("The above term card is not measurable");
+  expect(above.y).toBeGreaterThanOrEqual(0);
+  expect(above.y + above.height).toBeLessThanOrEqual(844);
+
+  await trigger.evaluate((element) => {
+    element.blur();
+    const rect = element.getBoundingClientRect();
+    window.scrollTo(0, window.scrollY + rect.top - 150);
+  });
+  await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())));
+  await trigger.focus();
+  await expect(card).toBeVisible();
+  await expect(card).toHaveAttribute("data-above", "false");
+  const below = await card.boundingBox();
+  const triggerBox = await trigger.boundingBox();
+  if (!below || !triggerBox) throw new Error("The term card or trigger is not measurable");
+  expect(below.y).toBeGreaterThan(triggerBox.y + triggerBox.height);
+  await context.close();
+});
+
 test("study cards flip, keep score and let you review the terms you missed", async ({ page }) => {
   await seed(page);
   await page.goto("/glossary/");

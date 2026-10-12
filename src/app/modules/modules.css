@@ -38,6 +38,7 @@
 .term-trigger[data-open="true"] { text-decoration-style: solid; text-decoration-color: var(--ink); }
 .term-trigger:focus-visible { outline-offset: 3px; }
 .term-card { position: absolute; z-index: 25; display: grid; gap: 6px; padding: 16px 18px; border: 1.5px solid var(--ink); border-radius: 4px; background: var(--ink); color: var(--paper); box-shadow: 6px 6px 0 var(--clay); font-size: 15px; line-height: 1.55; pointer-events: none; animation: term-in 180ms var(--ease-out); }
+.term-card[data-above="true"] { translate: 0 -100%; }
 .term-card strong { font-family: var(--font-display), sans-serif; font-size: 20px; font-weight: 600; line-height: 1.1; color: var(--clay); }
 @keyframes term-in { from { opacity: 0; transform: translateY(-4px); } }
 .outline-terms { margin-top: 30px; padding-top: 18px; border-top: 1px solid var(--line); }
