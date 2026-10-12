@@ -56,8 +56,14 @@ export function VoxelGlyph({ mark, className = "" }: { mark: string; className?:
       const group = new THREE.Group();
       group.rotation.z = TURNS[mark] ?? 0;
       scene.add(group);
-      const geometry = new THREE.BoxGeometry(1, 1, 4);
-      const material = new THREE.MeshStandardMaterial({ color, roughness: 0.6 });
+      const geometry = new THREE.BoxGeometry(1.06, 1.06, 4);
+      const normals = geometry.attributes.normal;
+      for (let index = 0; index < normals.count; index += 1)
+        if (Math.abs(normals.getZ(index)) < 0.5) {
+          normals.setXYZ(index, 0, 0, 1);
+          if (geometry.attributes.position.getZ(index) > 0) geometry.attributes.position.setZ(index, 1.9);
+        }
+      const material = new THREE.MeshLambertMaterial({ color });
       const mesh = new THREE.InstancedMesh(geometry, material, cells.length);
       group.add(mesh);
       const shadow = new THREE.InstancedMesh(geometry, new THREE.MeshBasicMaterial({ color: "#1C2A43" }), cells.length);
