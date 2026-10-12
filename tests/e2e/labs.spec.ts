@@ -57,6 +57,21 @@ test("learners spot hallucinations, build prompts and see answers vary", async (
   await expect(vary).toContainText("All three answers match");
 });
 
+test("the hallucination spotter keeps focus as claims are decided and reset", async ({ page }) => {
+  await page.goto("/modules/ai-foundations/lessons/strengths-and-limits/");
+  const claimItems = page.locator(".claim-list > li");
+  await expect(claimItems).toHaveCount(5);
+  for (let turn = 0; turn < 5; turn += 1) {
+    await claimItems.nth(turn).locator(".claim-actions button").first().click();
+    if (turn === 0) {
+      await expect(page.locator(".claim-list > li").nth(1).locator(".claim-actions button").first()).toBeFocused();
+    }
+  }
+  await expect(page.locator(".lab-score")).toBeFocused();
+  await page.getByRole("button", { name: "Try again" }).click();
+  await expect(page.locator(".claim-list > li").first().locator(".claim-actions button").first()).toBeFocused();
+});
+
 test("the privacy lesson only calls a prompt safe once every personal detail is removed", async ({ page }) => {
   await page.goto("/modules/ethical-ai/lessons/privacy/");
   const redact = lab(page, "Clean up a prompt before you send it.");

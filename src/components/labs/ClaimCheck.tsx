@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { LabFrame } from "./LabFrame";
 
 const claims = [
@@ -13,23 +13,32 @@ const claims = [
 
 export function ClaimCheck() {
   const [calls, setCalls] = useState<Record<number, boolean>>({});
+  const listRef = useRef<HTMLOListElement>(null);
+  const scoreRef = useRef<HTMLParagraphElement>(null);
+  const moveFocus = useRef(false);
   const done = Object.keys(calls).length === claims.length;
   const caught = claims.filter((claim, index) => !claim.real && calls[index] === false).length;
+  useEffect(() => {
+    if (!moveFocus.current) return;
+    moveFocus.current = false;
+    const next = listRef.current?.querySelector<HTMLButtonElement>(".claim-actions button");
+    (next ?? scoreRef.current)?.focus();
+  }, [calls]);
   return <LabFrame id="lab-claims" sources="claims" title="Spot the hallucinations." note="Hallucinations sound exactly as confident as facts, and invented sources are a warning sign. Check claims that matter against an official website, an encyclopedia or a textbook, like the sources below.">
     <p className="claim-prompt"><span>You asked</span> “Tell me about the Eiffel Tower.”</p>
-    <ol className="claim-list">
+    <ol className="claim-list" ref={listRef}>
       {claims.map((claim, index) => {
         const call = calls[index];
         const decided = call !== undefined;
         return <li key={claim.text} data-state={decided ? (call === claim.real ? "right" : "wrong") : undefined}>
           <p>{claim.text}</p>
           {!decided ? <div className="claim-actions" role="group" aria-label={`Is this claim true? ${claim.text}`}>
-            <button type="button" onClick={() => setCalls((current) => ({ ...current, [index]: true }))}>Looks true</button>
-            <button type="button" onClick={() => setCalls((current) => ({ ...current, [index]: false }))}>Made up</button>
+            <button type="button" onClick={() => { moveFocus.current = true; setCalls((current) => ({ ...current, [index]: true })); }}>Looks true</button>
+            <button type="button" onClick={() => { moveFocus.current = true; setCalls((current) => ({ ...current, [index]: false })); }}>Made up</button>
           </div> : <p className="claim-fix" role="status"><strong>{call === claim.real ? "Good call." : "Not quite."}</strong> {claim.fix}</p>}
         </li>;
       })}
     </ol>
-    {done && <p className="lab-score" role="status"><strong>You caught {caught} of {claims.filter((claim) => !claim.real).length}</strong> invented claims. <button type="button" className="text-link" onClick={() => setCalls({})}>Try again</button></p>}
+    {done && <p className="lab-score" role="status" ref={scoreRef} tabIndex={-1}><strong>You caught {caught} of {claims.filter((claim) => !claim.real).length}</strong> invented claims. <button type="button" className="button-secondary lab-retry" onClick={() => { moveFocus.current = true; setCalls({}); }}>Try again</button></p>}
   </LabFrame>;
 }
