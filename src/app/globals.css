@@ -1336,3 +1336,4 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
   .site-navigation a[aria-current="page"] { text-decoration: none; }
   .site-navigation a[aria-current="page"]::after { content: ""; flex: none; align-self: center; width: 14px; height: 14px; margin-left: auto; border: 1.5px solid var(--ink); border-radius: 3px; background: var(--clay); box-shadow: 0 3px 0 var(--ink); }
 }
+.motion-setting select:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
