@@ -1112,3 +1112,7 @@ html[data-motion="reduced"] .takeaways li { animation: none !important; }
   .glossary-letters a:hover { translate: 0 -4px; box-shadow: 0 6px 0 var(--ink); }
   .glossary-letters a:active { translate: 0 2px; box-shadow: 0 0 0 var(--ink); }
 }
+@media (min-width: 900px) {
+  .footer-giant span { text-shadow: .006em .006em 0 #B8694A, .012em .012em 0 #B8694A, .018em .018em 0 #B8694A, .024em .024em 0 #A35C40, .03em .03em 0 #A35C40, .036em .036em 0 #8E5037, .05em .07em .04em rgba(28, 42, 67, .18); }
+  .footer-giant .footer-dot { text-shadow: .006em .006em 0 var(--ink), .012em .012em 0 var(--ink), .018em .018em 0 var(--ink), .024em .024em 0 var(--ink), .03em .03em 0 var(--ink), .036em .036em 0 var(--ink); }
+}
