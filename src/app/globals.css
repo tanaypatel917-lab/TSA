@@ -1269,3 +1269,6 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
   .glossary-letters a:active { translate: 0 3px; box-shadow: 0 0 0 var(--ink); }
 }
 .directory-tools input[type="search"] { margin-bottom: 8px; }
+.motion-setting select { box-shadow: 3px 3px 0 var(--ink); transition: translate 140ms var(--ease-out), box-shadow 140ms var(--ease-out), background-color 160ms ease; }
+.motion-setting select:active { translate: 3px 3px; box-shadow: 0 0 0 var(--ink); }
+@media (hover: hover) and (pointer: fine) { .motion-setting select:hover { background-color: var(--sky); } }
