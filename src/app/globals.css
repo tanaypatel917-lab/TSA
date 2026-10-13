@@ -1452,3 +1452,36 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
   translate: 0 3px;
   cursor: default;
 }
+
+.intro-gate { background-color: color-mix(in srgb, var(--clay) 90%, transparent); background-image: radial-gradient(rgba(28, 42, 67, .2) 1.2px, transparent 1.7px); background-size: 14px 14px; }
+.intro-gate { overflow-y: auto; place-items: safe center; }
+.intro-gate-cert { justify-self: start; display: inline-flex; align-items: center; gap: 8px; margin-top: 22px; padding: 6px 13px; border: 1.5px dashed var(--ink); border-radius: 999px; font-size: 14px; font-weight: 700; line-height: 1.3; }
+.intro-gate-cert span { color: var(--clay); font-size: 16px; -webkit-text-stroke: 1px var(--ink); }
+.intro-gate-prefs { display: flex; flex-wrap: wrap; gap: 0 30px; }
+.intro-gate-prefs .intro-motion-choice { max-width: none; margin-top: 22px; }
+.boot-log { display: none; }
+@media (min-width: 1000px) {
+  .intro-gate-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 410px); column-gap: 52px; align-items: start; width: min(1180px, 100%); }
+  .intro-gate-card > :not(.boot-log):not(.intro-gate-mark):not(.intro-gate-voxel-wrap) { grid-column: 1; }
+  .intro-gate-voxel-wrap { top: 40px; right: 110px; translate: none; }
+  .intro-gate-card { padding: clamp(36px, 5vh, 56px) 60px; }
+  .intro-gate-title { font-size: clamp(56px, min(6.2vw, 9vh), 88px); }
+  .boot-log { position: relative; z-index: 2; display: block; grid-column: 2; grid-row: 1 / span 7; align-self: end; overflow: hidden; border: 2px solid var(--ink); border-radius: 6px; background: var(--ink); color: var(--paper); box-shadow: 9px 9px 0 var(--clay); transform: rotate(1.6deg); }
+}
+.boot-log-bar { display: flex; align-items: center; gap: 6px; padding: 9px 12px; border-bottom: 1.5px solid rgba(246, 239, 229, .22); background: #24365A; }
+.boot-log-bar i { width: 10px; height: 10px; border: 1px solid var(--paper); border-radius: 50%; background: var(--clay); }
+.boot-log-bar i:nth-child(2) { background: var(--sky); }
+.boot-log-bar i:nth-child(3) { background: var(--paper); }
+.boot-log-bar span { margin-left: 8px; font: 700 12px/1 var(--font-mono), monospace; letter-spacing: .08em; opacity: .75; }
+.boot-log pre { min-height: 250px; margin: 0; padding: 18px 18px 22px; font: 13.5px/1.8 var(--font-mono), monospace; white-space: pre-wrap; }
+.boot-line b { font-weight: 700; color: var(--sky); }
+.boot-line[data-tag="[!!]"], .boot-line[data-tag="more"], .boot-line[data-tag="[!!]"] b { color: var(--clay); }
+.boot-line[data-tag=">"] { color: var(--paper); font-weight: 700; }
+.boot-line[data-tag=">"] b { color: var(--clay); }
+.boot-caret { display: inline-block; width: .6em; height: 1.1em; margin-left: 2px; vertical-align: -.2em; background: var(--clay); animation: boot-blink 1s steps(1) infinite; }
+@keyframes boot-blink { 50% { opacity: 0; } }
+@keyframes boot-in { from { opacity: 0; transform: translateY(34px) rotate(6deg); } }
+html[data-motion="full"] .boot-log { animation: boot-in .8s var(--ease-out) .2s both; }
+html[data-motion="reduced"] .boot-caret, html[data-motion="reduced"] .boot-log { animation: none; }
+@media (prefers-reduced-motion: reduce) { .boot-caret, .boot-log { animation: none !important; } }
+@media (max-width: 767px) { .intro-gate-cert { margin-top: 16px; border-radius: 10px; font-size: 13px; } .intro-gate-cert span { display: none; } .intro-gate-prefs .intro-motion-choice { margin-top: 14px; } }
