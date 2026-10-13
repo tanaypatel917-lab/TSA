@@ -29,9 +29,17 @@ test("the first-visit gate traps focus, Escape enters Wordplay, and reload bypas
   await page.keyboard.press("Tab");
   await expect(page.getByRole("button", { name: "[ Full 3D ]", exact: true })).toBeFocused();
   await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: "[ On ]", exact: true })).toBeFocused();
+  await page.keyboard.press("Tab");
+  const soundOff = page.getByRole("button", { name: "[ Off ]", exact: true });
+  await expect(soundOff).toBeFocused();
+  await page.keyboard.press("Tab");
   await expect(play).toBeFocused();
   await page.keyboard.press("Shift+Tab");
-  await expect(page.getByRole("button", { name: "[ Full 3D ]", exact: true })).toBeFocused();
+  await expect(soundOff).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(soundOff).toHaveAttribute("aria-pressed", "true");
+  expect(await page.evaluate(() => localStorage.getItem("wordplay:sound:v1"))).toBe("off");
 
   await page.keyboard.press("Escape");
   await expect(dialog).toHaveCount(0);
