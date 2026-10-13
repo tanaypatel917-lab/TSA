@@ -11,6 +11,7 @@ const fakePageAddress = "brightside-news.example/science/naps-boost-scores";
 const juryTitle = "Meet the models. Why do they disagree?";
 const detectorTitle = "Can a detector really tell?";
 const diceTitle = "Roll a challenge. Write the prompt.";
+const cookieTitle = "Who's watching this page?";
 
 async function tabUntilFocused(page: Page, target: ReturnType<Page["getByRole"]>) {
   for (let index = 0; index < 100; index += 1) {
@@ -160,6 +161,71 @@ test("the privacy lesson only calls a prompt safe once every personal detail is 
   await expect(redact.locator(".lab-score")).toContainText("8 of 8");
   await redact.getByRole("button", { name: "Send to the chatbot" }).click();
   await expect(redact.getByRole("status")).toContainText("Safe to send");
+});
+
+test("the cookie lab reveals invented partners and switches by keyboard", async ({ page }) => {
+  await page.goto("/modules/ethical-ai/lessons/privacy/");
+  const cookie = lab(page, cookieTitle);
+  const banner = cookie.getByRole("region", { name: "Pretend cookie banner" });
+  await banner.getByRole("button", { name: "Show all partners (847)" }).click();
+
+  const list = banner.getByRole("region", { name: "Partner list" });
+  await expect(list.locator("li")).toHaveCount(12);
+  await expect(list).toContainText("All partner names here are made up.");
+  await expect(list).toContainText("…and 835 more");
+  const firstSwitch = list.getByRole("switch", { name: "Legitimate interest for Pixel Hound" });
+  await expect(firstSwitch).toHaveAttribute("aria-checked", "true");
+  await tabUntilFocused(page, firstSwitch);
+  await page.keyboard.press("Space");
+  await expect(firstSwitch).toHaveAttribute("aria-checked", "false");
+
+  await banner.getByRole("button", { name: "Manage options" }).click();
+  await expect(list).toContainText("Switch off each one you don't want.");
+});
+
+test("the cookie lab explains Accept and resets every option", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/modules/ethical-ai/lessons/privacy/");
+  const cookie = lab(page, cookieTitle);
+  const banner = cookie.getByRole("region", { name: "Pretend cookie banner" });
+  await banner.getByRole("button", { name: "Accept all" }).click();
+
+  const heading = cookie.getByRole("heading", { name: "One click, 847 companies." });
+  await expect(heading).toBeFocused();
+  await expect(cookie.locator(".cookie-trick-list li")).toHaveCount(4);
+  await expect(cookie.locator(".cookie-compare")).toContainText("prod.spline.design");
+  await expect(cookie.getByRole("status")).toContainText("You chose Accept all.");
+  await expect(banner.locator(".cookie-sticker")).toHaveCount(3);
+  await banner.getByRole("button", { name: "Show all partners (847)" }).click();
+  await expect(banner.locator(".cookie-sticker")).toHaveCount(4);
+
+  await cookie.getByRole("button", { name: "Try again" }).click();
+  await expect(heading).toHaveCount(0);
+  await expect(cookie.getByRole("status")).toHaveText("");
+  await banner.getByRole("button", { name: "Show all partners (847)" }).click();
+  await expect(banner.getByRole("switch", { name: "Legitimate interest for Pixel Hound" })).toHaveAttribute("aria-checked", "true");
+});
+
+test("the cookie lab shows the Reject result", async ({ page }) => {
+  await page.goto("/modules/ethical-ai/lessons/privacy/");
+  const cookie = lab(page, cookieTitle);
+  await cookie.getByRole("button", { name: "Reject all" }).click();
+  await expect(cookie.getByRole("heading", { name: "You found the grey link." })).toBeFocused();
+  await expect(cookie).toContainText("Saying no should be as easy as saying yes. Here it wasn't.");
+});
+
+test("the cookie banner respects reduced motion and its partner list scrolls at 360px", async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 844 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/modules/ethical-ai/lessons/privacy/");
+  await expect(page.locator("html")).toHaveAttribute("data-motion", "reduced");
+  const cookie = lab(page, cookieTitle);
+  const banner = cookie.getByRole("region", { name: "Pretend cookie banner" });
+  await expect(banner).toHaveCSS("animation-name", "none");
+  await banner.getByRole("button", { name: "Show all partners (847)" }).click();
+  const list = banner.getByRole("region", { name: "Partner list" });
+  expect(await list.evaluate((element) => element.scrollHeight)).toBeGreaterThan(await list.evaluate((element) => element.clientHeight));
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(360);
 });
 
 test("the fake-page lab finds clues, reveals the fabrication, and resets", async ({ page }) => {

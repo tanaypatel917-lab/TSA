@@ -5,6 +5,7 @@ import { NextWordDemo } from "../NextWordDemo";
 import { BiasLab } from "./BiasLab";
 import { ChatbotLab } from "./ChatbotLab";
 import { ClaimCheck } from "./ClaimCheck";
+import { CookieLab } from "./CookieLab";
 import { DetectorLab } from "./DetectorLab";
 import { FakePageLab } from "./FakePageLab";
 import { JuryLab } from "./JuryLab";
@@ -16,7 +17,7 @@ import { SystemDiagram } from "./SystemDiagram";
 import { TokenLab } from "./TokenLab";
 import { VariabilityLab } from "./VariabilityLab";
 
-const figures: Record<FigureKind, () => JSX.Element> = { system: SystemDiagram, rules: RuleLab, chatbot: ChatbotLab, tokens: TokenLab, predictor: () => <div className="lab-demo"><NextWordDemo /></div>, bias: BiasLab, claims: ClaimCheck, prompt: PromptBuilder, dice: PromptDiceLab, vary: VariabilityLab, redact: Redactor, fakepage: FakePageLab, jury: JuryLab, detector: DetectorLab };
+const figures: Record<FigureKind, () => JSX.Element> = { system: SystemDiagram, rules: RuleLab, chatbot: ChatbotLab, tokens: TokenLab, predictor: () => <div className="lab-demo"><NextWordDemo /></div>, bias: BiasLab, claims: ClaimCheck, prompt: PromptBuilder, dice: PromptDiceLab, vary: VariabilityLab, redact: Redactor, fakepage: FakePageLab, jury: JuryLab, detector: DetectorLab, cookies: CookieLab };
 
 export function LessonFigure({ kind }: { kind: FigureKind }) {
   const Figure = figures[kind];
