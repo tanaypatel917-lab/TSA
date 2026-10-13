@@ -221,6 +221,10 @@ test("the cookie banner respects reduced motion and its partner list scrolls at 
   await expect(page.locator("html")).toHaveAttribute("data-motion", "reduced");
   const cookie = lab(page, cookieTitle);
   const banner = cookie.getByRole("region", { name: "Pretend cookie banner" });
+  const address = cookie.locator(".cookie-browser-address");
+  await expect(address).toHaveCSS("white-space", "nowrap");
+  await expect(address).toHaveCSS("text-overflow", "ellipsis");
+  await expect(cookie.locator(".cookie-study-heading span")).toHaveCSS("white-space", "nowrap");
   await expect(banner).toHaveCSS("animation-name", "none");
   await banner.getByRole("button", { name: "Show all partners (847)" }).click();
   const list = banner.getByRole("region", { name: "Partner list" });

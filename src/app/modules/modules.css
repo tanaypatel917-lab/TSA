@@ -255,10 +255,10 @@ html[data-motion="reduced"] .fakepage-stamp { animation: none; }
 .cookie-browser-dots i { width: 9px; height: 9px; border: 1px solid var(--ink); border-radius: 50%; background: var(--clay); }
 .cookie-browser-dots i:nth-child(2) { background: var(--sky); }
 .cookie-browser-dots i:nth-child(3) { background: var(--paper); }
-.cookie-browser-address { min-width: 0; padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--paper); font: 12px/1.35 var(--font-mono), monospace; overflow-wrap: anywhere; }
+.cookie-browser-address { flex: 1; min-width: 0; overflow: hidden; padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--paper); font: 14px/1.35 var(--font-mono), monospace; text-overflow: ellipsis; white-space: nowrap; }
 .cookie-study-page { display: grid; gap: 18px; padding: 30px clamp(16px, 5vw, 64px); opacity: .48; }
-.cookie-study-heading { display: grid; gap: 8px; }
-.cookie-study-heading span { font: 700 10px/1.3 var(--font-mono), monospace; letter-spacing: .12em; }
+.cookie-study-heading { display: grid; gap: 8px; min-width: 0; }
+.cookie-study-heading span { min-width: 0; overflow: hidden; font: 700 10px/1.3 var(--font-mono), monospace; letter-spacing: .12em; text-overflow: ellipsis; white-space: nowrap; }
 .cookie-study-heading strong { font: 700 clamp(22px, 4vw, 34px)/1.05 var(--font-display), sans-serif; }
 .cookie-study-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 .cookie-study-cards article { display: grid; align-content: start; gap: 9px; min-width: 0; min-height: 105px; padding: 12px; border: 1px solid var(--ink); border-radius: 5px; background: #F6EFE5; box-shadow: 0 3px 0 rgba(28, 42, 67, .4); font-size: 12px; line-height: 1.4; }
@@ -331,6 +331,8 @@ html[data-motion="reduced"] .cookie-banner { animation: none !important; }
   .fakepage-headline { font-size: clamp(21px, 6vw, 25px); }
   .fakepage-stamp { right: 12px; bottom: 15px; font-size: clamp(16px, 5vw, 20px); }
   .cookie-browser { min-height: 600px; }
+  .cookie-browser-address { font-size: 13px; }
+  .cookie-study-heading span { font-size: 9px; letter-spacing: .08em; }
   .cookie-study-cards { grid-template-columns: minmax(0, 1fr); }
   .cookie-study-cards article { min-height: 58px; }
   .cookie-banner-actions { grid-template-columns: minmax(0, 1fr); }
