@@ -23,7 +23,13 @@ export function VariabilityLab() {
     }));
   }
   const unique = new Set(answers).size;
-  return <LabFrame id="lab-vary" sources="vary" title="Ask the same question three times." note="Most chat tools add some randomness, so the same prompt can give different answers. That is why you compare versions and verify the one you keep. This uses the same tiny model as the homepage demo.">
+  return <LabFrame id="lab-vary" sources="vary" title="Ask the same question three times." note="Most chat tools add some randomness, so the same prompt can give different answers. That is why you compare versions and verify the one you keep. This uses the same tiny model as the homepage demo." hood={{
+    spec: "Simulation · Data: 35 example sentences · Runs on your device",
+    content: <>
+      <p>A word-count model learned from 35 sentences picks each next word at random, weighted by how often it followed the last words. Temperature reshapes those odds: at 0 it always takes the top guess, and higher values give rarer words a better chance. Each answer stops at a period or after 14 words.</p>
+      <p>Real language models use far richer learned odds, but the lesson holds: getting a different answer each time doesn&apos;t make any of them true.</p>
+    </>
+  }}>
     <div className="lab-choices" role="group" aria-label="Start the sentence with">
       {predictorStarters.map((value) => <button key={value} type="button" aria-pressed={value === starter} onClick={() => { setStarter(value); setAnswers([]); }}>{value}…</button>)}
     </div>

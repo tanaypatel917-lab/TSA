@@ -154,6 +154,14 @@ export function TrainLab() {
     sources="rules"
     title="Teach the machine: train a line that sorts dots."
     note="A real, tiny model (a perceptron) trained in your browser on made-up dots. Each step nudges the line toward the dots it got wrong. If it can't sort them all, it keeps the best line it found."
+    hood={{
+      spec: "Tiny trained model · Data: 40 made-up dots · Runs on your device",
+      content: <>
+        <p>The perceptron draws one straight line. A dot is on the clay side when 0.3·x − 0.5·y + 0.1 is at least 0 at the start; every mistake nudges those three numbers by a learning rate of 0.1.</p>
+        <p>Training stops when every dot is sorted, or after 60 steps. Then it keeps the best line it found.</p>
+        <p>Real neural networks stack millions of these units in layers, which lets their boundaries bend.</p>
+      </>
+    }}
   >
     <div className="train-grid">
       <div className="train-visual">

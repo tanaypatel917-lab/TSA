@@ -29,7 +29,13 @@ export function PromptBuilder() {
   const [on, setOn] = useState<Set<PartId>>(new Set(["task"]));
   const toggle = (id: PartId) => setOn((current) => { const next = new Set(current); if (next.has(id)) next.delete(id); else next.add(id); return next; });
   const count = on.size;
-  return <LabFrame id="lab-prompt" sources="prompt" title="Build a prompt one part at a time." note="The responses are written examples of what a real tool tends to return, so you can compare them side by side. Real outputs vary, so treat every answer as a draft to check.">
+  return <LabFrame id="lab-prompt" sources="prompt" title="Build a prompt one part at a time." note="The responses are written examples of what a real tool tends to return, so you can compare them side by side. Real outputs vary, so treat every answer as a draft to check." hood={{
+    spec: "Scripted demo · Data: 2 written answers · Runs on your device",
+    content: <>
+      <p>Task is always on. Context switches to a more targeted written answer, Role adds an opener, Format turns it into bullets, and Limits shortens it. No language model runs here.</p>
+      <p>A real model writes a new answer from your whole prompt, and the answer can change even when the prompt stays the same.</p>
+    </>
+  }}>
     <div className="lab-choices" role="group" aria-label="Prompt parts">
       {parts.map((part) => <button key={part.id} type="button" aria-pressed={on.has(part.id)} disabled={"locked" in part} onClick={() => toggle(part.id)} data-part={part.id}>{part.label}</button>)}
     </div>

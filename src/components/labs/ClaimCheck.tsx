@@ -24,7 +24,13 @@ export function ClaimCheck() {
     const next = listRef.current?.querySelector<HTMLButtonElement>(".claim-actions button");
     (next ?? scoreRef.current)?.focus();
   }, [calls]);
-  return <LabFrame id="lab-claims" sources="claims" title="Spot the hallucinations." note="Hallucinations sound exactly as confident as facts, and invented sources are a warning sign. Check claims that matter against an official website, an encyclopedia or a textbook, like the sources below.">
+  return <LabFrame id="lab-claims" sources="claims" title="Spot the hallucinations." note="Hallucinations sound exactly as confident as facts, and invented sources are a warning sign. Check claims that matter against an official website, an encyclopedia or a textbook, like the sources below." hood={{
+    spec: "Scripted demo · Data: 5 written claims · Runs on your device",
+    content: <>
+      <p>The five claims, their answers and their explanations were written in advance. At the end, it counts how many of the 3 invented claims you marked &quot;Made up&quot;. It doesn&apos;t search anything.</p>
+      <p>Real fact-checking compares a claim with credible sources. No answer key is waiting for you.</p>
+    </>
+  }}>
     <p className="claim-prompt"><span>You asked</span> “Tell me about the Eiffel Tower.”</p>
     <ol className="claim-list" ref={listRef}>
       {claims.map((claim, index) => {

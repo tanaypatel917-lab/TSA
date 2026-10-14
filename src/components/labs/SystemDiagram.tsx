@@ -11,7 +11,13 @@ const inputs = [
 
 export function SystemDiagram() {
   const [pick, setPick] = useState(inputs[0]);
-  return <LabFrame id="lab-system" sources="system" kicker="See it" title="Every AI system: data in, patterns out." note="The model never looks anything up or understands the input. It returns the answer that best matches patterns in its training data, with a confidence score, and a confident answer can still be wrong. The confidence numbers here are examples.">
+  return <LabFrame id="lab-system" sources="system" kicker="See it" title="Every AI system: data in, patterns out." note="The model never looks anything up or understands the input. It returns the answer that best matches patterns in its training data, with a confidence score, and a confident answer can still be wrong. The confidence numbers here are examples." hood={{
+    spec: "Scripted demo · Data: 3 written examples · Runs on your device",
+    content: <>
+      <p>Each of the three inputs swaps in a description, an output and a confidence (94%, 71% or 38%) that we wrote in advance. No model calculates them.</p>
+      <p>Real systems compute their outputs from a trained model and the input. Their confidence numbers come from that model, not from a script.</p>
+    </>
+  }}>
     <div className="lab-choices" role="group" aria-label="Choose an input">
       {inputs.map((item) => <button key={item.id} type="button" aria-pressed={item.id === pick.id} onClick={() => setPick(item)}>{item.label}</button>)}
     </div>

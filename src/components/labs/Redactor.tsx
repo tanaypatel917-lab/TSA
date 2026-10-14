@@ -16,7 +16,13 @@ export function Redactor() {
   const [sent, setSent] = useState(false);
   const removed = hidden.size;
   const toggle = (index: number) => { setSent(false); setHidden((current) => { const next = new Set(current); if (next.has(index)) next.delete(index); else next.add(index); return next; }); };
-  return <LabFrame id="lab-redact" sources="redact" title="Clean up a prompt before you send it." note="The request still works without the private details: the tool only needs a placeholder like [Name]. Health details about someone else need their permission even when a teacher is involved.">
+  return <LabFrame id="lab-redact" sources="redact" title="Clean up a prompt before you send it." note="The request still works without the private details: the tool only needs a placeholder like [Name]. Health details about someone else need their permission even when a teacher is involved." hood={{
+    spec: "Scripted demo · Data: 1 example prompt, 8 personal details · Runs on your device",
+    content: <>
+      <p>The 8 personal details in this example are marked in advance, and clicking one swaps it for a label. The prompt counts as safe only when all 8 are hidden. It doesn&apos;t scan for anything else.</p>
+      <p>Real privacy tools have to find personal details in any text and format, and they still miss some, so read your prompt yourself before sending it.</p>
+    </>
+  }}>
     <p className="lab-hint">Click every personal detail to replace it with a placeholder.</p>
     <p className="redact-text">
       {pieces.map((piece, index) => piece.kind

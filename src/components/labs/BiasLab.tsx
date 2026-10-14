@@ -18,7 +18,14 @@ export function BiasLab() {
   const dy = model.ripe.y - model.unripe.y;
   const reach = 2;
   const line = { x1: mid.x - dy * reach, y1: mid.y + dx * reach, x2: mid.x + dy * reach, y2: mid.y - dx * reach };
-  return <LabFrame id="lab-bias" sources="bias" title="Train a fruit sorter on one farm’s photos." note="This is a real, tiny model (nearest average) trained in your browser on made-up fruit photos. Farm B photos are taken in shade, so ripe fruit looks darker there. Accuracy is measured on 120 fresh photos, half from each farm.">
+  return <LabFrame id="lab-bias" sources="bias" title="Train a fruit sorter on one farm’s photos." note="This is a real, tiny model (nearest average) trained in your browser on made-up fruit photos. Farm B photos are taken in shade, so ripe fruit looks darker there. Accuracy is measured on 120 fresh photos, half from each farm." hood={{
+    spec: "Tiny trained model · Data: 40 made-up fruit per training run · Runs on your device",
+    content: <>
+      <p>The sorter learns the average ripe fruit and the average unripe fruit from 40 training examples. It then labels each test fruit by whichever average it is closer to. The slider changes how many training examples come from Farm B, from 0% to 50%.</p>
+      <p>Accuracy is scored separately on 60 test fruit from each farm, so you can see who the model fails.</p>
+      <p>Real classifiers learn far more settings from far more data, but the lesson is the same: a model only knows the examples it was given.</p>
+    </>
+  }}>
     <label className="lab-field"><span>Farm B photos in the training set: <strong>{Math.round(share * 100)}%</strong></span><input type="range" min={0} max={0.5} step={0.05} value={share} onChange={(event) => setShare(Number(event.target.value))} /></label>
     <div className="bias-grid">
       <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="bias-plot" role="img" aria-label={`Scatter plot of test photos with the model's dividing line. Farm A accuracy ${Math.round(scoreA * 100)}%, Farm B accuracy ${Math.round(scoreB * 100)}%.`}>

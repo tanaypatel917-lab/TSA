@@ -46,6 +46,13 @@ export function LaunchDayLab() {
     id="lab-launch-day"
     title="Launch day: four choices before the club fair."
     note={LAUNCH_INTRO}
+    hood={{
+      spec: "Rule system · Data: 4 written decisions · Runs on your device",
+      content: <>
+        <p>Each day has one choice worth +1 trust and one worth −2. A total of 3 or more is a Trusted launch, −2 or more is Launch with patches, and anything lower is Pulled from the fair.</p>
+        <p>No model judges your choices. Real launches depend on evidence, feedback from the people affected, and someone accountable, not a point total.</p>
+      </>
+    }}
   >
     <div className="launch-day-topline">
       <div className="launch-path" role="img" aria-label={`Four-day launch path. ${path.length} of 4 decisions made.`}>

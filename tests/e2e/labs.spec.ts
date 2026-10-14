@@ -504,3 +504,47 @@ test("Capstone launch day traces trusted and pulled paths", async ({ page }) => 
   await expect(launch.getByRole("heading", { name: "Pulled from the fair" })).toBeVisible();
   await expect(meter).toHaveAttribute("aria-valuenow", "-8");
 });
+
+test("the remaining lesson labs open their authored Under the hood panels", async ({ page }) => {
+  const hoods = [
+    { id: "lab-system", route: "/modules/ai-foundations/lessons/what-is-ai/", spec: "Scripted demo", paragraphs: 2 },
+    { id: "lab-tokens", route: "/modules/ai-foundations/lessons/language-models/", spec: "Rule system", paragraphs: 2 },
+    { id: "lab-bias", route: "/modules/ai-foundations/lessons/data-and-bias/", spec: "Tiny trained model", paragraphs: 3 },
+    { id: "lab-train", route: "/modules/ai-foundations/lessons/rules-and-learning/", spec: "Tiny trained model", paragraphs: 3 },
+    { id: "lab-launch-day", route: "/modules/capstone/lessons/responsible-launch/", spec: "Rule system", paragraphs: 2 },
+    { id: "lab-claims", route: "/modules/ai-foundations/lessons/strengths-and-limits/", spec: "Scripted demo", paragraphs: 2 },
+    { id: "lab-prompt", route: "/modules/ai-tools/lessons/prompt-anatomy/", spec: "Scripted demo", paragraphs: 2 },
+    { id: "lab-vary", route: "/modules/ai-tools/lessons/iterate-verify/", spec: "Simulation", paragraphs: 2 },
+    { id: "lab-redact", route: "/modules/ethical-ai/lessons/privacy/", spec: "Scripted demo", paragraphs: 2 }
+  ];
+
+  for (const item of hoods) {
+    await page.goto(item.route);
+    const labFrame = page.locator(`#${item.id}`);
+    if (item.id === "lab-train") {
+      await labFrame.getByRole("button", { name: "A ring" }).click();
+      await labFrame.getByRole("button", { name: "Step once" }).click();
+      await expect(labFrame.locator(".train-counter")).toContainText("Step 1");
+    }
+    if (item.id === "lab-launch-day") {
+      await labFrame.locator(".launch-day-choice[data-trust='good']").click();
+      await labFrame.getByRole("button", { name: "Next day →" }).click();
+      await expect(labFrame.locator("#launch-day-heading")).toHaveText("Tuesday · Facts");
+    }
+
+    const hood = labFrame.locator(".under-the-hood");
+    const toggle = hood.getByRole("button", { name: "Look under the hood" });
+    await toggle.click();
+    await expect(toggle).toHaveAttribute("aria-expanded", "true");
+    await expect(hood.locator(".under-the-hood-spec")).toContainText(item.spec);
+    const panel = hood.locator(".under-the-hood-panel");
+    await expect(panel).toBeVisible();
+    await expect(panel.locator("p")).toHaveCount(item.paragraphs);
+
+    if (item.id === "lab-train") await expect(labFrame.locator(".train-counter")).toContainText("Step 1");
+    if (item.id === "lab-launch-day") {
+      await expect(labFrame.locator("#launch-day-heading")).toHaveText("Tuesday · Facts");
+      await expect(labFrame.locator(".launch-meter")).toHaveAttribute("aria-valuenow", "1");
+    }
+  }
+});
