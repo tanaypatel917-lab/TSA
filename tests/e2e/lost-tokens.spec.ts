@@ -3,7 +3,6 @@ import { expect, test } from "@playwright/test";
 test("collects a glossary token, reveals its album slot, and shows the 404 token", async ({ page }) => {
   await page.addInitScript(() => {
     localStorage.setItem("wordplay:intro:v1", "seen");
-    localStorage.removeItem("wordplay:found:v1");
   });
 
   await page.goto("/glossary/");
