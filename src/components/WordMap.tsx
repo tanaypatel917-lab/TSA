@@ -33,9 +33,78 @@ function MapFallback({ points, selected, links, onSelect, compact }: {
   onSelect: (term: string) => void;
   compact: boolean;
 }) {
+  const [hoveredTerm, setHoveredTerm] = useState<string | null>(null);
+  const [focusedTerm, setFocusedTerm] = useState<string | null>(null);
   const selectedPoint = points.find((point) => point.term === selected)!;
   const origin = project(selectedPoint);
   const positioned = points.map((point) => ({ ...point, ...project(point) }));
+  const fontSize = compact ? 22 : 17;
+  const clusterFontSize = compact ? 22 : 13;
+  const clusterSquare = compact ? 18 : 10;
+  const clusterGap = compact ? 7 : 5;
+  const clusterHeaders = WORD_MAP_GROUPS.map((group) => {
+    const members = positioned.filter((point) => point.group === group.id);
+    const top = members.reduce((current, point) => point.y < current.y ? point : current);
+    const textWidth = group.label.length * clusterFontSize * 0.69;
+    const width = textWidth + clusterSquare + clusterGap;
+    const center = project({ x: WORD_MAP_GROUP_CENTERS[group.id][0], y: WORD_MAP_GROUP_CENTERS[group.id][1] });
+    const baseline = top.y - (compact ? 42 : 22);
+    const bounds = {
+      x: center.x - width / 2,
+      y: baseline - clusterFontSize * 0.9,
+      width,
+      height: clusterFontSize * 1.2
+    };
+
+    return { group, bounds, baseline, center };
+  });
+  const visibleTerms = [...new Set([selected, ...links, hoveredTerm, focusedTerm].filter((term): term is string => term !== null))];
+  const placedLabels: Array<{ term: string; textX: number; baseline: number; textAnchor: "start" | "end"; rectX: number; rectY: number; rectWidth: number; rectHeight: number; isSelected: boolean; linked: boolean }> = [];
+  const labelObstacles = clusterHeaders.map(({ bounds }) => bounds);
+  const labelHeight = fontSize * 1.2;
+  const labelStep = labelHeight + 8;
+
+  for (const term of visibleTerms) {
+    const point = positioned.find((item) => item.term === term);
+    if (!point) continue;
+
+    const textAnchor = point.x > MAP_CENTER.x ? "end" : "start";
+    const textX = point.x + (textAnchor === "end" ? -9 : 9);
+    const textWidth = point.term.length * fontSize * 0.68;
+    const rectWidth = textWidth + 14;
+    const rectHeight = labelHeight;
+    const rectX = textAnchor === "end" ? textX - textWidth - 7 : textX - 7;
+    const baseY = point.y + fontSize * 0.35;
+    const offsets = [0, -1, 1, -2, 2, -3, 3, -4, 4, -5, 5].map((step) => step * labelStep);
+    const baseline = offsets
+      .map((offset) => baseY + offset)
+      .find((candidate) => {
+        const rectY = candidate - fontSize * 0.9;
+        const bounds = { x: rectX, y: rectY, width: rectWidth, height: rectHeight };
+        const inViewBox = bounds.x >= 4 && bounds.x + bounds.width <= 636 && bounds.y >= 4 && bounds.y + bounds.height <= 516;
+        return inViewBox && !labelObstacles.some((obstacle) =>
+          bounds.x < obstacle.x + obstacle.width && bounds.x + bounds.width > obstacle.x &&
+          bounds.y < obstacle.y + obstacle.height && bounds.y + bounds.height > obstacle.y
+        );
+      });
+
+    if (baseline === undefined) continue;
+    const rectY = baseline - fontSize * 0.9;
+    const bounds = { x: rectX, y: rectY, width: rectWidth, height: rectHeight };
+    labelObstacles.push(bounds);
+    placedLabels.push({
+      term,
+      textX,
+      baseline,
+      textAnchor,
+      rectX,
+      rectY,
+      rectWidth,
+      rectHeight,
+      isSelected: term === selected,
+      linked: links.includes(term)
+    });
+  }
 
   const activate = (event: KeyboardEvent<SVGGElement>, term: string) => {
     if (event.key === "Enter" || event.key === " ") {
@@ -44,16 +113,14 @@ function MapFallback({ points, selected, links, onSelect, compact }: {
     }
   };
 
-  return <svg className="word-map-fallback" viewBox="0 0 640 520" role="group" aria-label="Two-dimensional projection of the Word Map">
+  return <svg className={`word-map-fallback${compact ? " is-compact" : ""}`} viewBox="0 0 640 520" role="group" aria-label="Two-dimensional projection of the Word Map">
     <g aria-hidden="true">
       {WORD_MAP_GROUPS.map((group) => {
-        const center = project({ x: WORD_MAP_GROUP_CENTERS[group.id][0], y: WORD_MAP_GROUP_CENTERS[group.id][1] });
-        const radius = 0.86 * MAP_SCALE;
-        const compactLabelOffset = compact ? group.id === "models" ? 4 : group.id === "data" ? -24 : 0 : 0;
-        const compactLabelXOffset = compact && group.id === "data" ? 8 : 0;
+        const header = clusterHeaders.find(({ group: item }) => item.id === group.id)!;
         return <g key={group.id}>
-          <circle cx={center.x} cy={center.y} r={radius} fill="none" stroke={TONE_COLORS[group.tone]} strokeWidth="2" strokeDasharray="3 9" opacity=".25" />
-          <text className="word-map-cluster-label" x={center.x + compactLabelXOffset} y={center.y - radius - 12 + compactLabelOffset} textAnchor="middle">{group.label}</text>
+          <circle cx={header.center.x} cy={header.center.y} r={0.86 * MAP_SCALE} fill="none" stroke={TONE_COLORS[group.tone]} strokeWidth="2" strokeDasharray="3 9" opacity=".25" />
+          <rect x={header.bounds.x} y={header.baseline - clusterSquare + 2} width={clusterSquare} height={clusterSquare} fill={TONE_COLORS[group.tone]} />
+          <text className="word-map-cluster-label" x={header.bounds.x + clusterSquare + clusterGap} y={header.baseline}>{group.label.toUpperCase()}</text>
         </g>;
       })}
       {links.map((term) => {
@@ -63,26 +130,21 @@ function MapFallback({ points, selected, links, onSelect, compact }: {
     </g>
     {positioned.map((point) => {
       const group = groupLabel(point.group);
-      const depth = (point.z + 3.5) / 7;
-      const radius = 5 + depth * 2;
       const isSelected = point.term === selected;
       const linked = links.includes(point.term);
-      const termIndex = group.terms.findIndex((term) => term === point.term);
-      const textAnchor = point.x > MAP_CENTER.x + 24 ? "end" : point.x < MAP_CENTER.x - 24 ? "start" : "middle";
-      const textX = point.x + (textAnchor === "start" ? 10 : textAnchor === "end" ? -10 : 0) + (compact && point.term === "Verification" ? 12 : 0);
-      const row = Math.floor(termIndex / 2);
-      const rowOffset = compact
-        ? group.id === "models" ? [-28, 28, 24, 40][row] ?? 0 : row % 2 === 0 ? -28 : 28
-        : 0;
-      const textY = point.y + (point.y < MAP_CENTER.y ? -12 : 22)
-        + rowOffset
-        + (compact ? (group.id === "use" ? 55 : 0) + (termIndex % 2 === 0 ? -18 : 18) : 0);
-      return <g key={point.term} className="word-map-node" role="button" tabIndex={0} aria-label={`Select ${point.term}${isSelected ? ", selected" : ""}`} aria-pressed={isSelected} onClick={() => onSelect(point.term)} onKeyDown={(event) => activate(event, point.term)} style={{ opacity: 0.58 + depth * 0.42 }}>
-        <circle cx={point.x} cy={point.y} r={radius + (isSelected ? 7 : linked ? 4 : 0)} fill="none" stroke={isSelected ? "var(--clay)" : linked ? "var(--ink)" : "transparent"} strokeWidth={isSelected ? 4 : 2} />
-        <circle cx={point.x} cy={point.y} r={radius} fill={TONE_COLORS[group.tone]} stroke="var(--ink)" strokeWidth="2" />
-        <text className={isSelected ? "word-map-node-label is-selected" : "word-map-node-label"} x={textX} y={textY} textAnchor={textAnchor}>{point.term}</text>
+      return <g key={point.term} className="word-map-node" role="button" tabIndex={0} aria-label={`Select ${point.term}${isSelected ? ", selected" : ""}`} aria-pressed={isSelected} onClick={() => onSelect(point.term)} onKeyDown={(event) => activate(event, point.term)} onMouseEnter={() => setHoveredTerm(point.term)} onMouseLeave={() => setHoveredTerm(null)} onFocus={() => setFocusedTerm(point.term)} onBlur={() => setFocusedTerm(null)}>
+        <title>{point.term}</title>
+        {(isSelected || linked) && <circle className="word-map-node-ring" cx={point.x} cy={point.y} r={isSelected ? 11 : 8} fill="none" stroke={isSelected ? "var(--clay)" : "var(--ink)"} strokeWidth={isSelected ? 3 : 2} />}
+        <circle className="word-map-node-dot" cx={point.x} cy={point.y} r="5" fill={TONE_COLORS[group.tone]} stroke="var(--ink)" strokeWidth="1.5" />
+        <circle className="word-map-node-hit" cx={point.x} cy={point.y} r="14" fill="transparent" />
       </g>;
     })}
+    <g className="word-map-fallback-labels" aria-hidden="true">
+      {placedLabels.map((label) => <g key={label.term}>
+        <rect className={`word-map-node-label-bg${label.isSelected ? " is-selected" : label.linked ? " is-neighbor" : ""}`} x={label.rectX} y={label.rectY} width={label.rectWidth} height={label.rectHeight} rx="3" />
+        <text className={`word-map-node-label${label.isSelected ? " is-selected" : ""}`} x={label.textX} y={label.baseline} textAnchor={label.textAnchor}>{label.term}</text>
+      </g>)}
+    </g>
   </svg>;
 }
 

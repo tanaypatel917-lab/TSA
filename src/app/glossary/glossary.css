@@ -51,11 +51,19 @@ html[data-motion="full"] .flashcard { transform: perspective(1400px) rotateX(var
 .word-map-fallback, .word-map-three { position: absolute; inset: 0; width: 100%; height: 100%; }
 .word-map-fallback { display: block; transition: opacity 180ms var(--ease-out); }
 .word-map-fallback > g > line { stroke: var(--ink); stroke-width: 2.4; opacity: .72; }
-.word-map-cluster-label { fill: var(--muted); font-family: var(--font-body), sans-serif; font-size: 13px; font-weight: 650; }
+.word-map-cluster-label { fill: var(--ink); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; font-weight: 600; letter-spacing: 1.2px; }
 .word-map-node { cursor: pointer; outline: none; }
-.word-map-node-label { fill: var(--ink); font-family: var(--font-display), sans-serif; font-size: 17px; font-weight: 650; paint-order: stroke; stroke: var(--paper); stroke-linejoin: round; stroke-width: 5px; }
-.word-map-node-label.is-selected { fill: var(--ink); font-size: 20px; }
-.word-map-node:focus-visible circle:first-child { stroke: var(--clay); stroke-width: 5; }
+.word-map-node-dot { pointer-events: none; }
+.word-map-node-hit { fill: transparent; pointer-events: all; }
+.word-map-node:focus-visible .word-map-node-hit { stroke: var(--clay); stroke-width: 3; stroke-dasharray: 4 3; }
+.word-map-node-label-bg { fill: var(--paper); stroke: #D2C8BC; stroke-width: 1.5px; pointer-events: none; }
+.word-map-node-label-bg.is-selected { stroke: var(--clay); stroke-width: 2.2px; }
+.word-map-node-label { fill: var(--ink); font-family: var(--font-display), sans-serif; font-size: 17px; font-weight: 650; pointer-events: none; }
+.word-map-node-label.is-selected { font-weight: 800; }
+.word-map-fallback-labels { pointer-events: none; }
+.word-map-fallback.is-compact .word-map-cluster-label,
+.word-map-fallback.is-compact .word-map-node-label { font-size: 22px; }
+.word-map-fallback.is-compact .word-map-cluster-label { letter-spacing: 1.6px; }
 .word-map-three { z-index: 1; opacity: 0; pointer-events: none; transition: opacity 180ms var(--ease-out); }
 .word-map-three canvas { position: absolute; z-index: 0; inset: 0; display: block; width: 100%; height: 100%; cursor: grab; touch-action: none; }
 .word-map-three-labels { position: absolute; z-index: 1; inset: 0; overflow: hidden; pointer-events: none; }
