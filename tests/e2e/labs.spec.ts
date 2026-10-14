@@ -540,6 +540,12 @@ test("the remaining lesson labs open their authored Under the hood panels", asyn
     const panel = hood.locator(".under-the-hood-panel");
     await expect(panel).toBeVisible();
     await expect(panel.locator("p")).toHaveCount(item.paragraphs);
+    if (item.id === "lab-train") {
+      for (const paragraph of await panel.locator("p").all()) {
+        await expect(paragraph).toHaveCSS("opacity", "1");
+        await expect(paragraph).toHaveCSS("filter", "none");
+      }
+    }
 
     if (item.id === "lab-train") await expect(labFrame.locator(".train-counter")).toContainText("Step 1");
     if (item.id === "lab-launch-day") {
