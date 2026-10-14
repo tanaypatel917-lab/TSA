@@ -150,3 +150,14 @@ test("the homepage shows the course at a glance and previews progress and badges
   await expect(page.getByRole("heading", { level: 2, name: "Learning that levels up." })).toBeVisible();
   await expect(page.getByRole("link", { name: `All ${BADGES.length} badges` })).toHaveAttribute("href", "/badges/");
 });
+
+test("the idea section switches between rules, learning and context", async ({ page }) => {
+  await page.goto("/");
+  const section = page.locator(".idea-shapes");
+  await expect(section.getByRole("heading", { name: "Someone writes the rules." })).toBeVisible();
+  await section.getByRole("button", { name: "Learning" }).click();
+  await expect(section.getByRole("button", { name: "Learning" })).toHaveAttribute("aria-pressed", "true");
+  await expect(section.getByRole("heading", { name: "It learns from examples." })).toBeVisible();
+  await section.getByRole("button", { name: "Context" }).click();
+  await expect(section.locator(".idea-stage-label")).toHaveText("03 / Context");
+});
