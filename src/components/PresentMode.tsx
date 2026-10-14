@@ -44,6 +44,7 @@ export function PresentMode({ module, lesson, index, question, sections, figures
   }, []);
 
   function start() {
+    window.dispatchEvent(new Event("wordplay:present-open"));
     setAt(0);
     setDir(1);
     setOpen(true);

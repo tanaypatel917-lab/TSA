@@ -1,5 +1,6 @@
 "use client";
 
+import { createPortal } from "react-dom";
 import { useEffect, useRef, useState } from "react";
 import { scrollToElement } from "./SmoothScroll";
 import { useMotionPreference } from "./MotionPreferences";
@@ -75,6 +76,7 @@ export function ListenButton({ paragraphs }: { paragraphs: string[] }) {
   const [paused, setPaused] = useState(false);
   const sequence = useRef(0);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const listenButton = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!("speechSynthesis" in window) || typeof SpeechSynthesisUtterance === "undefined") return;
@@ -102,6 +104,20 @@ export function ListenButton({ paragraphs }: { paragraphs: string[] }) {
     clearWordHighlight();
     clearParagraphHighlights();
   }, [paragraphs]);
+
+  useEffect(() => {
+    const stopForPresent = () => {
+      sequence.current += 1;
+      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+      utteranceRef.current = null;
+      clearWordHighlight();
+      clearParagraphHighlights();
+      setPosition(null);
+      setPaused(false);
+    };
+    window.addEventListener("wordplay:present-open", stopForPresent);
+    return () => window.removeEventListener("wordplay:present-open", stopForPresent);
+  }, []);
 
   function finish() {
     utteranceRef.current = null;
@@ -182,13 +198,15 @@ export function ListenButton({ paragraphs }: { paragraphs: string[] }) {
   if (!supported) return null;
 
   return <div className="listen-controls">
-    {position === null
-      ? <button type="button" className="listen-button" onClick={start}>▶ Listen</button>
-      : <>
-        <button type="button" className="listen-button" onClick={togglePause}>{paused ? "▶ Resume" : "❚❚ Pause"}</button>
-        <button type="button" className="listen-button listen-stop" onClick={stop}>■ Stop</button>
-        <span className="listen-note">Reading aloud. The lesson text is the transcript.</span>
-      </>}
+    <button ref={listenButton} type="button" className="listen-button" aria-pressed={position !== null} onClick={start}>▶ Listen</button>
     <span className="listen-status" role="status" aria-live="polite">{position === null ? "" : `Reading paragraph ${position + 1} of ${paragraphs.length}`}</span>
+    {position !== null && createPortal(
+      <div className="listen-floating" role="group" aria-label="Listen controls">
+        <button type="button" className="listen-button" onClick={togglePause}>{paused ? "▶ Resume" : "❚❚ Pause"}</button>
+        <button type="button" className="listen-button listen-stop" onClick={() => { stop(); listenButton.current?.focus(); }}>■ Stop</button>
+        <span className="listen-floating-label" aria-hidden="true">Reading {position + 1}/{paragraphs.length}</span>
+      </div>,
+      document.body
+    )}
   </div>;
 }

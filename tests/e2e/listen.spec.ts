@@ -2,7 +2,6 @@ import { expect, test } from "@playwright/test";
 
 test("Listen advances paragraphs, pauses, stops, and stays visible on a phone", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.emulateMedia({ reducedMotion: "reduce" });
   await page.addInitScript(() => {
     class FakeUtterance {
       text: string;
@@ -75,8 +74,26 @@ test("Listen advances paragraphs, pauses, stops, and stays visible on a phone", 
   const second = page.locator('[data-paragraph="1"]');
   await expect(first).toHaveAttribute("data-speaking", "true");
   await expect(second).toHaveAttribute("data-speaking", "true");
+
+  const expectPillInViewport = async () => {
+    const pill = page.locator(".listen-floating");
+    await expect(pill).toBeVisible();
+    const bounds = await pill.evaluate((element) => {
+      const rect = element.getBoundingClientRect();
+      return { left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom };
+    });
+    const viewport = page.viewportSize()!;
+    expect(bounds.left).toBeGreaterThanOrEqual(0);
+    expect(bounds.top).toBeGreaterThanOrEqual(0);
+    expect(bounds.right).toBeLessThanOrEqual(viewport.width);
+    expect(bounds.bottom).toBeLessThanOrEqual(viewport.height);
+  };
+
+  await expectPillInViewport();
   await page.getByRole("button", { name: "❚❚ Pause", exact: true }).click();
   await expect(page.getByRole("button", { name: "▶ Resume", exact: true })).toBeVisible();
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await expectPillInViewport();
   await page.getByRole("button", { name: "■ Stop", exact: true }).click();
   await expect(page.locator("[data-speaking]")).toHaveCount(0);
   await expect(listen).toBeVisible();
