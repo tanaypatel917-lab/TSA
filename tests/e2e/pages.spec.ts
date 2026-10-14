@@ -208,3 +208,14 @@ test("glossary terms can be spoken out loud", async ({ page }) => {
   await page.getByRole("button", { name: "Say “Model” out loud" }).click();
   expect(await page.evaluate(() => (window as unknown as { said: string[] }).said)).toEqual(["Model"]);
 });
+
+test("My learning wraps up progress so far", async ({ page }) => {
+  const state = { version: 1, xp: 185, completedLessons: ["foundations/what-is-ai"], completedActivities: [], quizBest: { foundations: 90, tools: 100 }, badges: [], streak: { count: 1, lastDay: "2026-10-11" }, startedAt: "2026-10-02T15:00:00.000Z" };
+  await page.addInitScript((saved) => { localStorage.setItem("wordplay:intro:v1", "seen"); localStorage.setItem("wordplay:progress:v1", saved); }, JSON.stringify(state));
+  await page.goto("/learn/");
+  const recap = page.getByRole("region", { name: "Your Wordplay, wrapped." });
+  await expect(recap).toBeVisible();
+  await expect(recap.getByText("The Fact-Checker")).toBeVisible();
+  await expect(recap.getByText("95%")).toBeVisible();
+  await expect(recap.getByRole("link", { name: /See what’s left/ })).toHaveAttribute("href", "#certificate-title");
+});
