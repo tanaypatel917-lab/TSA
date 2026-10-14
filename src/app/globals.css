@@ -179,6 +179,7 @@ html[data-motion="reduced"] .title-guess-tile { transition: none; }
 .learning-path li p { margin-top: 10px; max-width: 260px; font-size: 16px; line-height: 1.65; }
 .path-note { display: flex; justify-content: space-between; gap: 24px; margin-top: 50px; font-size: 14px; }
 .path-note p { max-width: 500px; color: var(--muted); }
+.path-note-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px 32px; }
 .home-closing { background: var(--clay); overflow: hidden; }
 .home-closing .shell { position: relative; padding-block: 52px 66px; }
 .home-closing p { font-size: 16px; }
@@ -392,6 +393,7 @@ html[data-motion="reduced"] .badge-toast button { transition: none; }
   .learning-path li p { font-size: 15px; }
   .path-note { display: block; margin-top: 32px; }
   .path-note .text-link { margin-top: 20px; }
+  .path-note-links { display: grid; justify-content: start; gap: 0; }
   .home-closing .shell { padding-block: 36px 42px; }
   .home-closing h2 { font-size: clamp(50px, 12vw, 72px); margin: 20px 0 24px; }
   .home-closing p { font-size: 14px; }
