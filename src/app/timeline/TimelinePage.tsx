@@ -1,13 +1,36 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { referenceById, referenceNumber } from "@/content/references";
 import { timelineEras } from "@/content/timeline";
 import { LostToken } from "@/components/LostToken";
+import { TimelineParticles } from "@/components/three/TimelineParticles";
+import { useMotionPreference } from "@/components/MotionPreferences";
+
+const timelineItems = timelineEras.flatMap((era) => era.entries.map((entry, index) => {
+  const key = typeof entry.year === "number" ? String(entry.year) : `next-${index + 1}`;
+  const year = typeof entry.year === "number" ? String(entry.year) : "NEXT";
+  return {
+    key,
+    mark: entry.object?.mark ?? "?",
+    caption: `${year} · ${(entry.object?.label ?? "YOUR TURN").toUpperCase()}`
+  };
+}));
+
+function supportsWebGL() {
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("webgl2") ?? canvas.getContext("webgl");
+  if (context) context.getExtension("WEBGL_lose_context")?.loseContext();
+  return Boolean(context);
+}
 
 export function TimelinePage() {
   const [activeEra, setActiveEra] = useState("past");
+  const [activeEntry, setActiveEntry] = useState(timelineItems[0]?.key ?? "");
+  const [particlesEnabled, setParticlesEnabled] = useState(false);
+  const { reduced, ready } = useMotionPreference();
+  const currentParticle = timelineItems.find((item) => item.key === activeEntry) ?? timelineItems[0];
 
   useEffect(() => {
     const sections = Array.from(document.querySelectorAll<HTMLElement>(".timeline-era"));
@@ -19,8 +42,55 @@ export function TimelinePage() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    if (!ready || reduced) {
+      setParticlesEnabled(false);
+      return;
+    }
+    const wide = window.matchMedia("(min-width: 1200px)");
+    const update = () => setParticlesEnabled(wide.matches && supportsWebGL());
+    update();
+    wide.addEventListener("change", update);
+    return () => wide.removeEventListener("change", update);
+  }, [ready, reduced]);
+
+  useEffect(() => {
+    let frame = 0;
+    const updateActiveEntry = () => {
+      frame = 0;
+      const center = window.innerHeight / 2;
+      let closest: HTMLElement | undefined;
+      let closestDistance = Number.POSITIVE_INFINITY;
+      for (const entry of document.querySelectorAll<HTMLElement>(".timeline-entry")) {
+        const bounds = entry.getBoundingClientRect();
+        const distance = Math.abs((bounds.top + bounds.bottom) / 2 - center);
+        if (distance < closestDistance) {
+          closest = entry;
+          closestDistance = distance;
+        }
+      }
+      const key = closest?.id.replace("timeline-entry-", "");
+      if (key) setActiveEntry((current) => current === key ? current : key);
+    };
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(updateActiveEntry);
+    };
+    schedule();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+    };
+  }, []);
+
+  const disableParticles = useCallback((readyState: boolean) => {
+    if (!readyState) setParticlesEnabled(false);
+  }, []);
+
   return (
-    <div className="timeline-layout shell">
+    <div className={`timeline-layout shell${particlesEnabled ? " timeline-layout--particles" : ""}`}>
       <header className="timeline-hero">
         <p className="timeline-eyebrow">A living history</p>
         <h1>AI, one sentence a year.</h1>
@@ -35,6 +105,10 @@ export function TimelinePage() {
           ))}
         </nav>
       </aside>
+      {particlesEnabled && currentParticle && <aside className="timeline-particles-column" aria-hidden="true">
+        <TimelineParticles mark={currentParticle.mark} onReady={disableParticles} />
+        <p className="timeline-particles-caption">{currentParticle.caption}</p>
+      </aside>}
       <div className="timeline-content">
         {timelineEras.map((era) => (
           <section key={era.id} id={era.id} className="timeline-era" aria-labelledby={`${era.id}-heading`}>

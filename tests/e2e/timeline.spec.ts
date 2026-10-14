@@ -78,4 +78,11 @@ test("reduced motion keeps every timeline entry visible", async ({ page }) => {
   await page.goto("/timeline/");
   await expect(page.locator(".timeline-entry")).toHaveCount(12);
   for (const entry of await page.locator(".timeline-entry").all()) await expect(entry).toBeVisible();
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await expect(page.locator(".timeline-particles-canvas")).toHaveCount(0);
+  await expect(page.locator(".timeline-layout")).not.toHaveClass(/timeline-layout--particles/);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(1440);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(page.locator(".timeline-particles-column")).toHaveCount(0);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
 });
