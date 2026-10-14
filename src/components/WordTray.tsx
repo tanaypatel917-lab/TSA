@@ -3,13 +3,15 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { loadTray, saveTray, toggleTerm, TRAY_KEY } from "@/engine/tray";
+import { loadTray, saveTray, toggleTerm, TRAY_KEY, TRAY_LIMIT } from "@/engine/tray";
 import type { TermLesson } from "@/engine/glossary";
 import "./wordtray.css";
 
 type TrayState = { terms: string[]; hydrated: boolean; error: string | null };
 type TrayEntry = { term: string; definition: string; lessons: TermLesson[] };
 type Subscriber = () => void;
+
+const STARTER = ["Token", "Prompt", "Hallucination", "Bias", "Verification"];
 
 const subscribers = new Set<Subscriber>();
 let listeningForStorage = false;
@@ -59,8 +61,9 @@ export function useTray() {
   const toggle = useCallback((term: string) => persist(toggleTerm(state.terms, term)), [persist, state.terms]);
   const remove = useCallback((term: string) => persist(state.terms.filter((saved) => saved !== term)), [persist, state.terms]);
   const clear = useCallback(() => persist([]), [persist]);
+  const addAll = useCallback((terms: string[]) => persist([...new Set([...state.terms, ...terms])].slice(0, TRAY_LIMIT)), [persist, state.terms]);
 
-  return { ...state, toggle, remove, clear };
+  return { ...state, toggle, remove, clear, addAll };
 }
 
 export function TrayToggle({ term, compact = false }: { term: string; compact?: boolean }) {
@@ -83,6 +86,7 @@ export function TrayPageContent({ entries }: { entries: TrayEntry[] }) {
   const clearTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const entryByTerm = new Map(entries.map((entry) => [entry.term, entry]));
   const savedEntries = tray.terms.map((term) => entryByTerm.get(term)).filter((entry): entry is TrayEntry => Boolean(entry));
+  const starter = STARTER.map((term) => entryByTerm.get(term)).filter((entry): entry is TrayEntry => Boolean(entry));
 
   const resetClear = useCallback(() => {
     if (clearTimer.current) clearTimeout(clearTimer.current);
@@ -108,7 +112,7 @@ export function TrayPageContent({ entries }: { entries: TrayEntry[] }) {
       <button type="button" className="button-primary" disabled={!tray.hydrated || savedEntries.length === 0} onClick={() => window.print()}>Print study sheet <span aria-hidden="true">↗</span></button>
       <button type="button" className="button-secondary" disabled={!tray.hydrated || savedEntries.length === 0} onClick={requestClear} onBlur={resetClear}>{confirmClear ? "Click again to clear" : "Clear tray"}</button>
     </div>
-    <p className="tray-status" role="status" aria-live="polite">{savedEntries.length} words saved</p>
+    <p className="tray-status" role="status" aria-live="polite">{savedEntries.length} {savedEntries.length === 1 ? "word" : "words"} saved</p>
     {tray.error && <p className="tray-error" role="status">{tray.error}</p>}
     {savedEntries.length ? <ol className="tray-list">{savedEntries.map((entry) => <li className="tray-term" key={entry.term}>
       <article>
@@ -117,7 +121,11 @@ export function TrayPageContent({ entries }: { entries: TrayEntry[] }) {
         {entry.lessons.length > 0 && <p className="tray-lesson-links">Explained in {entry.lessons.map((lesson, index) => <span key={lesson.href}>{index > 0 && " · "}<Link href={lesson.href}>{lesson.title}</Link></span>)}</p>}
         <p className="tray-own-words"><span>In my own words:</span><span aria-hidden="true">_________________________</span></p>
       </article>
-    </li>)}</ol> : <div className="tray-empty"><p>Your tray is empty.</p><Link href="/glossary/" className="text-link text-link--arrow"><span className="text-link-label">Find words to save </span><span aria-hidden="true">→</span></Link></div>}
+    </li>)}</ol> : <div className="tray-empty"><p>Your tray is empty.</p>
+      {starter.length > 0 && <><p className="tray-starter-lede">Start with {starter.length} words every AI user should know.</p>
+        <ul className="tray-starter">{starter.map((entry, index) => <li key={entry.term} className="tray-starter-card" style={{ "--i": index - (starter.length - 1) / 2 } as React.CSSProperties}><b>{entry.term}</b><span>{entry.definition}</span><TrayToggle term={entry.term} /></li>)}</ul></>}
+      <div className="tray-starter-actions">{starter.length > 0 && <button type="button" className="button-primary" disabled={!tray.hydrated} onClick={() => tray.addAll(starter.map((entry) => entry.term))}>Save all {starter.length} <span aria-hidden="true">+</span></button>}<Link href="/glossary/" className="text-link text-link--arrow"><span className="text-link-label">Find words to save </span><span aria-hidden="true">→</span></Link></div>
+    </div>}
     <p className="tray-print-footer">PROPERTY OF A CURIOUS STUDENT // STORED IN THIS BROWSER ONLY</p>
   </section>;
 }

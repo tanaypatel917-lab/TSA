@@ -26,7 +26,7 @@ test("glossary saves words in order, removes one, and keeps the change after rel
   await page.goto("/tray/");
   await expect(page.locator(".tray-term h2")).toHaveText(["Token", "Model"]);
   await page.getByRole("button", { name: "Remove Model" }).click();
-  await expect(page.locator(".tray-status")).toHaveText("1 words saved");
+  await expect(page.locator(".tray-status")).toHaveText("1 word saved");
   await page.reload();
   await expect(page.locator(".tray-term h2")).toHaveText(["Token"]);
   await expect(page.getByRole("link", { name: "Word tray, 1 saved" })).toBeVisible();
@@ -148,4 +148,13 @@ test("the desktop header remains on one row at 1024 and 1280 pixels", async ({ p
     expect(geometry.brandRight).toBeGreaterThan(geometry.shellLeft);
     expect(geometry.scrollWidth).toBeLessThanOrEqual(width);
   }
+});
+
+test("an empty tray offers a starter pack of words", async ({ page }) => {
+  await page.goto("/tray/");
+  await expect(page.getByText("Your tray is empty.")).toBeVisible();
+  await page.getByRole("button", { name: "Save all 5" }).click();
+  await expect(page.getByRole("status").filter({ hasText: "words saved" })).toHaveText("5 words saved");
+  await expect(page.getByRole("heading", { name: "Hallucination" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Word tray, 5 saved" })).toBeVisible();
 });

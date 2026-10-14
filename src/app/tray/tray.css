@@ -13,6 +13,20 @@
 .tray-empty { padding: 26px 0; border-top: 1.5px solid var(--ink); font-size: 20px; }
 .tray-empty .text-link { margin-top: 18px; }
 .tray-print-heading, .tray-own-words, .tray-print-footer { display: none; }
+.tray-starter-lede { margin-top: 6px; color: var(--muted); font-size: 17px; }
+.tray-starter { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 18px; margin: 30px 0 0; padding: 0; list-style: none; }
+.tray-starter-card { display: flex; flex-direction: column; gap: 10px; min-width: 0; padding: 18px 18px 16px; border: 1.5px solid var(--ink); border-radius: 10px; background: var(--paper); box-shadow: 6px 6px 0 var(--ink); rotate: calc(var(--i) * 1.5deg); transition: rotate 240ms var(--ease-out), translate 240ms var(--ease-out), background-color 200ms ease; }
+.tray-starter-card:has([aria-pressed="true"]) { background: var(--sky); }
+.tray-starter-card b { font-family: var(--font-display), sans-serif; font-size: clamp(22px, 2vw, 30px); font-weight: 650; line-height: 1; letter-spacing: -.035em; overflow-wrap: anywhere; }
+.tray-starter-card span { display: -webkit-box; flex: 1; overflow: hidden; font-size: 14px; line-height: 1.5; -webkit-box-orient: vertical; -webkit-line-clamp: 4; }
+.tray-starter-card .tray-toggle { align-self: flex-start; }
+.tray-starter-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 28px; margin-top: 36px; }
+.tray-empty .tray-starter-actions .text-link { margin-top: 0; }
+@media (hover: hover) and (pointer: fine) { .tray-starter-card:hover { rotate: 0deg; translate: 0 -6px; } }
+@media (max-width: 1099px) { .tray-starter { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 639px) { .tray-starter { grid-template-columns: minmax(0, 1fr); gap: 14px; } .tray-starter-card { padding: 14px 16px; rotate: calc(var(--i) * .6deg); box-shadow: 4px 4px 0 var(--ink); } .tray-starter-card span { -webkit-line-clamp: 2; } }
+@media (prefers-reduced-motion: reduce) { .tray-starter-card { transition: none; } }
+html[data-motion="reduced"] .tray-starter-card { transition: none; }
 @media (max-width: 767px) {
   .tray-content { padding-block: 38px 72px; }
   .tray-list { grid-template-columns: minmax(0, 1fr); gap: 18px; }
@@ -30,6 +44,7 @@
   .tray-print-heading .wordmark { display: block; color: #000; font-size: 18pt; }
   .tray-print-heading h1 { margin-top: 10pt; color: #000; font-family: var(--font-display), sans-serif; font-size: 28pt; line-height: 1.05; }
   .tray-status, .tray-error { display: none !important; }
+  .tray-starter-lede, .tray-starter, .tray-starter-actions { display: none !important; }
   .tray-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18pt 22pt; margin: 0; padding: 0; }
   .tray-term { break-inside: avoid; min-width: 0; padding: 0 0 12pt; border: 0; border-bottom: 1pt solid #777; background: #fff; color: #000; }
   .tray-term-heading { display: block; }
