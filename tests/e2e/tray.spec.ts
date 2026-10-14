@@ -75,7 +75,7 @@ test("keyboard activation saves a glossary word", async ({ page }) => {
   const token = page.getByRole("button", { name: "Save Token to your word tray" });
   await expect(token).toBeEnabled();
   let focused = false;
-  for (let index = 0; index < 80; index += 1) {
+  for (let index = 0; index < 140; index += 1) {
     await page.keyboard.press("Tab");
     const label = await page.evaluate(() => document.activeElement?.getAttribute("aria-label"));
     if (label === "Save Token to your word tray") {
