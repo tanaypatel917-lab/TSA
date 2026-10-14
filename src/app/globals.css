@@ -1587,3 +1587,16 @@ html[data-text="larger"] main:not(:has(.world)) { zoom: 1.22; }
   .comfort-pill button, .comfort-pill .motion-toggle { padding-inline: 8px; }
   .comfort-pill > :first-child { padding-left: 11px; }
 }
+
+/* X-ray: token boundaries */
+::highlight(xray-a) { background-color: rgba(175, 203, 227, .8); color: var(--ink); }
+::highlight(xray-b) { background-color: rgba(221, 137, 98, .42); color: var(--ink); }
+.xray-toggle { position: fixed; left: 18px; bottom: 18px; z-index: 60; display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 6px 14px 6px 12px; border: 1.5px solid var(--ink); border-radius: 999px; background: var(--paper); box-shadow: 0 3px 0 var(--ink); color: var(--ink); font: 700 13px/1.2 var(--font-mono), monospace; letter-spacing: .06em; text-transform: uppercase; transition: translate 140ms var(--ease-out), box-shadow 140ms var(--ease-out), background-color 160ms ease; }
+.xray-toggle:active { translate: 0 3px; box-shadow: none; }
+.xray-toggle:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.xray-toggle[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.xray-dot { width: 10px; height: 10px; border-radius: 50%; background: linear-gradient(90deg, var(--sky) 50%, var(--clay) 50%); box-shadow: 0 0 0 1.5px currentColor; }
+.xray-count { padding-left: 9px; border-left: 1.5px solid color-mix(in srgb, currentColor 40%, transparent); font-weight: 600; letter-spacing: .02em; text-transform: none; }
+@media (hover: hover) and (pointer: fine) { .xray-toggle:hover { background: var(--sky); } .xray-toggle[aria-pressed="true"]:hover { background: #2A3B5A; } }
+@media (max-width: 767px) { .xray-toggle { left: 12px; bottom: 12px; min-height: 36px; padding: 5px 11px; font-size: 11.5px; } }
+@media print { .xray-toggle { display: none; } }

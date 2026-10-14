@@ -315,3 +315,16 @@ test("the comfort pill toggles sound and cycles a saved text size", async ({ pag
   await comfort.getByRole("button", { name: "Text size: Larger" }).click();
   await expect(page.locator("html")).not.toHaveAttribute("data-text", /./);
 });
+
+test("the X-ray switch counts the tokens on the page", async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("wordplay:intro:v1", "seen"));
+  await page.goto("/glossary/");
+  const xray = page.getByRole("button", { name: /^X-ray/ });
+  await expect(xray).toHaveAttribute("aria-pressed", "false");
+  await xray.click();
+  await expect(xray).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByRole("status").filter({ hasText: /≈ [\d,]+ tokens/ })).toBeVisible();
+  expect(await page.evaluate(() => (CSS as unknown as { highlights: Map<string, unknown> }).highlights.has("xray-a"))).toBe(true);
+  await xray.click();
+  expect(await page.evaluate(() => (CSS as unknown as { highlights: Map<string, unknown> }).highlights.has("xray-a"))).toBe(false);
+});
