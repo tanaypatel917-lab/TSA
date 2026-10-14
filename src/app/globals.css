@@ -160,6 +160,8 @@ html[data-motion="reduced"] .title-guess-tile { transition: none; }
 .judgment-inner h2 span { color: var(--clay); }
 .judgment-copy { padding-top: 15px; }
 .judgment-lead { font-size: 23px; line-height: 1.4; margin-bottom: 22px; }
+.scroll-read > span { transition: opacity .4s var(--ease-out); }
+.scroll-read > span[data-read="false"] { opacity: .3; }
 .judgment-copy > p:not(.judgment-lead), .judgment-copy details p { font-size: 17px; line-height: 1.75; }
 .judgment-copy details { margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--clay); }
 .judgment-copy summary { font-weight: 600; }
