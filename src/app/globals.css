@@ -1572,8 +1572,7 @@ html[data-text="large"] main:not(:has(.world)) { zoom: 1.1; }
 html[data-text="larger"] main:not(:has(.world)) { zoom: 1.22; }
 @media (max-width: 1023px) { .site-navigation .comfort-pill { align-self: flex-start; margin-top: 16px; } .site-navigation .comfort-pill button { min-height: 44px; padding-inline: 16px; font-size: 15px; } }
 .comfort-pill .motion-toggle { margin-top: 0; align-self: stretch; }
-.site-navigation a { white-space: nowrap; }
-@media (min-width: 1024px) and (max-width: 1279px) {
+@media (min-width: 1024px) and (max-width: 1439px) {
   .comfort-sound .comfort-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .comfort-pill button { padding-inline: 10px; }
 }
@@ -1582,4 +1581,9 @@ html[data-text="larger"] main:not(:has(.world)) { zoom: 1.22; }
   .lesson-facts div { min-width: 0; padding: 10px 14px 10px 12px; }
   .lesson-facts dd { font-size: 30px; }
   .lesson-facts dt { font-size: 10px; letter-spacing: .05em; }
+}
+@media (min-width: 1024px) and (max-width: 1179px) {
+  .site-navigation { gap: 10px; }
+  .comfort-pill button, .comfort-pill .motion-toggle { padding-inline: 8px; }
+  .comfort-pill > :first-child { padding-left: 11px; }
 }
