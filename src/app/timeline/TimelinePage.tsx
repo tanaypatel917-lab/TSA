@@ -51,6 +51,7 @@ export function TimelinePage() {
                         : <><span className="timeline-question" aria-hidden="true">?</span><span className="sr-only">Next</span></>}
                     </div>
                     <div className="timeline-copy">
+                      {entry.object && <span className="timeline-object" aria-hidden="true"><b>{entry.object.mark}</b><small>{entry.object.label}</small></span>}
                       <h3>{entry.sentence}</h3>
                       {entry.why && <p className="timeline-why">{entry.why}</p>}
                       {reference && <p className="timeline-source source-line">Source: <Link href={`/references#ref-${reference.id}`}>[{referenceNumber(reference.id)}] {reference.short}</Link></p>}
