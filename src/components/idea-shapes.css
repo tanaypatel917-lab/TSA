@@ -16,6 +16,6 @@
 .idea-stage-label { position: absolute; z-index: 1; top: 14px; left: 16px; font-family: var(--font-mono), monospace; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
 .idea-flat { position: absolute; inset: 0; display: grid; place-items: center; color: var(--clay); font: 700 clamp(96px, 14vw, 180px)/1 var(--font-display), sans-serif; letter-spacing: -.05em; }
 .idea-stage[data-on="true"] .idea-flat { display: none; }
-@media (max-width: 899px) { .idea-inner { grid-template-columns: minmax(0, 1fr); } .idea-panel { min-height: 0; } .idea-stage { min-height: 280px; box-shadow: 6px 6px 0 var(--ink); } }
+@media (max-width: 899px) { .idea-inner { grid-template-columns: minmax(0, 1fr); } .idea-panel { min-height: 0; } .idea-stage { min-height: 0; aspect-ratio: 1; box-shadow: 6px 6px 0 var(--ink); } }
 @media (prefers-reduced-motion: reduce) { .idea-tabs button { transition: none; } }
 html[data-motion="reduced"] .idea-tabs button { transition: none; }
