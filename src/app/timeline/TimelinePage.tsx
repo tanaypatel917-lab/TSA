@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { referenceById, referenceNumber } from "@/content/references";
 import { timelineEras } from "@/content/timeline";
+import { LostToken } from "@/components/LostToken";
 
 export function TimelinePage() {
   const [activeEra, setActiveEra] = useState("past");
@@ -56,6 +57,7 @@ export function TimelinePage() {
                       {entry.why && <p className="timeline-why">{entry.why}</p>}
                       {reference && <p className="timeline-source source-line">Source: <Link href={`/references#ref-${reference.id}`}>[{referenceNumber(reference.id)}] {reference.short}</Link></p>}
                       {entry.lesson && <Link className="timeline-lesson" href={entry.lesson.href}>{entry.lesson.label}</Link>}
+                      {entry.year === 2017 && <div className="lost-token-context lost-token-context--timeline"><LostToken id="mask" /></div>}
                     </div>
                   </li>
                 );

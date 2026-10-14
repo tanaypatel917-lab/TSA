@@ -1,0 +1,286 @@
+.lost-token {
+  display: inline-flex;
+  max-width: 100%;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  vertical-align: middle;
+}
+
+.lost-token-chip {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border: 1px dashed var(--ink);
+  border-radius: 3px;
+  background: var(--paper);
+  color: var(--ink);
+  font: 650 12px/1.15 var(--font-mono), ui-monospace, monospace;
+  cursor: pointer;
+  opacity: .58;
+  rotate: -1.8deg;
+  transition: opacity 160ms ease, rotate 180ms var(--ease-out), translate 180ms var(--ease-out), box-shadow 180ms var(--ease-out);
+}
+
+.lost-token-chip[data-found="true"] {
+  opacity: .82;
+}
+
+.lost-token-check {
+  color: #36664F;
+  font: 800 15px/1 var(--font-body), sans-serif;
+}
+
+.lost-token-chip:focus-visible {
+  outline: 3px solid var(--clay);
+  outline-offset: 4px;
+  opacity: 1;
+}
+
+.lost-token-popover {
+  position: relative;
+  z-index: 5;
+  width: min(280px, calc(100vw - 48px));
+  max-width: 100%;
+  margin-top: 12px;
+  padding: 14px 16px;
+  border: 1.5px solid var(--ink);
+  border-radius: 3px;
+  background: var(--paper);
+  box-shadow: 4px 4px 0 var(--ink);
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.lost-token-popover::before {
+  position: absolute;
+  top: -7px;
+  left: 18px;
+  width: 12px;
+  height: 12px;
+  border-top: 1.5px solid var(--ink);
+  border-left: 1.5px solid var(--ink);
+  background: var(--paper);
+  content: "";
+  rotate: 45deg;
+}
+
+.lost-token-popover strong {
+  display: block;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+}
+
+.lost-token-popover p {
+  margin-top: 5px;
+}
+
+.lost-token-popover a {
+  display: inline-block;
+  margin-top: 8px;
+  color: var(--ink);
+  font-weight: 750;
+  text-underline-offset: 3px;
+}
+
+.lost-token-popover a:focus-visible {
+  outline: 2px solid var(--clay);
+  outline-offset: 3px;
+}
+
+.lost-token-album {
+  margin-top: 72px;
+  padding-top: 38px;
+  border-top: 2px solid var(--ink);
+}
+
+.lost-token-album-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px 28px;
+}
+
+.lost-token-album-head h2 {
+  margin-top: 8px;
+  font-size: clamp(42px, 6vw, 76px);
+  line-height: .98;
+  letter-spacing: -.045em;
+}
+
+.lost-token-count {
+  padding: 8px 12px;
+  border: 1.5px solid var(--ink);
+  background: var(--clay);
+  box-shadow: 3px 3px 0 var(--ink);
+  font: 700 12px/1.2 var(--font-mono), ui-monospace, monospace;
+  white-space: nowrap;
+}
+
+.lost-token-slots {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin: 32px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lost-token-slot {
+  min-width: 0;
+  padding: 5px 6px 7px 5px;
+  background: var(--ink);
+  rotate: var(--lost-token-tilt, 0deg);
+}
+
+.lost-token-slot:nth-child(3n + 1) { --lost-token-tilt: -1deg; }
+.lost-token-slot:nth-child(3n + 2) { --lost-token-tilt: 1.2deg; }
+.lost-token-slot:nth-child(3n) { --lost-token-tilt: -.5deg; }
+
+.lost-token-slot-card {
+  display: flex;
+  min-height: 190px;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 17px 18px;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.lost-token-slot[data-found="false"] .lost-token-slot-card {
+  background-color: #E8DFD3;
+  background-image: repeating-linear-gradient(135deg, transparent 0 12px, rgba(28, 42, 67, .045) 12px 13px);
+}
+
+.lost-token-slot-label {
+  font: 700 10px/1.2 var(--font-mono), ui-monospace, monospace;
+  letter-spacing: .09em;
+}
+
+.lost-token-slot-glyph {
+  margin-top: 22px;
+  padding: 5px 9px;
+  border: 1px dashed var(--ink);
+  background: var(--sky);
+  font: 700 23px/1.2 var(--font-mono), ui-monospace, monospace;
+}
+
+.lost-token-slot-card p {
+  margin-top: auto;
+  padding-top: 14px;
+  font-size: 14px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.lost-token-mystery {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  align-self: center;
+  margin-top: 12px;
+  border: 1px dashed var(--ink);
+  border-radius: 50%;
+  color: var(--clay);
+  font: 700 27px/1 var(--font-display), sans-serif;
+}
+
+.lost-token-complete {
+  margin-top: 28px;
+  padding: 17px 20px;
+  border: 2px solid var(--ink);
+  background: var(--clay);
+  box-shadow: 5px 5px 0 var(--ink);
+  font-weight: 750;
+  line-height: 1.5;
+}
+
+.idea-copy .lost-token-context {
+  margin-block: 18px;
+}
+
+.glossary-list-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px 22px;
+  margin-bottom: 28px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--ink);
+}
+
+.glossary-list-head h2 {
+  font-size: clamp(24px, 3vw, 38px);
+  line-height: 1.05;
+  letter-spacing: -.035em;
+}
+
+.timeline-copy .lost-token-context {
+  margin-top: 16px;
+}
+
+.lost-token-context--badges {
+  margin-top: 36px;
+}
+
+.built-steps .lost-token-context {
+  margin-top: 16px;
+}
+
+.not-found .lost-token-context {
+  margin-top: 38px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .lost-token-chip:hover {
+    opacity: 1;
+    rotate: 0deg;
+    translate: 0 -2px;
+    box-shadow: 2px 2px 0 var(--ink);
+  }
+}
+
+html[data-motion="full"] .lost-token-chip[data-pop="true"] {
+  animation: lost-token-pop 560ms var(--ease-out) both;
+}
+
+@keyframes lost-token-pop {
+  0% { transform: scale(.78) rotateX(65deg); }
+  52% { transform: scale(1.12) rotateX(0deg); }
+  100% { transform: scale(1) rotateX(0deg); }
+}
+
+@media (max-width: 899px) {
+  .lost-token-slots { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .lost-token-slot-card { min-height: 180px; padding: 14px; }
+  .lost-token-album { margin-top: 58px; padding-top: 30px; }
+}
+
+@media (max-width: 420px) {
+  .lost-token-slots { gap: 10px; }
+  .lost-token-slot { padding: 4px 5px 6px 4px; }
+  .lost-token-slot-card { min-height: 172px; padding: 12px; }
+  .lost-token-slot-card p { font-size: 13px; }
+  .lost-token-album-head { align-items: flex-start; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lost-token-chip { transition: none; }
+  .lost-token-chip[data-pop="true"] { animation: none; }
+}
+
+html[data-motion="reduced"] .lost-token-chip {
+  transition: none;
+}
+
+html[data-motion="reduced"] .lost-token-chip[data-pop="true"] {
+  animation: none;
+}

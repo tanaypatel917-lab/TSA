@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useMotionPreference } from "./MotionPreferences";
+import { LostToken } from "./LostToken";
 import "./idea-shapes.css";
 
 const STEPS = [
@@ -190,6 +191,7 @@ export function IdeaShapes() {
       <div className="idea-copy">
         <p className="section-index">How a machine gets an idea</p>
         <h2 id="idea-title">One question.<br /><span>Three kinds of AI.</span></h2>
+        <div className="lost-token-context lost-token-context--home"><LostToken id="bos" /></div>
         <div className="idea-tabs" role="group" aria-label="Choose a kind of AI">{STEPS.map((item, index) => <button key={item.name} type="button" aria-pressed={index === step} onClick={() => { setTouched(true); setStep(index); }}><small>{pad(index + 1)}</small>{item.name}</button>)}</div>
         <div className="idea-panel" aria-live={touched ? "polite" : "off"}>
           <h3>{active.title}</h3>
