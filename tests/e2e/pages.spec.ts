@@ -219,3 +219,11 @@ test("My learning wraps up progress so far", async ({ page }) => {
   await expect(recap.getByText("95%")).toBeVisible();
   await expect(recap.getByRole("link", { name: /See what’s left/ })).toHaveAttribute("href", "#certificate-title");
 });
+
+test("Explore points to the certificate at the finish line", async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("wordplay:intro:v1", "seen"));
+  await page.goto("/modules/");
+  const goal = page.getByRole("region", { name: "Finish all five. Print your certificate." });
+  await expect(goal).toBeVisible();
+  await expect(goal.getByRole("link", { name: /See your progress/ })).toHaveAttribute("href", /\/learn\/#certificate-title$/);
+});

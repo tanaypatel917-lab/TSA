@@ -604,3 +604,24 @@ html[data-motion="reduced"] .prompt-dice-meter span { animation: none !important
 @media (min-width: 900px) and (max-width: 1279px) {
   .rail[data-mode="scrub"] .chapter-mark { top: 32%; font-size: clamp(170px, 30vh, 260px); }
 }
+
+.cert-goal { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(32px, 6vw, 96px); align-items: center; padding-block: clamp(64px, 8vw, 120px); }
+.cert-goal h2 { margin-top: 12px; font: 700 clamp(38px, 5vw, 72px)/.98 var(--font-display), sans-serif; letter-spacing: -.045em; }
+.cert-goal-copy > p:not(.page-hero-label) { max-width: 46ch; margin: 20px 0 28px; font-size: 18px; line-height: 1.6; }
+.cert-goal-card { position: relative; padding: 34px 34px 28px; border: 2px solid var(--ink); background: var(--paper); box-shadow: 10px 10px 0 var(--ink); outline: 1.5px dashed var(--line); outline-offset: -14px; rotate: 2deg; transition: rotate 300ms var(--ease-out); }
+.cert-goal-card::after { content: "✓"; position: absolute; top: 26px; right: 28px; display: grid; width: 66px; height: 66px; place-items: center; border: 2px dashed var(--clay); border-radius: 50%; color: var(--clay); font-size: 30px; font-weight: 700; rotate: -12deg; opacity: .55; }
+.cert-goal-card[data-complete="true"]::after { border-style: solid; background: var(--clay); color: var(--paper); opacity: 1; }
+.cert-goal-brand { font: 700 30px/1 var(--font-display), sans-serif; letter-spacing: -.04em; }
+.cert-goal-kicker { margin-top: 8px; color: var(--muted); font: 700 12px/1.3 var(--font-mono), monospace; letter-spacing: .14em; text-transform: uppercase; }
+.cert-goal-card ol { display: grid; gap: 10px; margin: 24px 0 0; padding: 0; list-style: none; }
+.cert-goal-card li { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: 650; }
+.cert-goal-card li span { display: grid; flex: none; width: 24px; height: 24px; place-items: center; border: 1.5px solid var(--ink); border-radius: 4px; background: var(--paper); font-size: 14px; }
+.cert-goal-card li[data-done="true"] span { background: var(--clay); }
+.cert-goal-card li[data-done="false"] { color: var(--muted); }
+.cert-goal-bar { height: 10px; margin-top: 24px; overflow: hidden; border: 1.5px solid var(--ink); border-radius: 999px; background: var(--line); }
+.cert-goal-bar i { display: block; height: 100%; background: var(--clay); }
+.cert-goal-percent { margin-top: 8px; font: 700 12px/1.3 var(--font-mono), monospace; letter-spacing: .08em; text-transform: uppercase; }
+@media (hover: hover) and (pointer: fine) { .cert-goal-card:hover { rotate: 0deg; } }
+@media (max-width: 899px) { .cert-goal { grid-template-columns: minmax(0, 1fr); } .cert-goal-card { padding: 26px 22px 22px; box-shadow: 6px 6px 0 var(--ink); rotate: 1deg; } .cert-goal-card::after { width: 52px; height: 52px; font-size: 24px; } }
+@media (prefers-reduced-motion: reduce) { .cert-goal-card { transition: none; } }
+html[data-motion="reduced"] .cert-goal-card { transition: none; }
