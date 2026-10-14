@@ -95,8 +95,8 @@ export function TitleGuess() {
     <div className="title-guess-tiles" aria-hidden="true">
       {letters.map((letter, index) => <span key={index} className="title-guess-tile" data-filled={letter === titleGuess[index].letter} data-active={activeIndex === index} data-option={activeIndex === index ? optionIndex : undefined}><span className="title-guess-letter">{letter}</span></span>)}
     </div>
-    <p className="title-guess-pill" aria-hidden="true" data-complete={finished}>{pillText}</p>
     <div className="title-guess-note">
+      <p className="title-guess-pill" aria-hidden="true" data-complete={finished}>{pillText}</p>
       <p className="title-guess-caption">Demo odds, not a real model: a model guesses one piece at a time, like this.</p>
       {!reduced && <button type="button" className="title-guess-replay" onClick={replay}>Replay</button>}
     </div>
