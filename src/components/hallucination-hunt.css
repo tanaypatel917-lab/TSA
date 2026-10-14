@@ -238,3 +238,6 @@ html[data-motion="reduced"] .hunt-card:hover {
   transition: none;
   translate: none;
 }
+
+.hunt-card { min-height: 128px; }
+.hunt-card.is-real { border-top: 8px solid #5F86BA; background: var(--paper); }
