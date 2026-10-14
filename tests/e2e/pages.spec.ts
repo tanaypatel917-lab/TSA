@@ -126,7 +126,7 @@ test("hallucination hunt catches fake pages and can be replayed", async ({ page 
 
   await page.getByRole("button", { name: "Check my answers" }).click();
   await expect(page.getByRole("status")).toHaveText("You caught 3 of 3 fakes, no false alarms");
-  await expect(page.getByRole("link", { name: /Glossary/ })).toHaveAttribute("href", /\/glossary\/?$/);
+  await expect(page.locator(".hunt-grid").getByRole("link", { name: /Glossary/ })).toHaveAttribute("href", /\/glossary\/?$/);
 
   await page.getByRole("button", { name: "Play again" }).click();
   await expect(page.getByRole("button", { name: "Check my answers" })).toBeVisible();
