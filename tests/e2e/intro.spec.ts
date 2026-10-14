@@ -324,7 +324,7 @@ test("the X-ray switch counts the tokens on the page", async ({ page }) => {
   await xray.click();
   await expect(xray).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByRole("status").filter({ hasText: /≈ [\d,]+ tokens/ })).toBeVisible();
-  expect(await page.evaluate(() => (CSS as unknown as { highlights: Map<string, unknown> }).highlights.has("xray-a"))).toBe(true);
+  await expect.poll(() => page.evaluate(() => (CSS as unknown as { highlights: Map<string, unknown> }).highlights.has("xray-a"))).toBe(true);
   await xray.click();
-  expect(await page.evaluate(() => (CSS as unknown as { highlights: Map<string, unknown> }).highlights.has("xray-a"))).toBe(false);
+  await expect.poll(() => page.evaluate(() => (CSS as unknown as { highlights: Map<string, unknown> }).highlights.has("xray-a"))).toBe(false);
 });
