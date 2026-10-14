@@ -49,30 +49,28 @@ export function LaunchDayLab() {
   >
     <div className="launch-day-topline">
       <div className="launch-path" role="img" aria-label={`Four-day launch path. ${path.length} of 4 decisions made.`}>
+        <svg className="launch-path-svg" viewBox="0 0 400 52" preserveAspectRatio="none" aria-hidden="true">
+          {path.slice(1).map((choiceIndex, index) => {
+            const previousY = path[index] === 0 ? 13 : 39;
+            const currentY = choiceIndex === 0 ? 13 : 39;
+            return <line key={index} className="launch-path-line" x1={50 + index * 100} y1={previousY} x2={150 + index * 100} y2={currentY} vectorEffect="non-scaling-stroke" />;
+          })}
+        </svg>
         <div className="launch-path-days">
           {LAUNCH_NODES.map((item, index) => {
             const topic = item.tag.split(" · ")[1];
             return <div className="launch-path-day" key={item.id}>
               <span className="launch-path-tag launch-path-tag--long">{item.tag}</span>
               <span className="launch-path-tag launch-path-tag--short">{SHORT_DAYS[index]} · {topic}</span>
+              {item.choices.map((_, choiceIndex) => <span
+                key={`${item.id}-${choiceIndex}`}
+                className={`launch-path-dot launch-path-dot--${choiceIndex}`}
+                data-picked={path[index] === choiceIndex}
+                aria-hidden="true"
+              />)}
             </div>;
           })}
         </div>
-        <svg className="launch-path-svg" viewBox="0 0 400 52" aria-hidden="true">
-          {path.slice(1).map((choiceIndex, index) => {
-            const previousY = path[index] === 0 ? 13 : 39;
-            const currentY = choiceIndex === 0 ? 13 : 39;
-            return <line key={index} className="launch-path-line" x1={50 + index * 100} y1={previousY} x2={150 + index * 100} y2={currentY} />;
-          })}
-          {LAUNCH_NODES.map((item, nodeIndex) => item.choices.map((_, choiceIndex) => <circle
-            key={`${item.id}-${choiceIndex}`}
-            className="launch-path-dot"
-            data-picked={path[nodeIndex] === choiceIndex}
-            cx={50 + nodeIndex * 100}
-            cy={choiceIndex === 0 ? 13 : 39}
-            r="7"
-          />))}
-        </svg>
       </div>
       <div className="launch-trust">
         <div className="launch-trust-heading"><span>Trust</span><strong>{trust > 0 ? `+${trust}` : trust}</strong></div>
