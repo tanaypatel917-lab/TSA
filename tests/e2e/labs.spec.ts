@@ -442,3 +442,24 @@ test("prompt challenge dice fits at 360px without horizontal overflow", async ({
   await expect(lab(page, diceTitle)).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(360);
 });
+
+test("Present mode turns a lesson into keyboard-driven slides", async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("wordplay:intro:v1", "seen"));
+  await page.goto("/modules/ai-foundations/lessons/what-is-ai/");
+  const open = page.getByRole("button", { name: "Present" });
+  await open.click();
+  const deck = page.getByRole("dialog", { name: /^Presenting: / });
+  await expect(deck).toBeVisible();
+  await expect(deck.getByText(/^Slide 1 of \d+$/)).toBeVisible();
+  await page.keyboard.press("ArrowRight");
+  await expect(deck.getByText(/^Slide 2 of \d+$/)).toBeVisible();
+  await expect(deck.getByText(/^01 \/ \d\d$/)).toBeVisible();
+  await page.keyboard.press("End");
+  await expect(deck.getByRole("heading", { name: "Questions?" })).toBeVisible();
+  await expect(deck.getByRole("button", { name: "Next slide" })).toBeDisabled();
+  await page.keyboard.press("ArrowLeft");
+  await expect(deck.getByRole("heading", { name: "Take this with you." })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(deck).toBeHidden();
+  await expect(open).toBeFocused();
+});

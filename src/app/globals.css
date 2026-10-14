@@ -1600,3 +1600,38 @@ html[data-text="larger"] main:not(:has(.world)) { zoom: 1.22; }
 @media (hover: hover) and (pointer: fine) { .xray-toggle:hover { background: var(--sky); } .xray-toggle[aria-pressed="true"]:hover { background: #2A3B5A; } }
 @media (max-width: 767px) { .xray-toggle { left: 12px; bottom: 12px; min-height: 36px; padding: 5px 11px; font-size: 11.5px; } }
 @media print { .xray-toggle { display: none; } }
+
+.present-open { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; min-height: 38px; padding: 6px 16px 6px 13px; border: 2px solid var(--ink); border-radius: 999px; background: var(--ink); color: var(--paper); box-shadow: 0 3px 0 var(--clay); font: 700 13px/1.2 var(--font-mono), monospace; letter-spacing: .08em; text-transform: uppercase; transition: translate 140ms var(--ease-out), box-shadow 140ms var(--ease-out); }
+.present-open span { font-size: 10px; color: var(--clay); }
+.present-open:active { translate: 0 2px; box-shadow: 0 1px 0 var(--clay); }
+.present-open:focus-visible, .present-bar button:focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) { .present-open:hover { translate: 0 -2px; box-shadow: 0 5px 0 var(--clay); } }
+@media (max-width: 767px) { .present-open { display: none; } }
+.present { position: fixed; inset: 0; z-index: 300; display: grid; grid-template-rows: minmax(0, 1fr) auto; background: var(--paper) radial-gradient(circle, rgba(28, 42, 67, .12) 1.2px, transparent 1.5px) 0 0 / 22px 22px; color: var(--ink); outline: none; }
+.present-stage { position: relative; display: grid; place-items: center; overflow: auto; overscroll-behavior: contain; padding: clamp(32px, 6vw, 96px) clamp(24px, 7vw, 120px); }
+.present-ghost { position: fixed; right: 3vw; bottom: 64px; font: 700 clamp(160px, 26vw, 420px)/.8 var(--font-display), sans-serif; letter-spacing: -.06em; color: transparent; -webkit-text-stroke: 2px var(--line); pointer-events: none; user-select: none; }
+.present-slide { position: relative; width: min(1180px, 100%); animation: present-in 460ms var(--ease-out) both; }
+.present-slide[data-dir="-1"] { animation-name: present-back; }
+@keyframes present-in { from { opacity: 0; translate: 48px 0; } }
+@keyframes present-back { from { opacity: 0; translate: -48px 0; } }
+.present-kicker, .present-beat, .present-meta { margin-bottom: 22px; font: 700 15px/1.3 var(--font-mono), monospace; letter-spacing: .14em; text-transform: uppercase; color: #B8694A; }
+.present-meta { margin: 34px 0 0; color: var(--muted); }
+.present-slide h2 { margin-bottom: .45em; font: 700 clamp(40px, 5vw, 80px)/1 var(--font-display), sans-serif; letter-spacing: -.045em; text-wrap: balance; }
+.present-slide .present-title { font-size: clamp(56px, 8vw, 132px); line-height: .92; text-shadow: 4px 4px 0 var(--clay); }
+.present-question { max-width: 26ch; font-size: clamp(24px, 2.6vw, 40px); line-height: 1.25; letter-spacing: -.02em; color: var(--muted); text-wrap: pretty; }
+.present-body { max-width: 32ch; font-size: clamp(26px, 2.8vw, 44px); line-height: 1.32; letter-spacing: -.015em; text-wrap: pretty; }
+.present-lab { width: 100%; }
+.present-takeaways { display: grid; gap: 0; counter-reset: take; border-top: 3px solid var(--ink); }
+.present-takeaways li { display: grid; grid-template-columns: 2.4em minmax(0, 1fr); gap: 18px; padding: 20px 0; border-bottom: 1.5px solid var(--line); font-size: clamp(22px, 2.2vw, 34px); line-height: 1.3; counter-increment: take; }
+.present-takeaways li::before { content: counter(take, decimal-leading-zero); font: 700 1em/1.3 var(--font-display), sans-serif; color: var(--clay); text-shadow: 2px 2px 0 var(--ink); }
+.present-bar { display: flex; align-items: center; gap: 12px; padding: 12px clamp(20px, 4vw, 48px); border-top: 2px solid var(--ink); background: var(--paper); }
+.present-bar button { min-width: 44px; min-height: 40px; padding: 0 16px; border: 1.5px solid var(--ink); border-radius: 999px; background: var(--paper); box-shadow: 0 3px 0 var(--ink); font: 700 15px/1 var(--font-mono), monospace; color: var(--ink); }
+.present-bar button:disabled { opacity: .35; box-shadow: none; }
+.present-bar button:not(:disabled):active { translate: 0 2px; box-shadow: 0 1px 0 var(--ink); }
+.present-progress { flex: 1; height: 8px; border: 1.5px solid var(--ink); border-radius: 999px; overflow: hidden; }
+.present-progress i { display: block; height: 100%; background: var(--clay); transition: width 360ms var(--ease-out); }
+.present-count { font: 700 13px/1 var(--font-mono), monospace; letter-spacing: .06em; white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { .present-slide { animation: none; } .present-progress i { transition: none; } }
+html[data-motion="reduced"] .present-slide { animation: none; }
+html[data-motion="reduced"] .present-progress i { transition: none; }
+
