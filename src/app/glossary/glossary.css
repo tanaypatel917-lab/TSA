@@ -57,7 +57,15 @@ html[data-motion="full"] .flashcard { transform: perspective(1400px) rotateX(var
 .word-map-node-label.is-selected { fill: var(--ink); font-size: 20px; }
 .word-map-node:focus-visible circle:first-child { stroke: var(--clay); stroke-width: 5; }
 .word-map-three { z-index: 1; opacity: 0; pointer-events: none; transition: opacity 180ms var(--ease-out); }
-.word-map-three canvas { display: block; width: 100%; height: 100%; cursor: grab; touch-action: none; }
+.word-map-three canvas { position: absolute; z-index: 0; inset: 0; display: block; width: 100%; height: 100%; cursor: grab; touch-action: none; }
+.word-map-three-labels { position: absolute; z-index: 1; inset: 0; overflow: hidden; pointer-events: none; }
+.word-map-three-term { position: absolute; top: 0; left: 0; margin: 0; padding: 3px 6px; border: 1.5px solid var(--ink); border-radius: 3px; background: var(--paper); color: var(--ink); box-shadow: none; font: 650 clamp(12px, .9vw, 13px)/1.15 var(--font-display), sans-serif; white-space: nowrap; cursor: pointer; pointer-events: auto; transform-origin: top left; }
+.word-map-three-term.is-selected { background: var(--clay); color: var(--ink); box-shadow: 2px 2px 0 var(--ink); }
+.word-map-three-term.is-neighbor:not(.is-selected) { outline: 1.5px solid var(--clay); outline-offset: 1px; }
+.word-map-three-cluster { position: absolute; z-index: 250; top: 0; left: 0; color: var(--ink); font: 700 10px/1.2 var(--font-mono), ui-monospace, monospace; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; pointer-events: none; }
+.word-map-three-cluster[data-tone="sky"] { color: #7498B7; }
+.word-map-three-cluster[data-tone="clay"] { color: #A85A3D; }
+.word-map-three-cluster[data-tone="lake"] { color: #5F86BA; }
 .word-map-stage[data-3d="true"] .word-map-fallback { visibility: hidden; opacity: 0; pointer-events: none; }
 .word-map-stage[data-3d="true"] .word-map-three { opacity: 1; pointer-events: auto; }
 .word-map-stage-hint { position: absolute; z-index: 2; right: 10px; bottom: 8px; max-width: calc(100% - 20px); padding: 5px 9px; border: 1px solid var(--ink); background: var(--paper); font-size: 11px; line-height: 1.2; pointer-events: none; }
