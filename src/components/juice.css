@@ -43,3 +43,23 @@ html[data-motion="full"] .answer-strip li { animation: juice-pop 380ms cubic-bez
 @media (max-width: 899px) {
   .lesson-meta .lesson-voxel > .chapter-glyph { text-shadow: 2px 2px 0 #B8694A, 4px 4px 0 #B8694A, 6px 6px 0 #A35C40, 8px 8px 0 #8E5037, 14px 16px 14px rgba(28, 42, 67, .16); }
 }
+
+.listen-controls { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; max-width: 100%; }
+.listen-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 38px; max-width: 100%; padding: 6px 13px; border: 2px solid var(--ink); border-radius: 999px; background: var(--ink); color: var(--paper); box-shadow: 0 3px 0 var(--clay); font: 700 13px/1.2 var(--font-mono), monospace; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transition: translate 140ms var(--ease-out), box-shadow 140ms var(--ease-out); }
+.listen-button:active { translate: 0 2px; box-shadow: 0 1px 0 var(--clay); }
+.listen-button:focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; }
+.listen-stop { background: var(--paper); color: var(--ink); box-shadow: 0 3px 0 var(--ink); }
+.listen-stop:active { box-shadow: 0 1px 0 var(--ink); }
+.listen-note { flex-basis: 100%; color: var(--muted); font-size: 12px; line-height: 1.45; }
+.listen-status { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.lesson-reading [data-paragraph][data-speaking="true"] { padding: 4px 12px; border-radius: 2px; background: color-mix(in srgb, var(--sky) 18%, transparent); box-shadow: inset 4px 0 0 var(--clay); }
+::highlight(wordplay-reading) { background: var(--clay); color: var(--ink); }
+
+@media (hover: hover) and (pointer: fine) {
+  .listen-button:hover { translate: 0 -2px; box-shadow: 0 5px 0 var(--clay); }
+  .listen-stop:hover { box-shadow: 0 5px 0 var(--ink); }
+}
+@media (max-width: 767px) {
+  .lesson-meta .listen-controls { flex-basis: 100%; }
+  .listen-note { max-width: 100%; }
+}

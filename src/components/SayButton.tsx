@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-function pickVoice() {
+export function pickVoice() {
   const voices = window.speechSynthesis.getVoices().filter((voice) => voice.lang.toLowerCase().startsWith("en"));
   return voices.find((voice) => voice.localService && voice.lang === "en-US") ?? voices.find((voice) => voice.localService) ?? voices[0];
 }
