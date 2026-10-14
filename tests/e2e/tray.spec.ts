@@ -158,3 +158,10 @@ test("an empty tray offers a starter pack of words", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Hallucination" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Word tray, 5 saved" })).toBeVisible();
 });
+
+test("the tray hero deals a deck of word cards", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto("/tray/");
+  await expect(page.locator(".deck-flat li")).toHaveCount(5);
+  await expect(page.locator(".deck-flat li").first()).toContainText("Token");
+});

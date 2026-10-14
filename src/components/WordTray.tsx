@@ -11,7 +11,7 @@ type TrayState = { terms: string[]; hydrated: boolean; error: string | null };
 type TrayEntry = { term: string; definition: string; lessons: TermLesson[] };
 type Subscriber = () => void;
 
-const STARTER = ["Token", "Prompt", "Hallucination", "Bias", "Verification"];
+export const STARTER = ["Token", "Prompt", "Hallucination", "Bias", "Verification"];
 
 const subscribers = new Set<Subscriber>();
 let listeningForStorage = false;

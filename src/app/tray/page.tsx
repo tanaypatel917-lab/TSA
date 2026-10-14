@@ -11,5 +11,5 @@ export const metadata: Metadata = { title: "Word tray" };
 const entries = glossary.map(({ term, definition }) => ({ term, definition, lessons: lessonsForTerm(term, modules) }));
 
 export default function TrayPage() {
-  return <div className="tray-page"><PageHero stage="echo" tone="clay" label="Word tray" title="Your words, ready to study." lede="Save words from the glossary or any lesson. They stay in this browser only." mark="Aa" /><TrayPageContent entries={entries} /></div>;
+  return <div className="tray-page"><PageHero stage="deck" tone="clay" label="Word tray" title="Your words, ready to study." lede="Save words from the glossary or any lesson. They stay in this browser only." mark="Aa" /><TrayPageContent entries={entries} /></div>;
 }

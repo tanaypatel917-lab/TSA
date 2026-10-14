@@ -10,9 +10,10 @@ import { BadgeCoins } from "./three/BadgeCoins";
 import { ChapterOrbit } from "./three/ChapterOrbit";
 import { EmbeddingSpace } from "./three/EmbeddingSpace";
 import { VoxelGlyph } from "./three/VoxelGlyph";
+import { WordDeck } from "./three/WordDeck";
 import "./hero-stage.css";
 
-export type HeroVariant = "orbit" | "cloud" | "stamps" | "echo";
+export type HeroVariant = "orbit" | "cloud" | "stamps" | "echo" | "deck";
 
 type Item = { label: string; x: number; y: number; kind?: string; on?: boolean };
 
@@ -25,6 +26,7 @@ function layout(variant: HeroVariant, mark: string, earned: string[]): Item[] {
     return { label: term, x: 12 + col * 22 + (row % 2) * 6, y: 14 + row * 22 + (col % 2) * 6 };
   });
   if (variant === "stamps") return BADGES.slice(0, 12).map((badge, index) => ({ label: badge.mark, x: 16 + (index % 4) * 23 + (Math.floor(index / 4) % 2) * 6, y: 20 + Math.floor(index / 4) * 30, on: earned.includes(badge.id) }));
+  if (variant === "deck") return [];
   return Array.from({ length: ECHOES }, (_, index) => ({ label: mark, x: 50, y: 52, kind: index === ECHOES - 1 ? "solid" : "line" }));
 }
 
@@ -131,6 +133,7 @@ export function HeroStage({ variant, mark }: { variant: HeroVariant; mark: strin
     {variant === "stamps" && hydrated && <BadgeCoins earned={state.badges} />}
     {variant === "cloud" && <EmbeddingSpace />}
     {variant === "orbit" && <ChapterOrbit />}
+    {variant === "deck" && <WordDeck />}
     {variant === "echo" && <VoxelGlyph mark={mark} className="hero-voxel" />}
     {variant === "orbit" && <><span className="hero-stage-ring" /><span className="hero-stage-center" data-stage-center="">?</span></>}
     {items.map((item, index) => <span key={`${item.label}-${index}`} className="hero-stage-item" data-stage-item="" data-kind={item.kind} data-on={item.on} style={variant === "echo" ? { opacity: 0.18 + (index / (ECHOES - 1)) * 0.82 } : undefined}>
