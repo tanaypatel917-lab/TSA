@@ -1515,3 +1515,37 @@ html[data-motion="reduced"] .boot-caret, html[data-motion="reduced"] .boot-log {
 }
 @media (prefers-reduced-motion: reduce) { .badge-patch, .badge-patch::after, .badge-mark { animation: none !important; transition: none !important; } }
 html[data-motion="reduced"] .badge-patch { animation: none !important; }
+
+/* Lesson polish: facts strip, margin notes, beats, pull quote, wide bands */
+.lesson-facts { display: flex; flex-wrap: wrap; align-items: stretch; gap: 0; margin-top: 26px; border: 2px solid var(--ink); border-radius: 8px; background: var(--paper); box-shadow: 5px 5px 0 var(--ink); width: fit-content; max-width: 100%; overflow: hidden; }
+.lesson-facts::before { content: "The facts"; display: flex; align-items: center; padding: 10px 16px; background: var(--ink); color: var(--paper); font: 700 11px/1.1 var(--font-mono), monospace; letter-spacing: .12em; text-transform: uppercase; writing-mode: vertical-rl; rotate: 180deg; }
+.lesson-facts div { display: flex; flex-direction: column-reverse; justify-content: center; gap: 4px; padding: 12px 22px 12px 18px; border-left: 1.5px solid var(--line); }
+.lesson-facts div:first-of-type { border-left: 0; }
+.lesson-facts dd { font: 650 38px/1 var(--font-display), sans-serif; letter-spacing: -.04em; color: var(--ink); text-shadow: 2px 2px 0 var(--clay); }
+.lesson-facts dt { font: 700 11px/1.2 var(--font-mono), monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.lesson-beat { display: block; margin-bottom: 4px; font: 700 12px/1.4 var(--font-mono), monospace; letter-spacing: .12em; color: #B8694A; }
+.lesson-beat i { font-style: normal; color: var(--muted); }
+.lesson-margin { display: none; }
+.lesson-pull { position: relative; margin: 52px 0 46px; padding: 34px 0 30px 0; border-block: 3px solid var(--ink); }
+.lesson-pull::before { content: "“"; position: absolute; top: -22px; left: -4px; height: 40px; overflow: hidden; padding-right: 10px; background: var(--paper); color: var(--clay); font: 800 88px/.78 var(--font-display), sans-serif; -webkit-text-stroke: 2px var(--ink); paint-order: stroke fill; }
+.lesson-pull p { font: 650 clamp(28px, 3vw, 42px)/1.12 var(--font-display), sans-serif; letter-spacing: -.025em; color: var(--ink); }
+.lesson-band { margin-block: 30px; }
+.lesson-reading section, .lesson-reading section > div { position: relative; }
+@media (min-width: 1360px) {
+  .lesson-reading { max-width: min(66ch, calc(100% - 236px)); }
+  .lesson-margin { position: absolute; left: calc(100% + 36px); width: 200px; display: flex; flex-wrap: wrap; gap: 6px; padding: 2px 0 4px 14px; border-left: 2px solid var(--clay); }
+  .lesson-margin::before { content: "In the glossary"; flex-basis: 100%; font: 700 10px/1.4 var(--font-mono), monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .lesson-margin span { padding: 3px 10px; border: 1.5px solid var(--ink); border-radius: 99px; background: var(--paper); box-shadow: 2px 2px 0 var(--ink); font-size: 13px; font-weight: 650; line-height: 1.3; }
+  .lesson-reading section > .lesson-margin, .lesson-reading section > div > .lesson-margin { position: absolute; }
+  .lesson-band, .lesson-pull { margin-right: -236px; }
+}
+@media (max-width: 767px) {
+  .lesson-facts { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); width: 100%; margin-top: 20px; box-shadow: 3px 3px 0 var(--ink); }
+  .lesson-facts::before { display: none; }
+  .lesson-facts div { justify-content: flex-end; padding: 9px 7px 8px; }
+  .lesson-facts dd { font-size: 24px; }
+  .lesson-facts dt { font-size: 8.5px; letter-spacing: .04em; }
+  .lesson-pull { margin: 40px 0 34px; padding: 26px 0 22px; }
+  .lesson-pull::before { top: -18px; height: 32px; font-size: 70px; }
+}
+@media print { .lesson-margin, .lesson-pull { display: none; } }
