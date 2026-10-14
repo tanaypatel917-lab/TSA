@@ -30,7 +30,7 @@ export function LessonClient({ module, lesson, index, sources, terms }: { module
   const figuresAfter = (position: number) => figures.filter((figure) => figure.after === position).map((figure) => <div key={figure.kind} className="lesson-band"><LessonFigure kind={figure.kind} /></div>);
   const margin = (position: number) => { const notes = terms.filter((term) => term.paragraph === position); return notes.length > 0 && <span className="lesson-margin" aria-hidden="true">{notes.map((term) => <span key={term.slug}>{term.term}</span>)}</span>; };
   const pullAfter = lesson.body.length >= 3 ? Math.floor(lesson.body.length / 2) - 1 : -1;
-  const pull = <blockquote className="lesson-pull" aria-hidden="true"><p>{lesson.keyTakeaways[0]}</p></blockquote>;
+  const pull = <blockquote className="lesson-pull" aria-hidden="true"><p data-quote={lesson.keyTakeaways[0]} /></blockquote>;
   const pad = (value: number) => String(value).padStart(2, "0");
   const facts: [string, number][] = [["min read", lesson.minutes], [figures.length === 1 ? "lab" : "labs", figures.length], ["sources", sources.length], ["terms", terms.length], ["quiz questions", module.quiz.length]];
   const outline = <ol>{sections.map((title, position) => <li key={title}><a href={`#lesson-section-${position}`}>{title}</a></li>)}<li><a href="#takeaways">Key takeaways</a></li></ol>;
