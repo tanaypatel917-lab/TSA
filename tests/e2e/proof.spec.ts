@@ -173,7 +173,13 @@ test("returning learners get a hydrated next task and compatible progress import
 test("quiz advances once, focuses the next question and reviews incorrect answers", async ({ page }) => {
   await page.goto(`/modules/${foundations.slug}/quiz/`);
   for (const [index, question] of foundations.quiz.entries()) {
-    await page.getByRole("button", { name: question.choices[index === 0 ? 0 : question.answerIndex], exact: true }).click();
+    if (question.estimate) {
+      const value = index === 0 ? question.estimate.answer + question.estimate.tolerance * 3 : question.estimate.answer;
+      await page.getByLabel("Your estimate").fill(String(value));
+      await page.getByRole("button", { name: "Lock it in", exact: true }).click();
+    } else {
+      await page.getByRole("button", { name: question.choices[index === 0 ? 0 : question.answerIndex], exact: true }).click();
+    }
     const next = page.getByRole("button", { name: index === 4 ? "See results" : "Next question", exact: true });
     await next.evaluate((button: HTMLButtonElement) => { button.click(); button.click(); });
     await expect(page.getByRole("heading", { name: index === 4 ? "80%" : foundations.quiz[index + 1].prompt, exact: true })).toBeFocused();

@@ -12,6 +12,7 @@ export type QuizQuestion = {
   choices: string[];
   answerIndex: number;
   explanation: string;
+  estimate?: { min: number; max: number; step: number; answer: number; tolerance: number; unit: string };
 };
 
 export type Activity =

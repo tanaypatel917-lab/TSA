@@ -20,10 +20,16 @@ async function answerQuiz(page: Page, correctAnswers: boolean[]) {
     await expect(page.getByText(`Question ${index + 1} of ${foundations.quiz.length}`, { exact: true })).toBeVisible();
     await expect(page.getByRole("heading", { name: question.prompt, exact: true })).toBeVisible();
 
-    const choiceIndex = correctAnswers[index]
-      ? question.answerIndex
-      : (question.answerIndex + 1) % question.choices.length;
-    await page.getByRole("button", { name: question.choices[choiceIndex], exact: true }).click();
+    if (question.estimate) {
+      const value = correctAnswers[index] ? question.estimate.answer : question.estimate.answer + question.estimate.tolerance * 3;
+      await page.getByLabel("Your estimate").fill(String(value));
+      await page.getByRole("button", { name: "Lock it in", exact: true }).click();
+    } else {
+      const choiceIndex = correctAnswers[index]
+        ? question.answerIndex
+        : (question.answerIndex + 1) % question.choices.length;
+      await page.getByRole("button", { name: question.choices[choiceIndex], exact: true }).click();
+    }
     await expect(page.getByText(question.explanation, { exact: true })).toBeVisible();
     await page.getByRole("button", {
       name: index === foundations.quiz.length - 1 ? "See results" : "Next question",
@@ -87,4 +93,21 @@ test("a lower-score retry resets the attempt and preserves the saved best", asyn
 
   await page.reload();
   await expectBest(page, 80);
+});
+
+test("an estimate answer shows when a guess falls outside the tolerance", async ({ page }) => {
+  for (const question of foundations.quiz.slice(0, 2)) {
+    await page.getByRole("button", { name: question.choices[question.answerIndex], exact: true }).click();
+    await page.getByRole("button", { name: "Next question", exact: true }).click();
+  }
+
+  const slider = page.getByRole("slider", { name: "Your estimate" });
+  await expect(page.getByRole("heading", { name: foundations.quiz[2].prompt, exact: true })).toBeVisible();
+  await expect(slider).toHaveValue("550");
+  await slider.fill("500");
+  await page.getByRole("button", { name: "Lock it in", exact: true }).click();
+
+  await expect(page.locator(".answer-feedback")).toHaveAttribute("data-good", "false");
+  await expect(page.getByRole("status")).toContainText("Not quite.");
+  await expect(page.getByText("You: 500 · Real: about 400", { exact: true })).toBeVisible();
 });

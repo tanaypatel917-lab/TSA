@@ -3,14 +3,73 @@
 import Link from "next/link";
 import { VoxelGlyph } from "./three/VoxelGlyph";
 import { useEffect, useRef, useState } from "react";
-import type { Module } from "@/content/types";
+import type { Module, QuizQuestion } from "@/content/types";
+import { estimateChoice } from "@/engine/estimate";
 import { useProgress } from "@/state/ProgressProvider";
 import { todayKey } from "@/engine/dates";
 import "./juice.css";
 
+function startingEstimate(question: QuizQuestion): number {
+  const estimate = question.estimate;
+  if (!estimate) return 0;
+  const midpoint = (estimate.min + estimate.max) / 2;
+  return Math.min(estimate.max, Math.max(estimate.min, estimate.min + Math.round((midpoint - estimate.min) / estimate.step) * estimate.step));
+}
+
+function EstimateControl({
+  question,
+  value,
+  disabled,
+  onChange,
+  onLock
+}: {
+  question: QuizQuestion;
+  value: number;
+  disabled: boolean;
+  onChange: (value: number) => void;
+  onLock: () => void;
+}) {
+  const estimate = question.estimate;
+  if (!estimate) return null;
+  const inputId = `estimate-${question.id}`;
+
+  return <div className="quiz-estimate">
+    <p className="quiz-estimate-readout" aria-live="off"><strong>{value}</strong><span>{estimate.unit}</span></p>
+    <label className="quiz-estimate-label" htmlFor={inputId}>Your estimate</label>
+    <input
+      id={inputId}
+      type="range"
+      min={estimate.min}
+      max={estimate.max}
+      step={estimate.step}
+      value={value}
+      aria-valuetext={`${value} ${estimate.unit}`}
+      disabled={disabled}
+      onChange={(event) => onChange(Number(event.target.value))}
+    />
+    <p className="quiz-estimate-hint">Close enough counts: within ±{estimate.tolerance} {estimate.unit}</p>
+    <button className="button-primary" type="button" disabled={disabled} onClick={onLock}>Lock it in</button>
+  </div>;
+}
+
+function EstimateScale({ value, estimate }: { value: number; estimate: NonNullable<QuizQuestion["estimate"]> }) {
+  const range = estimate.max - estimate.min || 1;
+  const guessPosition = Math.max(0, Math.min(100, (value - estimate.min) / range * 100));
+  const answerPosition = Math.max(0, Math.min(100, (estimate.answer - estimate.min) / range * 100));
+
+  return <figure className="quiz-estimate-result">
+    <div className="quiz-estimate-scale" aria-hidden="true">
+      <span className="quiz-estimate-marker" data-kind="guess" style={{ left: `${guessPosition}%` }} />
+      <span className="quiz-estimate-marker" data-kind="answer" style={{ left: `${answerPosition}%` }} />
+    </div>
+    <figcaption>You: {value} · Real: about {estimate.answer}</figcaption>
+  </figure>;
+}
+
 export function QuizRunner({ module }: { module: Module }) {
   const { state, dispatch, hydrated, storageError } = useProgress();
   const [index, setIndex] = useState(0);
+  const [estimateValue, setEstimateValue] = useState(() => startingEstimate(module.quiz[0]));
   const [answers, setAnswers] = useState<number[]>([]);
   const [finished, setFinished] = useState(false);
   const chosenIndex = useRef<number | null>(null);
@@ -38,6 +97,10 @@ export function QuizRunner({ module }: { module: Module }) {
     }
   }, [selected]);
 
+  useEffect(() => {
+    setEstimateValue(startingEstimate(module.quiz[index]));
+  }, [index, module.quiz]);
+
   function choose(choice: number) {
     if (!hydrated || finished || chosenIndex.current === index) return;
     chosenIndex.current = index;
@@ -59,14 +122,44 @@ export function QuizRunner({ module }: { module: Module }) {
     moveFocus.current = true;
     setAnswers([]);
     setIndex(0);
+    setEstimateValue(startingEstimate(module.quiz[0]));
     setFinished(false);
   }
 
   if (finished) return <section className="quiz-results"><div className="result-top"><div><p className="eyebrow">Quiz complete</p><div className="quiz-score"><h2 ref={heading} tabIndex={-1}>{score}%</h2><VoxelGlyph mark={`${score}%`} className="quiz-voxel" /></div><p>{correctCount} of {module.quiz.length} correct this time.</p><ol className="answer-strip" aria-label="Your answers">{module.quiz.map((item, position) => { const right = answers[position] === item.answerIndex; return <li key={item.id} data-correct={right} style={{ "--i": position } as React.CSSProperties}><span>Q{position + 1}</span><strong>{right ? "Right" : "Missed"}</strong></li>; })}</ol></div><div className="result-detail"><p className="result-best">{storageError ? "Best score this session" : "Saved best score"}: {state.quizBest[module.id] ?? 0}%</p><p>{score >= 80 ? "Strong work. Keep asking why an answer holds up." : "Every missed question is a useful place to start again."}</p><div className="result-actions"><button className="button-secondary" onClick={retry}>Retry quiz</button><Link className="button-primary" href={`/modules/${module.slug}`}>Back to module</Link></div></div></div>{storageError && <p className="storage-warning" role="status">{storageError}</p>}<div className="quiz-review"><h3>{incorrect.length ? "A second look." : "You’ve got the foundations."}</h3>{incorrect.length ? <><p className="mt-3">Revisit the ideas behind the answers you missed.</p><ol>{incorrect.map(({ question: item, answer, position }) => <li key={item.id}><h4>{position + 1}. {item.prompt}</h4><p className="review-choice">Your answer: {item.choices[answer]}</p><p><strong>Correct answer:</strong> {item.choices[item.answerIndex]}</p><p>{item.explanation}</p></li>)}</ol></> : <p className="mt-3">You answered every question correctly. Try explaining one idea to someone else, in your own words.</p>}<Link href={`/modules/${module.slug}`} className="text-link text-link--arrow"><span className="text-link-label">Review the lessons </span><span aria-hidden="true">↗</span></Link></div></section>;
 
-  return <div className="quiz-layout"><aside className="quiz-aside"><p>Question {index + 1} of {module.quiz.length}</p><div className="quiz-count" aria-hidden="true">{String(index + 1).padStart(2, "0")}<span>/{String(module.quiz.length).padStart(2, "0")}</span></div><p>{correctCount} correct so far</p>{streak >= 2 && <p className="quiz-streak" key={streak}>{streak} in a row</p>}<div className="quiz-steps" aria-hidden="true">{module.quiz.map((item, position) => <i key={item.id} data-reached={position <= index} data-result={answers[position] === undefined ? undefined : answers[position] === item.answerIndex ? "right" : "missed"} />)}</div></aside><section className="quiz-main"><h2 ref={heading} tabIndex={-1}>{question.prompt}</h2><div className="answer-list">{question.choices.map((choice, choiceIndex) => {
-    const status = selected === undefined ? "unanswered" : choiceIndex === question.answerIndex ? "correct" : choiceIndex === selected ? "incorrect" : "unselected";
-    const statusText = status === "correct" ? "Correct" : status === "incorrect" ? "Incorrect" : status === "unselected" ? "Not selected" : "";
-    return <button key={`${question.id}-${choiceIndex}`} className="answer-choice" data-state={status} aria-pressed={choiceIndex === selected} disabled={!hydrated || selected !== undefined} onClick={() => choose(choiceIndex)}><span className="answer-letter" aria-hidden="true">{String.fromCharCode(65 + choiceIndex)}</span><span>{choice}</span>{statusText && <span className="answer-status">{statusText}</span>}</button>;
-  })}</div>{selected !== undefined && <div className="answer-feedback" data-good={selected === question.answerIndex}><span className="answer-stamp" aria-hidden="true">{selected === question.answerIndex ? streak >= 2 ? `×${streak}` : "✓" : "✕"}</span><div role="status" aria-live="polite"><strong>{selected === question.answerIndex ? "Correct!" : "Not quite."}</strong><p>{question.explanation}</p>{selected !== question.answerIndex && <p className="small-note mt-2">Correct answer: {question.choices[question.answerIndex]}</p>}</div><button ref={nextButton} className="button-primary" onClick={next}>{index === module.quiz.length - 1 ? "See results" : "Next question"}</button></div>}{storageError && <p className="storage-warning" role="status">{storageError}</p>}</section></div>;
+  return <div className="quiz-layout">
+    <aside className="quiz-aside">
+      <p>Question {index + 1} of {module.quiz.length}</p>
+      <div className="quiz-count" aria-hidden="true">{String(index + 1).padStart(2, "0")}<span>/{String(module.quiz.length).padStart(2, "0")}</span></div>
+      <p>{correctCount} correct so far</p>
+      {streak >= 2 && <p className="quiz-streak" key={streak}>{streak} in a row</p>}
+      <div className="quiz-steps" aria-hidden="true">{module.quiz.map((item, position) => <i key={item.id} data-reached={position <= index} data-result={answers[position] === undefined ? undefined : answers[position] === item.answerIndex ? "right" : "missed"} />)}</div>
+    </aside>
+    <section className="quiz-main">
+      <h2 ref={heading} tabIndex={-1}>{question.prompt}</h2>
+      {question.estimate ? <EstimateControl
+        question={question}
+        value={estimateValue}
+        disabled={!hydrated || selected !== undefined}
+        onChange={setEstimateValue}
+        onLock={() => choose(estimateChoice(question, estimateValue))}
+      /> : <div className="answer-list">{question.choices.map((choice, choiceIndex) => {
+        const status = selected === undefined ? "unanswered" : choiceIndex === question.answerIndex ? "correct" : choiceIndex === selected ? "incorrect" : "unselected";
+        const statusText = status === "correct" ? "Correct" : status === "incorrect" ? "Incorrect" : status === "unselected" ? "Not selected" : "";
+        return <button key={`${question.id}-${choiceIndex}`} className="answer-choice" data-state={status} aria-pressed={choiceIndex === selected} disabled={!hydrated || selected !== undefined} onClick={() => choose(choiceIndex)}><span className="answer-letter" aria-hidden="true">{String.fromCharCode(65 + choiceIndex)}</span><span>{choice}</span>{statusText && <span className="answer-status">{statusText}</span>}</button>;
+      })}</div>}
+      {question.estimate && selected !== undefined && <EstimateScale value={estimateValue} estimate={question.estimate} />}
+      {selected !== undefined && <div className="answer-feedback" data-good={selected === question.answerIndex}>
+        <span className="answer-stamp" aria-hidden="true">{selected === question.answerIndex ? streak >= 2 ? `×${streak}` : "✓" : "✕"}</span>
+        <div role="status" aria-live="polite">
+          <strong>{selected === question.answerIndex ? "Correct!" : "Not quite."}</strong>
+          <p>{question.explanation}</p>
+          {selected !== question.answerIndex && <p className="small-note mt-2">Correct answer: {question.choices[question.answerIndex]}</p>}
+        </div>
+        <button ref={nextButton} className="button-primary" onClick={next}>{index === module.quiz.length - 1 ? "See results" : "Next question"}</button>
+      </div>}
+      {storageError && <p className="storage-warning" role="status">{storageError}</p>}
+    </section>
+  </div>;
 }
