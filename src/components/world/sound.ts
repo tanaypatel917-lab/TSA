@@ -20,6 +20,7 @@ export function soundOn() {
 
 export function setSound(on: boolean) {
   try { localStorage.setItem(SOUND_KEY, on ? "on" : "off"); } catch {}
+  if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent("wordplay:sound", { detail: on }));
 }
 
 export function play(cue: Cue) {

@@ -1550,3 +1550,36 @@ html[data-motion="reduced"] .badge-patch { animation: none !important; }
   .lesson-pull::before { top: -18px; height: 32px; font-size: 70px; }
 }
 @media print { .lesson-margin, .lesson-pull { display: none; } }
+
+
+/* Comfort pill: Calm, Sound, Text size */
+.comfort-pill { display: inline-flex; align-items: stretch; flex: none; border: 1.5px solid var(--ink); border-radius: 999px; background: var(--paper); box-shadow: 0 3px 0 var(--ink); overflow: hidden; }
+.comfort-pill button, .comfort-pill .motion-toggle { display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 4px 12px; border: 0; border-left: 1.5px solid var(--ink); border-radius: 0; background: transparent; box-shadow: none; font-size: 13px; font-weight: 700; line-height: 1.2; color: var(--ink); transition: background-color 160ms ease; }
+.comfort-pill > :first-child { border-left: 0; padding-left: 14px; }
+.comfort-pill button[aria-pressed="true"] { background: var(--sky); }
+.comfort-pill button:active { translate: none; box-shadow: none; background: var(--clay); }
+.comfort-pill button:focus-visible { outline: 3px solid var(--ink); outline-offset: -4px; }
+@media (hover: hover) and (pointer: fine) { .comfort-pill button:hover { background: color-mix(in srgb, var(--sky) 55%, var(--paper)); } .comfort-pill button[aria-pressed="true"]:hover { background: var(--sky); } }
+.comfort-icon { position: relative; width: 10px; height: 10px; border-radius: 2px 6px 6px 2px; background: currentColor; clip-path: polygon(0 30%, 40% 30%, 100% 0, 100% 100%, 40% 70%, 0 70%); }
+.comfort-icon[data-on="false"] { opacity: .35; }
+.comfort-text { padding-inline: 11px 13px; font-family: var(--font-display), sans-serif; }
+.comfort-text span { font-size: 15px; letter-spacing: -.02em; }
+.comfort-text small { font-size: 10px; margin-left: 1px; }
+.comfort-text[data-size="large"] span { font-size: 17px; }
+.comfort-text[data-size="larger"] span { font-size: 19px; }
+.comfort-text[data-size]:not([data-size="normal"]) { background: var(--sky); }
+html[data-text="large"] main:not(:has(.world)) { zoom: 1.1; }
+html[data-text="larger"] main:not(:has(.world)) { zoom: 1.22; }
+@media (max-width: 1023px) { .site-navigation .comfort-pill { align-self: flex-start; margin-top: 16px; } .site-navigation .comfort-pill button { min-height: 44px; padding-inline: 16px; font-size: 15px; } }
+.comfort-pill .motion-toggle { margin-top: 0; align-self: stretch; }
+.site-navigation a { white-space: nowrap; }
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .comfort-sound .comfort-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .comfort-pill button { padding-inline: 10px; }
+}
+@media (min-width: 768px) and (max-width: 1279px) {
+  .lesson-facts { flex-wrap: nowrap; }
+  .lesson-facts div { min-width: 0; padding: 10px 14px 10px 12px; }
+  .lesson-facts dd { font-size: 30px; }
+  .lesson-facts dt { font-size: 10px; letter-spacing: .05em; }
+}

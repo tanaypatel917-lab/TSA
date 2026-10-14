@@ -296,3 +296,22 @@ test("without JavaScript every scene is readable on its own color field", async 
   expect(await page.locator("#intro-act-2").evaluate((element) => getComputedStyle(element).backgroundColor)).toBe("rgb(74, 104, 146)");
   await context.close();
 });
+
+test("the comfort pill toggles sound and cycles a saved text size", async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("wordplay:intro:v1", "seen"));
+  await page.goto("/glossary/");
+  const comfort = page.getByRole("group", { name: "Comfort settings" });
+  const sound = comfort.getByRole("button", { name: "Sound", exact: true });
+  await expect(sound).toHaveAttribute("aria-pressed", "true");
+  await sound.click();
+  await expect(sound).toHaveAttribute("aria-pressed", "false");
+  expect(await page.evaluate(() => localStorage.getItem("wordplay:sound:v1"))).toBe("off");
+  await comfort.getByRole("button", { name: "Text size: Normal" }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-text", "large");
+  await page.reload();
+  await expect(page.locator("html")).toHaveAttribute("data-text", "large");
+  await expect(comfort.getByRole("button", { name: "Sound", exact: true })).toHaveAttribute("aria-pressed", "false");
+  await comfort.getByRole("button", { name: "Text size: Large" }).click();
+  await comfort.getByRole("button", { name: "Text size: Larger" }).click();
+  await expect(page.locator("html")).not.toHaveAttribute("data-text", /./);
+});
