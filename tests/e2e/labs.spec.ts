@@ -117,6 +117,10 @@ test("the perceptron learns a line and shows why a ring needs more layers", asyn
   await train.getByRole("button", { name: "A ring" }).click();
   await train.getByRole("button", { name: "Train" }).click();
   await expect(train.getByRole("status")).toContainText("can't circle the middle.", { timeout: 15000 });
+  const boundary = train.locator("line.plot-line");
+  await expect(boundary).toHaveCount(1);
+  const endpoints = await boundary.evaluate((line) => ["x1", "y1", "x2", "y2"].map((attribute) => Number(line.getAttribute(attribute))));
+  expect(endpoints.every((coordinate) => coordinate >= 0 && coordinate <= 300)).toBe(true);
 });
 
 test("the bias lab shows a gap from one-sided data that mixed data closes", async ({ page }) => {

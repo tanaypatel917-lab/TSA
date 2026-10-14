@@ -9,7 +9,7 @@ const SIZE = 300;
 const MAX_STEPS = 60;
 type Preset = keyof typeof PRESETS;
 type Point = { x: number; y: number };
-type State = { preset: Preset; model: Model; steps: number; running: boolean; status: string };
+type State = { preset: Preset; model: Model; best: Model; bestScore: number; steps: number; running: boolean; status: string };
 type Action =
   | { type: "select"; preset: Preset }
   | { type: "reset" }
@@ -20,7 +20,8 @@ type Action =
   | { type: "finish" };
 
 function freshState(preset: Preset): State {
-  return { preset, model: { ...START }, steps: 0, running: false, status: "" };
+  const model = { ...START };
+  return { preset, model, best: model, bestScore: score(model, PRESETS[preset]), steps: 0, running: false, status: "" };
 }
 
 function statusFor(state: State): string {
@@ -32,12 +33,27 @@ function statusFor(state: State): string {
   return `Paused at ${percentage}% after ${state.steps} steps.`;
 }
 
+function pocketStatus(state: State): string {
+  const percentage = Math.round(state.bestScore * 100);
+  return `Best line: ${percentage}% after ${state.steps} steps. A straight line can't circle the middle. Real models stack many lines, in layers, to bend the boundary.`;
+}
+
 function advance(state: State, keepRunning: boolean): State {
   const data = PRESETS[state.preset];
   const model = step(state.model, data);
-  const next = { ...state, model, steps: state.steps + 1, running: keepRunning, status: "" };
-  if (score(model, data) === 1) return { ...next, running: false, status: statusFor(next) };
-  if (next.steps >= MAX_STEPS) return { ...next, running: false, status: statusFor(next) };
+  const currentScore = score(model, data);
+  const improved = currentScore > state.bestScore;
+  const next = {
+    ...state,
+    model,
+    best: improved ? model : state.best,
+    bestScore: improved ? currentScore : state.bestScore,
+    steps: state.steps + 1,
+    running: keepRunning,
+    status: ""
+  };
+  if (currentScore === 1) return { ...next, running: false, status: statusFor(next) };
+  if (next.steps >= MAX_STEPS) return { ...next, model: next.best, running: false, status: pocketStatus(next) };
   return next;
 }
 
@@ -137,7 +153,7 @@ export function TrainLab() {
     id="lab-train"
     sources="rules"
     title="Teach the machine: train a line that sorts dots."
-    note="A real, tiny model (a perceptron) trained in your browser on made-up dots. Each step nudges the line toward the dots it got wrong."
+    note="A real, tiny model (a perceptron) trained in your browser on made-up dots. Each step nudges the line toward the dots it got wrong. If it can't sort them all, it keeps the best line it found."
   >
     <div className="train-grid">
       <div className="train-visual">
