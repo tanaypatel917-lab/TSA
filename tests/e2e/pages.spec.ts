@@ -196,3 +196,15 @@ test("redesigned pages fit a 390px screen without horizontal scrolling", async (
   }
   await context.close();
 });
+
+test("glossary terms can be spoken out loud", async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem("wordplay:intro:v1", "seen");
+    const said: string[] = [];
+    (window as unknown as { said: string[] }).said = said;
+    Object.defineProperty(window, "speechSynthesis", { configurable: true, value: { getVoices: () => [], cancel: () => {}, speak: (utterance: SpeechSynthesisUtterance) => { said.push(utterance.text); } } });
+  });
+  await page.goto("/glossary/");
+  await page.getByRole("button", { name: "Say “Model” out loud" }).click();
+  expect(await page.evaluate(() => (window as unknown as { said: string[] }).said)).toEqual(["Model"]);
+});
