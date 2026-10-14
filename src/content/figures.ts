@@ -1,4 +1,4 @@
-export type FigureKind = "system" | "rules" | "chatbot" | "tokens" | "predictor" | "bias" | "train" | "claims" | "prompt" | "dice" | "vary" | "redact" | "fakepage" | "jury" | "detector" | "cookies";
+export type FigureKind = "system" | "rules" | "chatbot" | "tokens" | "predictor" | "bias" | "train" | "launch-day" | "claims" | "prompt" | "dice" | "vary" | "redact" | "fakepage" | "jury" | "detector" | "cookies";
 
 export const lessonFigures: Record<string, { after: number; kind: FigureKind }[]> = {
   "foundations/what-is-ai": [{ after: 0, kind: "system" }],
@@ -11,5 +11,6 @@ export const lessonFigures: Record<string, { after: number; kind: FigureKind }[]
   "ethics/privacy": [{ after: 0, kind: "redact" }, { after: 1, kind: "cookies" }],
   "ethics/fairness": [{ after: 0, kind: "jury" }],
   "ethics/academic-integrity": [{ after: 1, kind: "detector" }],
-  "ethics/misinformation": [{ after: 1, kind: "fakepage" }]
+  "ethics/misinformation": [{ after: 1, kind: "fakepage" }],
+  "capstone/responsible-launch": [{ after: 0, kind: "launch-day" }]
 };

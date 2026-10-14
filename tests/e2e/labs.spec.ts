@@ -479,3 +479,28 @@ test("Present mode turns a lesson into keyboard-driven slides", async ({ page })
   await expect(deck).toBeHidden();
   await expect(open).toBeFocused();
 });
+
+test("Capstone launch day traces trusted and pulled paths", async ({ page }) => {
+  await page.goto("/modules/capstone/lessons/responsible-launch/");
+  const launch = lab(page, "Launch day: four choices before the club fair.");
+  const meter = launch.getByRole("meter", { name: "Trust" });
+
+  for (let day = 0; day < 4; day += 1) {
+    await launch.locator(".launch-day-choice[data-trust='good']").click();
+    if (day < 3) {
+      await launch.getByRole("button", { name: "Next day →" }).click();
+      await expect(launch.getByRole("heading").filter({ hasText: /· (Facts|Fairness|Credit)$/ })).toBeFocused();
+    }
+  }
+  await expect(launch.getByRole("heading", { name: "Trusted launch" })).toBeVisible();
+  await expect(launch.locator(".launch-review-row")).toHaveCount(4);
+
+  await launch.getByRole("button", { name: "Try another path" }).click();
+  await expect(launch.getByRole("heading", { name: "Monday · Data" })).toBeFocused();
+  for (let day = 0; day < 4; day += 1) {
+    await launch.locator(".launch-day-choice[data-trust='bad']").click();
+    if (day < 3) await launch.getByRole("button", { name: "Next day →" }).click();
+  }
+  await expect(launch.getByRole("heading", { name: "Pulled from the fair" })).toBeVisible();
+  await expect(meter).toHaveAttribute("aria-valuenow", "-8");
+});
