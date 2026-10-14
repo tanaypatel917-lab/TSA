@@ -1,6 +1,6 @@
 export type Fruit = { x: number; y: number; ripe: boolean; farm: "A" | "B" };
 
-function random(seed: number) {
+export function random(seed: number) {
   let state = seed >>> 0;
   return () => {
     state = (state + 0x6d2b79f5) >>> 0;

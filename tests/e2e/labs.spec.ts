@@ -107,6 +107,18 @@ test("foundation lessons explain systems, rules and tokens hands-on", async ({ p
   await expect(page.getByRole("region", { name: "Guess the next word, like a language model." })).toBeVisible();
 });
 
+test("the perceptron learns a line and shows why a ring needs more layers", async ({ page }) => {
+  await page.goto("/modules/ai-foundations/lessons/rules-and-learning/");
+  const train = page.locator("#lab-train");
+  await train.getByRole("button", { name: "Two blobs" }).click();
+  await train.getByRole("button", { name: "Train" }).click();
+  await expect(train.getByRole("status")).toContainText("Sorted in", { timeout: 15000 });
+
+  await train.getByRole("button", { name: "A ring" }).click();
+  await train.getByRole("button", { name: "Train" }).click();
+  await expect(train.getByRole("status")).toContainText("can't circle the middle.", { timeout: 15000 });
+});
+
 test("the bias lab shows a gap from one-sided data that mixed data closes", async ({ page }) => {
   await page.goto("/modules/ai-foundations/lessons/data-and-bias/");
   const bias = lab(page, "Train a fruit sorter on one farm’s photos.");
