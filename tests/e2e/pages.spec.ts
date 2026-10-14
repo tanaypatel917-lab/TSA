@@ -115,6 +115,24 @@ test("unknown routes show the designed 404 with recovery links", async ({ page }
   await expect(page).toHaveURL(/\/modules\/$/);
 });
 
+test("hallucination hunt catches fake pages and can be replayed", async ({ page }) => {
+  await seed(page);
+  const response = await page.goto("/does-not-exist/");
+  expect(response?.status()).toBe(404);
+
+  for (const name of ["Homework answers", "Secret level 99", "Teacher's grade book"]) {
+    await page.getByRole("button", { name: new RegExp(name) }).click();
+  }
+
+  await page.getByRole("button", { name: "Check my answers" }).click();
+  await expect(page.getByRole("status")).toHaveText("You caught 3 of 3 fakes, no false alarms");
+  await expect(page.getByRole("link", { name: /Glossary/ })).toHaveAttribute("href", /\/glossary\/?$/);
+
+  await page.getByRole("button", { name: "Play again" }).click();
+  await expect(page.getByRole("button", { name: "Check my answers" })).toBeVisible();
+  await expect(page.getByRole("status")).toHaveCount(0);
+});
+
 test("case-study completion keeps focus on the completion key", async ({ page }) => {
   await seed(page);
   await page.goto("/modules/ai-in-the-real-world/activity/");
