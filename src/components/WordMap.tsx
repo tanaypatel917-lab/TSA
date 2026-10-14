@@ -26,11 +26,12 @@ function groupLabel(id: WordMapGroupId) {
   return WORD_MAP_GROUPS.find((group) => group.id === id)!;
 }
 
-function MapFallback({ points, selected, links, onSelect }: {
+function MapFallback({ points, selected, links, onSelect, compact }: {
   points: WordMapPoint[];
   selected: string;
   links: string[];
   onSelect: (term: string) => void;
+  compact: boolean;
 }) {
   const selectedPoint = points.find((point) => point.term === selected)!;
   const origin = project(selectedPoint);
@@ -47,10 +48,12 @@ function MapFallback({ points, selected, links, onSelect }: {
     <g aria-hidden="true">
       {WORD_MAP_GROUPS.map((group) => {
         const center = project({ x: WORD_MAP_GROUP_CENTERS[group.id][0], y: WORD_MAP_GROUP_CENTERS[group.id][1] });
-        const radius = (0.55 + 0.08 * group.terms.length) * MAP_SCALE;
+        const radius = 0.86 * MAP_SCALE;
+        const compactLabelOffset = compact ? group.id === "models" ? 4 : group.id === "data" ? -24 : 0 : 0;
+        const compactLabelXOffset = compact && group.id === "data" ? 8 : 0;
         return <g key={group.id}>
           <circle cx={center.x} cy={center.y} r={radius} fill="none" stroke={TONE_COLORS[group.tone]} strokeWidth="2" strokeDasharray="3 9" opacity=".25" />
-          <text className="word-map-cluster-label" x={center.x} y={center.y - radius - 12} textAnchor="middle">{group.label}</text>
+          <text className="word-map-cluster-label" x={center.x + compactLabelXOffset} y={center.y - radius - 12 + compactLabelOffset} textAnchor="middle">{group.label}</text>
         </g>;
       })}
       {links.map((term) => {
@@ -64,9 +67,16 @@ function MapFallback({ points, selected, links, onSelect }: {
       const radius = 5 + depth * 2;
       const isSelected = point.term === selected;
       const linked = links.includes(point.term);
-      const textAnchor = point.x > MAP_CENTER.x + 24 ? "start" : point.x < MAP_CENTER.x - 24 ? "end" : "middle";
-      const textX = point.x + (textAnchor === "start" ? 10 : textAnchor === "end" ? -10 : 0);
-      const textY = point.y + (point.y < MAP_CENTER.y ? -12 : 22);
+      const termIndex = group.terms.findIndex((term) => term === point.term);
+      const textAnchor = point.x > MAP_CENTER.x + 24 ? "end" : point.x < MAP_CENTER.x - 24 ? "start" : "middle";
+      const textX = point.x + (textAnchor === "start" ? 10 : textAnchor === "end" ? -10 : 0) + (compact && point.term === "Verification" ? 12 : 0);
+      const row = Math.floor(termIndex / 2);
+      const rowOffset = compact
+        ? group.id === "models" ? [-28, 28, 24, 40][row] ?? 0 : row % 2 === 0 ? -28 : 28
+        : 0;
+      const textY = point.y + (point.y < MAP_CENTER.y ? -12 : 22)
+        + rowOffset
+        + (compact ? (group.id === "use" ? 55 : 0) + (termIndex % 2 === 0 ? -18 : 18) : 0);
       return <g key={point.term} className="word-map-node" role="button" tabIndex={0} aria-label={`Select ${point.term}${isSelected ? ", selected" : ""}`} aria-pressed={isSelected} onClick={() => onSelect(point.term)} onKeyDown={(event) => activate(event, point.term)} style={{ opacity: 0.58 + depth * 0.42 }}>
         <circle cx={point.x} cy={point.y} r={radius + (isSelected ? 7 : linked ? 4 : 0)} fill="none" stroke={isSelected ? "var(--clay)" : linked ? "var(--ink)" : "transparent"} strokeWidth={isSelected ? 4 : 2} />
         <circle cx={point.x} cy={point.y} r={radius} fill={TONE_COLORS[group.tone]} stroke="var(--ink)" strokeWidth="2" />
@@ -102,7 +112,7 @@ export function WordMap({ onBrowse }: { onBrowse: (term: string) => void }) {
     <h2 id="word-map-heading">Word map</h2>
     <div className="word-map-main">
       <div className="word-map-stage" data-3d={canUseThree && threeReady}>
-        <MapFallback points={points} selected={selected} links={linkedTerms} onSelect={setSelected} />
+        <MapFallback points={points} selected={selected} links={linkedTerms} onSelect={setSelected} compact={smallScreen} />
         {canUseThree && <WordMapStage points={points} selected={selected} onSelect={setSelected} onReady={onStageReady} />}
         <p className="word-map-stage-hint">{canUseThree ? "Drag · hover · select" : "Select any term"}</p>
       </div>

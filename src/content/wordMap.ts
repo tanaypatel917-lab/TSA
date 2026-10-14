@@ -29,26 +29,9 @@ export type WordMapGroup = (typeof WORD_MAP_GROUPS)[number];
 export type WordMapGroupId = WordMapGroup["id"];
 export type WordMapTone = WordMapGroup["tone"];
 
-const TETRAHEDRON = [
-  [1, 1, 1],
-  [1, -1, -1],
-  [-1, 1, -1],
-  [-1, -1, 1]
-] as const;
-
-const CENTER_COMPONENT = 2.2 / Math.sqrt(3);
-
-function centerFor(vertex: readonly [number, number, number]) {
-  return [
-    vertex[0] * CENTER_COMPONENT,
-    vertex[1] * CENTER_COMPONENT,
-    vertex[2] * CENTER_COMPONENT
-  ] as const;
-}
-
 export const WORD_MAP_GROUP_CENTERS = {
-  models: centerFor(TETRAHEDRON[0]),
-  data: centerFor(TETRAHEDRON[1]),
-  use: centerFor(TETRAHEDRON[2]),
-  risks: centerFor(TETRAHEDRON[3])
-} satisfies Record<WordMapGroupId, readonly [number, number, number]>;
+  models: [-1.6, 0.9, 0.3],
+  use: [1.6, 0.9, -0.3],
+  risks: [-1.6, -1.1, -0.3],
+  data: [1.6, -1.1, 0.3]
+} as const satisfies Record<WordMapGroupId, readonly [number, number, number]>;

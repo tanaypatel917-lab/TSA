@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import { WORD_MAP_GROUPS } from "@/content/wordMap";
 import { layoutWordMap, nearest } from "./wordMap";
 
 describe("Word Map layout", () => {
@@ -11,10 +10,14 @@ describe("Word Map layout", () => {
     expect(points.every((point) => Math.hypot(point.x, point.y, point.z) <= 3.5)).toBe(true);
   });
 
-  it("keeps hallucination close to its risk-group neighbors", () => {
+  it("keeps clusters separated and hallucination closest to risks terms", () => {
     const points = layoutWordMap();
-    const risks = new Set<string>(WORD_MAP_GROUPS.find((group) => group.id === "risks")!.terms);
+    const crossClusterDistances = points.flatMap((point, index) => points.slice(index + 1)
+      .filter((other) => point.group !== other.group)
+      .map((other) => Math.hypot(point.x - other.x, point.y - other.y, point.z - other.z)));
 
-    expect(nearest(points, "Hallucination").filter((point) => risks.has(point.term)).length).toBeGreaterThanOrEqual(2);
+    expect(Math.min(...crossClusterDistances)).toBeGreaterThanOrEqual(1.5);
+    expect(nearest(points, "Hallucination")).toHaveLength(3);
+    expect(nearest(points, "Hallucination").every((point) => point.group === "risks")).toBe(true);
   });
 });
