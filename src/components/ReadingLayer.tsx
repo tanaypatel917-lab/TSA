@@ -47,7 +47,7 @@ function wordAt(x: number, y: number) {
   range.setStart(node, start); range.setEnd(node, end);
   const box = range.getBoundingClientRect();
   if (x < box.left - 2 || x > box.right + 2 || y < box.top - 2 || y > box.bottom + 2) return null;
-  return word;
+  return { word, box };
 }
 
 export function ReadingLayer() {
@@ -91,8 +91,8 @@ export function ReadingLayer() {
 
     const update = () => {
       frame = 0;
-      label.style.transform = `translate3d(${pointer.x + 14}px, ${pointer.y - 44}px, 0)`;
-      const word = wordAt(pointer.x, pointer.y);
+      const hit = wordAt(pointer.x, pointer.y);
+      const word = hit?.word;
       if (word !== shown) {
         shown = word ?? "";
         label.dataset.on = String(!!word);
@@ -103,6 +103,10 @@ export function ReadingLayer() {
           return token;
         }));
       }
+      const height = label.offsetHeight || 34;
+      const x = Math.min(pointer.x + 14, window.innerWidth - label.offsetWidth - 8);
+      const y = !hit ? pointer.y - 44 : hit.box.top - height - 8 >= 8 ? hit.box.top - height - 8 : hit.box.bottom + 8;
+      label.style.transform = `translate3d(${x}px, ${y}px, 0)`;
       if (focus) draw();
     };
     const move = (event: PointerEvent) => { pointer = { x: event.clientX, y: event.clientY }; if (!frame) frame = requestAnimationFrame(update); };
