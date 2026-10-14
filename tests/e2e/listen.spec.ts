@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 
 test("Listen advances paragraphs, pauses, stops, and stays visible on a phone", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
   await page.addInitScript(() => {
     class FakeUtterance {
       text: string;
