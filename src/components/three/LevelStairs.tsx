@@ -34,7 +34,7 @@ export function LevelStairs({ levels }: { levels: readonly string[] }) {
       const scene = new THREE.Scene();
       const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 100);
       camera.position.set(4.5, 5, 16);
-      camera.lookAt(0, 1.7, 0);
+      camera.lookAt(0, 2.3, 0);
 
       const disposables: { dispose: () => void }[] = [];
       const keep = <T extends { dispose: () => void }>(item: T) => { disposables.push(item); return item; };
@@ -57,7 +57,7 @@ export function LevelStairs({ levels }: { levels: readonly string[] }) {
         const numeral = String(index + 1).padStart(2, "0");
         if (tone.outline) { context.lineWidth = 8; context.strokeStyle = tone.text; context.strokeText(numeral, pad, pad * 0.6); }
         else { context.fillStyle = tone.text; context.fillText(numeral, pad, pad * 0.6); }
-        fit(context, name, "750", Math.round(0.22 * PX), font, room);
+        fit(context, name, "800", Math.round(0.3 * PX), font, room);
         context.fillStyle = tone === TONES.now ? PAPER : tone.text;
         context.textBaseline = "alphabetic";
         context.fillText(name, pad, canvas.height - pad * 0.75);
@@ -122,7 +122,7 @@ export function LevelStairs({ levels }: { levels: readonly string[] }) {
         const box = element.getBoundingClientRect();
         renderer.setSize(box.width, box.height, false);
         const aspect = box.width / Math.max(1, box.height);
-        const half = Math.max(2.9, 6.9 / aspect);
+        const half = Math.max(3.4, 7.2 / aspect);
         camera.left = -half * aspect; camera.right = half * aspect; camera.top = half; camera.bottom = -half;
         camera.updateProjectionMatrix();
       };
