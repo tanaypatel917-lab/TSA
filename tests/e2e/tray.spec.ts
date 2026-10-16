@@ -150,6 +150,20 @@ test("the desktop header remains on one row at 1024 and 1280 pixels", async ({ p
   }
 });
 
+test("the desktop navigation fits the page at supported widths and routes", async ({ page }) => {
+  for (const route of ["/", "/modules/", "/timeline/"]) {
+    for (const width of [1024, 1100, 1200, 1279, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(route);
+      const dimensions = await page.evaluate(() => ({
+        scrollWidth: document.documentElement.scrollWidth,
+        clientWidth: document.documentElement.clientWidth
+      }));
+      expect(dimensions.scrollWidth, `${route} at ${width}px`).toBe(dimensions.clientWidth);
+    }
+  }
+});
+
 test("an empty tray offers a starter pack of words", async ({ page }) => {
   await page.goto("/tray/");
   await expect(page.getByText("Your tray is empty.")).toBeVisible();

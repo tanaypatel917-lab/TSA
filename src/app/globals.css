@@ -1617,6 +1617,9 @@ html[data-text="larger"] main:not(:has(.world)) { zoom: 1.22; }
   .comfort-pill button, .comfort-pill .motion-toggle { padding-inline: 8px; }
   .comfort-pill > :first-child { padding-left: 11px; }
 }
+@media (min-width: 1200px) and (max-width: 1279px) {
+  .site-navigation { gap: 20px; }
+}
 
 /* X-ray: token boundaries */
 ::highlight(xray-a) { background-color: rgba(175, 203, 227, .8); color: var(--ink); }
