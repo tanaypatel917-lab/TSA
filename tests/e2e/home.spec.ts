@@ -161,3 +161,38 @@ test("the idea section switches between rules, learning and context", async ({ p
   await section.getByRole("button", { name: "Context" }).click();
   await expect(section.locator(".idea-stage-label")).toHaveText("03 / Context");
 });
+
+test("the desktop hero keeps its headline lines and title tiles below the header", async ({ page }) => {
+  const widths = [
+    ...new Set([
+      ...Array.from({ length: 27 }, (_, index) => 1024 + index * 16),
+      1280,
+      1366
+    ])
+  ].sort((a, b) => a - b);
+
+  await page.goto("/");
+
+  for (const width of widths) {
+    await page.setViewportSize({ width, height: 720 });
+    await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => resolve())));
+    const geometry = await page.evaluate(() => {
+      const heading = document.querySelector<HTMLHeadingElement>(".home-hero .hero-copy h1");
+      const header = document.querySelector(".site-header");
+      const titleGuess = document.querySelector(".title-guess");
+      if (!heading || !header || !titleGuess) throw new Error("Homepage hero elements are missing");
+
+      return {
+        fontSize: Number.parseFloat(getComputedStyle(heading).fontSize),
+        lineHeights: [...heading.querySelectorAll(".hero-line")].map(line => line.getBoundingClientRect().height),
+        headerBottom: header.getBoundingClientRect().bottom,
+        titleGuessTop: titleGuess.getBoundingClientRect().top
+      };
+    });
+
+    for (const [index, height] of geometry.lineHeights.entries()) {
+      expect(height, `headline line ${index + 1} at ${width}px`).toBeLessThan(geometry.fontSize * 1.5);
+    }
+    expect(geometry.titleGuessTop, `title tiles at ${width}px`).toBeGreaterThanOrEqual(geometry.headerBottom);
+  }
+});
