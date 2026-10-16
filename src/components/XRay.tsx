@@ -45,8 +45,31 @@ export function XRay() {
   const [supported, setSupported] = useState(false);
   const [on, setOn] = useState(false);
   const [count, setCount] = useState(0);
+  const [tucked, setTucked] = useState(false);
   const hidden = /^\/(intro|play)/.test(path);
   useEffect(() => { setSupported("highlights" in CSS && "Highlight" in window); }, []);
+  useEffect(() => {
+    if (on || hidden) { setTucked(false); return; }
+    let previousY = window.scrollY;
+    let frame = 0;
+    const update = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        const y = window.scrollY;
+        const delta = y - previousY;
+        const atBottom = document.documentElement.scrollHeight - window.innerHeight - y <= 80;
+        if (atBottom || delta < -8) setTucked(false);
+        else if (y > 200 && delta > 8) setTucked(true);
+        previousY = y;
+      });
+    };
+    window.addEventListener("scroll", update, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", update);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, [on, hidden, path]);
   useEffect(() => {
     if (!on || hidden) { clear(); return; }
     let timer = 0;
@@ -58,8 +81,8 @@ export function XRay() {
     return () => { window.clearTimeout(first); window.clearTimeout(timer); observer.disconnect(); clear(); };
   }, [on, hidden, path]);
   if (!supported || hidden) return null;
-  return <button type="button" className="xray-toggle" aria-pressed={on} onClick={() => setOn(!on)}>
-    <span className="xray-dot" aria-hidden="true" />X-ray
-    {on && <span className="xray-count" role="status">≈ {count.toLocaleString("en-US")} tokens</span>}
+  return <button type="button" className="xray-toggle" aria-label="X-ray" aria-pressed={on} data-tucked={tucked ? "true" : "false"} onFocus={() => setTucked(false)} onClick={() => setOn(!on)}>
+    <span className="xray-dot" aria-hidden="true" />
+    <span className="xray-label">X-ray{on && <span className="xray-count" role="status">≈ {count.toLocaleString("en-US")} tokens</span>}</span>
   </button>;
 }

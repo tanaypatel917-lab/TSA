@@ -328,3 +328,18 @@ test("the X-ray switch counts the tokens on the page", async ({ page }) => {
   await xray.click();
   await expect.poll(() => page.evaluate(() => (CSS as unknown as { highlights: Map<string, unknown> }).highlights.has("xray-a"))).toBe(false);
 });
+
+test("the X-ray toggle stays compact and tucks away while scrolling", async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("wordplay:intro:v1", "seen"));
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/about/");
+  const xray = page.getByRole("button", { name: /^X-ray/ });
+  const width = await xray.evaluate((button) => button.getBoundingClientRect().width);
+  expect(width, "collapsed X-ray toggle should stay compact at 1440px").toBeLessThanOrEqual(44);
+  await expect(xray).toHaveAttribute("data-tucked", "false");
+
+  await page.mouse.wheel(0, 1200);
+  await expect(xray, "X-ray toggle should tuck after scrolling down").toHaveAttribute("data-tucked", "true");
+  await page.mouse.wheel(0, -400);
+  await expect(xray, "X-ray toggle should untuck after scrolling up").toHaveAttribute("data-tucked", "false");
+});

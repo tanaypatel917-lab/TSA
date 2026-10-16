@@ -1666,14 +1666,23 @@ html[data-text="larger"] main:not(:has(.world)) { zoom: 1.22; }
 /* X-ray: token boundaries */
 ::highlight(xray-a) { background-color: rgba(175, 203, 227, .8); color: var(--ink); }
 ::highlight(xray-b) { background-color: rgba(221, 137, 98, .42); color: var(--ink); }
-.xray-toggle { position: fixed; left: 18px; bottom: 18px; z-index: 60; display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 6px 14px 6px 12px; border: 1.5px solid var(--ink); border-radius: 999px; background: var(--paper); box-shadow: 0 3px 0 var(--ink); color: var(--ink); font: 700 13px/1.2 var(--font-mono), monospace; letter-spacing: .06em; text-transform: uppercase; transition: translate 140ms var(--ease-out), box-shadow 140ms var(--ease-out), background-color 160ms ease; }
+.xray-toggle { position: fixed; left: 16px; bottom: 16px; z-index: 60; display: inline-flex; align-items: center; justify-content: center; gap: 0; width: max-content; min-width: 40px; max-width: 40px; height: 40px; padding: 0 10px; overflow: hidden; border: 1.5px solid var(--ink); border-radius: 999px; background: var(--paper); box-shadow: 0 3px 0 var(--ink); color: var(--ink); font: 700 13px/1.2 var(--font-mono), monospace; letter-spacing: .06em; text-transform: uppercase; transition: max-width 220ms var(--ease-out), translate 260ms var(--ease-out), box-shadow 140ms var(--ease-out), background-color 160ms ease; }
 .xray-toggle:active { translate: 0 3px; box-shadow: none; }
 .xray-toggle:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
 .xray-toggle[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
-.xray-dot { width: 10px; height: 10px; border-radius: 50%; background: linear-gradient(90deg, var(--sky) 50%, var(--clay) 50%); box-shadow: 0 0 0 1.5px currentColor; }
+.xray-label { display: inline-flex; align-items: center; gap: 8px; max-width: 0; overflow: hidden; opacity: 0; white-space: nowrap; transition: max-width 220ms var(--ease-out), opacity 160ms var(--ease-out); }
 .xray-count { padding-left: 9px; border-left: 1.5px solid color-mix(in srgb, currentColor 40%, transparent); font-weight: 600; letter-spacing: .02em; text-transform: none; }
+.xray-dot { flex: none; width: 14px; height: 14px; border-radius: 50%; background: linear-gradient(90deg, var(--sky) 50%, var(--clay) 50%); box-shadow: 0 0 0 1.5px currentColor; }
+.xray-toggle:is(:hover, :focus-visible, [aria-pressed="true"]) { justify-content: flex-start; gap: 8px; max-width: min(300px, calc(100vw - 32px)); }
+.xray-toggle:is(:hover, :focus-visible, [aria-pressed="true"]) .xray-label { max-width: 260px; opacity: 1; }
+.xray-toggle[data-tucked="true"] { translate: 0 calc(100% + 24px); }
 @media (hover: hover) and (pointer: fine) { .xray-toggle:hover { background: var(--sky); } .xray-toggle[aria-pressed="true"]:hover { background: #2A3B5A; } }
-@media (max-width: 767px) { .xray-toggle { left: 12px; bottom: 12px; min-height: 36px; padding: 5px 11px; font-size: 11.5px; } }
+@media (max-width: 767px) {
+  .xray-toggle { min-width: 36px; max-width: 36px; height: 36px; padding-inline: 9px; left: 16px; bottom: 16px; font-size: 11.5px; }
+}
+@media (max-width: 639px) {
+  body:has(.badge-toast) .xray-toggle { bottom: calc(180px + env(safe-area-inset-bottom, 0px)); }
+}
 @media print { .xray-toggle { display: none; } }
 
 .present-open { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; min-height: 38px; padding: 6px 16px 6px 13px; border: 2px solid var(--ink); border-radius: 999px; background: var(--ink); color: var(--paper); box-shadow: 0 3px 0 var(--clay); font: 700 13px/1.2 var(--font-mono), monospace; letter-spacing: .08em; text-transform: uppercase; transition: translate 140ms var(--ease-out), box-shadow 140ms var(--ease-out); }
