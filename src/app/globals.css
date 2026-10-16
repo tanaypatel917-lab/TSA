@@ -213,7 +213,7 @@ html[data-motion="reduced"] .title-guess-tile { transition: none; }
 .lesson-outline a:hover { text-decoration: underline; }
 .lesson-outline li[data-kind="lab"], .mobile-contents li[data-kind="lab"] { margin-left: 10px; }
 .lesson-outline li[data-kind="lab"] a, .mobile-contents li[data-kind="lab"] a { color: var(--muted); }
-.lesson-outline-lab-prefix { color: var(--clay); }
+.lesson-outline-lab-prefix { color: #8E5037; font-weight: 600; }
 .mobile-contents { display: none; }
 .lesson-reading { width: 100%; max-width: 66ch; font-size: 18px; line-height: 1.75; }
 .lesson-reading section { scroll-margin-top: 28px; }
