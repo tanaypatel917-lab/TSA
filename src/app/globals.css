@@ -137,6 +137,8 @@ html[data-motion="reduced"] .title-guess-tile { transition: none; }
 .section-index { margin-bottom: 26px; font-size: 14px; font-weight: 600; }
 .sampler-intro > p:not(.section-index) { max-width: 360px; margin-top: 24px; font-size: 18px; line-height: 1.7; }
 .sampler-intro .text-link { margin-top: 32px; font-size: 15px; }
+.sampler-voxel { display: none !important; }
+@media (min-width: 900px) { .sampler-voxel { display: grid !important; justify-self: start; width: max-content; margin: 72px 0 0 90px; } .sampler-voxel .voxel-glyph-stage { inset: -45% -60%; } .sampler-voxel > .chapter-glyph { opacity: 0 !important; font-size: 160px; line-height: 1; color: var(--clay); } }
 .sampler-workspace { padding: 28px; border: 1px solid var(--ink); box-shadow: 7px 7px 0 var(--clay); }
 .weak-label { font-size: 13px; color: var(--muted); }
 .sampler-workspace blockquote { margin: 7px 0 26px; font-size: 22px; line-height: 1.4; }
