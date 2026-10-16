@@ -1122,7 +1122,7 @@ html[data-motion="full"] :is(.section-heading h2, .spine h2, .human-judgment h2,
   .lesson-meta .voxel-glyph:not([data-on="true"]) > .chapter-glyph { text-shadow: 2px 2px 0 #B8694A, 4px 4px 0 #B8694A, 6px 6px 0 #A35C40, 8px 8px 0 #8E5037, 14px 16px 14px rgba(28, 42, 67, .16); }
 }
 
-.nf-voxel { position: absolute !important; right: 4%; top: 50%; transform: translateY(-50%); display: none !important; }
+.nf-voxel { position: absolute !important; right: 4%; top: clamp(300px, 34vh, 380px); transform: translateY(-50%); display: none !important; }
 .nf-voxel > .chapter-glyph { opacity: 0 !important; padding: 0; font-size: clamp(200px, 22vw, 340px); letter-spacing: -.04em; color: var(--clay); }
 @media (min-width: 900px) { .nf-voxel { display: grid !important; } }
 .not-found:has(.nf-voxel[data-on="true"]) .not-found-mark { opacity: 0; }
@@ -1261,7 +1261,7 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
 }
 @media (min-width: 900px) {
   .not-found h1 { max-width: 9.5ch; }
-  .nf-voxel { right: 2%; top: 56%; }
+  .nf-voxel { right: 2%; top: 330px; }
   .nf-voxel > .chapter-glyph { font-size: clamp(170px, 18vw, 290px); }
 }
 @media (min-width: 768px) {
