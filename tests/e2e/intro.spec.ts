@@ -338,8 +338,10 @@ test("the X-ray toggle stays compact and tucks away while scrolling", async ({ p
   expect(width, "collapsed X-ray toggle should stay compact at 1440px").toBeLessThanOrEqual(44);
   await expect(xray).toHaveAttribute("data-tucked", "false");
 
+  await page.mouse.move(720, 450);
   await page.mouse.wheel(0, 1200);
   await expect(xray, "X-ray toggle should tuck after scrolling down").toHaveAttribute("data-tucked", "true");
+  await page.waitForTimeout(300);
   await page.mouse.wheel(0, -400);
   await expect(xray, "X-ray toggle should untuck after scrolling up").toHaveAttribute("data-tucked", "false");
 });
