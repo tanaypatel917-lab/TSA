@@ -611,7 +611,7 @@ body:has(.intro-experience) .site-footer { display: none; }
 .chapter-pager strong { position: relative; z-index: 1; display: block; margin-top: 8px; font-family: var(--font-body), sans-serif; font-size: 18px; font-weight: 700; line-height: 1.2; }
 .chapter-pager-question { position: relative; z-index: 1; display: block; max-width: 12ch; margin-top: 7px; font-family: var(--font-display), sans-serif; font-size: clamp(30px, 3.2vw, 48px); font-style: normal; font-weight: 700; line-height: 1; letter-spacing: -.03em; }
 .chapter-pager-note { position: relative; z-index: 1; display: block; max-width: 32ch; margin-top: 8px; font-size: 14px; font-style: normal; line-height: 1.4; }
-.chapter-pager-number { position: absolute; z-index: 0; top: 8px; left: 24px; color: transparent; font-family: var(--font-display), sans-serif; font-size: 96px; font-weight: 650; line-height: .8; -webkit-text-stroke: 2px var(--ink); pointer-events: none; }
+.chapter-pager-number { position: absolute; z-index: 0; top: 15px; left: 24px; color: transparent; font-family: var(--font-display), sans-serif; font-size: 96px; font-weight: 650; line-height: 1; -webkit-text-stroke: 2px var(--ink); pointer-events: none; }
 .chapter-pager a[data-module="real-world"] .chapter-pager-number { -webkit-text-stroke-color: var(--paper); }
 .chapter-pager-mark { position: absolute; z-index: 0; right: -10px; bottom: -30px; color: var(--clay); font-family: var(--font-display), sans-serif; font-size: 220px; font-weight: 650; line-height: 1; white-space: nowrap; text-shadow: 3px 3px 0 #B8694A, 6px 6px 0 #B8694A, 9px 9px 0 #A35C40, 12px 12px 0 #8E5037, 22px 24px 20px rgba(28, 42, 67, .18); pointer-events: none; }
 .chapter-pager a[data-module="ethics"] .chapter-pager-mark, .chapter-pager a[data-module="capstone"] .chapter-pager-mark { color: var(--ink); }
@@ -812,9 +812,9 @@ body:has(.intro-experience) .site-footer { display: none; }
   .step-arrow { grid-column: 3; grid-row: 1; font-size: 18px; }
   .chapter-outcomes { padding: 22px; box-shadow: 5px 5px 0 var(--clay); }
   .chapter-pager { grid-template-columns: 1fr; gap: 16px; padding-bottom: 56px; }
-  .chapter-pager a, .chapter-pager a.is-next { grid-column: 1; min-height: 220px; padding: 22px 146px 22px 20px; border-radius: 10px; }
+  .chapter-pager a, .chapter-pager a.is-next { grid-column: 1; min-height: 232px; padding: 22px 146px 22px 20px; border-radius: 10px; }
   .chapter-pager span { font-size: 12px; }
-  .chapter-pager-number { top: 6px; left: 18px; font-size: 64px; }
+  .chapter-pager-number { top: 14px; left: 18px; font-size: 64px; }
   .chapter-pager-mark { right: -10px; bottom: -18px; font-size: 140px; }
   .chapter-pager-question { font-size: clamp(26px, 7vw, 34px); }
   .badges-section { padding-bottom: 60px; }
