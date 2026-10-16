@@ -201,3 +201,15 @@ html[data-motion="reduced"] .map-step[data-next="true"]::after { animation: none
 @media (max-width: 519px) { .wrapped-cards { gap: 12px; } .wrapped-persona { grid-column: 1 / -1; } .wrapped-card { min-height: 132px; padding: 14px 14px 12px; box-shadow: 4px 4px 0 var(--ink); } .wrapped-persona { box-shadow: 4px 4px 0 var(--clay); } .wrapped-card strong { font-size: 38px; } .wrapped-persona strong { font-size: 40px; } .wrapped-card span { font-size: 13px; } .wrapped-card small { font-size: 11.5px; } .wrapped-cta strong { font-size: 24px; } .learn-wrapped { padding-top: 56px; } }
 @media (prefers-reduced-motion: reduce) { .wrapped-card { transition: none; } }
 html[data-motion="reduced"] .wrapped-card { transition: none; }
+
+/* Badge shelf: locked badges are face-down collectible cards; the next one to earn is face-up */
+.mini-badges { counter-reset: badge; }
+.mini-badges li { position: relative; counter-increment: badge; }
+.mini-badges li[data-earned="false"] { overflow: hidden; border: 1.5px solid var(--ink); border-radius: 6px; background-color: var(--ink); background-image: repeating-linear-gradient(45deg, rgba(221, 137, 98, .18) 0 2px, transparent 2px 13px), repeating-linear-gradient(-45deg, rgba(175, 203, 227, .12) 0 2px, transparent 2px 13px); color: rgba(246, 239, 229, .66); box-shadow: 4px 4px 0 rgba(28, 42, 67, .24); }
+.mini-badges li[data-earned="false"]::before { content: "No. " counter(badge, decimal-leading-zero); position: absolute; top: 12px; right: 12px; font-size: 10px; font-weight: 700; letter-spacing: .12em; color: rgba(246, 239, 229, .5); }
+.mini-badges li[data-earned="false"] .mini-mark { color: transparent; -webkit-text-stroke: 1.5px rgba(246, 239, 229, .55); text-shadow: none; }
+.mini-badges li[data-earned="false"]:not(li[data-earned="false"] ~ li) { border: 2px dashed var(--clay); background: var(--paper); color: var(--ink); box-shadow: 5px 5px 0 var(--clay); }
+.mini-badges li[data-earned="false"]:not(li[data-earned="false"] ~ li)::before { content: "Next up"; color: var(--clay); }
+.mini-badges li[data-earned="false"]:not(li[data-earned="false"] ~ li) .mini-mark { color: var(--clay); -webkit-text-stroke: 0; text-shadow: 1px 1px 0 var(--ink), 2px 2px 0 var(--ink); }
+html[data-motion="full"] .mini-badges li[data-earned="false"]:hover { translate: 0 -4px; rotate: 1.5deg; border-color: var(--clay); }
+.mini-badges li[data-earned="false"]::before { position: static; order: -1; margin-bottom: -4px; }
