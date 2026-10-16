@@ -213,3 +213,8 @@ html[data-motion="reduced"] .wrapped-card { transition: none; }
 .mini-badges li[data-earned="false"]:not(li[data-earned="false"] ~ li) .mini-mark { color: var(--clay); -webkit-text-stroke: 0; text-shadow: 1px 1px 0 var(--ink), 2px 2px 0 var(--ink); }
 html[data-motion="full"] .mini-badges li[data-earned="false"]:hover { translate: 0 -4px; rotate: 1.5deg; border-color: var(--clay); }
 .mini-badges li[data-earned="false"]::before { position: static; order: -1; margin-bottom: -4px; }
+
+/* Locked certificate fills with ink as the course progresses */
+.cert-fill { position: absolute; z-index: 0; right: 0; bottom: 0; left: 0; height: calc(var(--pct, 0) * 1%); border-top: 2px solid var(--clay); background: repeating-linear-gradient(-45deg, rgba(221, 137, 98, .34) 0 2px, transparent 2px 9px); pointer-events: none; transition: height .8s var(--ease-out); }
+.learn-certificate[data-complete="true"] .cert-fill { display: none; }
+.cert-preview > :not(.cert-fill) { position: relative; z-index: 1; }
