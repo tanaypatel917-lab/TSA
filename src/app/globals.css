@@ -1010,7 +1010,10 @@ html[data-motion="full"] .xp-demo-track i { animation: xp-fill 1.8s var(--ease-o
 .badge-demo { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 10px; margin: 16px 0 0; padding: 0; list-style: none; }
 .badge-demo li { display: grid; justify-items: center; align-content: start; gap: 6px; padding: 14px 6px 10px; border: 1.5px solid var(--ink); border-radius: 8px; background: var(--paper); text-align: center; }
 .badge-demo li[data-earned="true"][data-tone="1"] { background: var(--sky); }
-.badge-demo li[data-earned="false"] { border-style: dashed; background: transparent; opacity: .72; }
+.badge-demo li[data-earned="false"] { background-color: var(--ink); background-image: repeating-linear-gradient(45deg, rgba(221, 137, 98, .22) 0 2px, transparent 2px 11px), repeating-linear-gradient(-45deg, rgba(175, 203, 227, .14) 0 2px, transparent 2px 11px); color: rgba(246, 239, 229, .7); box-shadow: 3px 3px 0 rgba(28, 42, 67, .35); }
+.badge-demo li[data-earned="false"] span { color: transparent; -webkit-text-stroke: 1.2px rgba(246, 239, 229, .6); }
+.badge-demo li[data-earned="false"]:not(li[data-earned="false"] ~ li) { border: 2px dashed var(--ink); background: var(--paper); color: var(--ink); }
+.badge-demo li[data-earned="false"]:not(li[data-earned="false"] ~ li) span { color: var(--clay); -webkit-text-stroke: 0; text-shadow: 1px 1px 0 var(--ink), 2px 2px 0 var(--ink); }
 .badge-demo span { font-family: var(--font-display), sans-serif; font-size: 26px; font-weight: 600; line-height: 1; }
 .badge-demo small { font-size: 11px; font-weight: 700; line-height: 1.2; }
 .progress-visual figcaption { margin-top: 14px; font-size: 13px; font-weight: 600; }
