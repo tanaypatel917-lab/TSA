@@ -102,7 +102,8 @@ export function VoxelGlyph({ mark, className = "" }: { mark: string; className?:
       const color = getComputedStyle(text).color;
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(30, 1, 1, 400);
-      camera.position.set(0, 0, 100);
+      const cameraDistance = Number.parseFloat(getComputedStyle(element).getPropertyValue("--voxel-camera-distance"));
+      camera.position.set(0, 0, Number.isFinite(cameraDistance) && cameraDistance > 0 ? cameraDistance : 100);
       scene.add(new THREE.HemisphereLight("#ffffff", "#1C2A43", 2));
       const sun = new THREE.DirectionalLight("#ffffff", 2.6);
       sun.position.set(-30, 40, 60);

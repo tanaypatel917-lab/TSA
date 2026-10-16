@@ -60,6 +60,19 @@ test("a chapter overview resumes returning learners and marks finished chapters"
   await expect(page.locator(".program-step .step-state").last()).toHaveText("Best 80%");
 });
 
+test("chapter overviews fit the viewport at desktop width", async ({ page }) => {
+  await seed(page);
+  await page.setViewportSize({ width: 1280, height: 800 });
+  for (const slug of ["ai-foundations", "ai-tools", "ethical-ai", "ai-in-the-real-world", "capstone"]) {
+    await page.goto(`/modules/${slug}/`);
+    const dimensions = await page.evaluate(() => ({
+      scrollWidth: document.documentElement.scrollWidth,
+      clientWidth: document.documentElement.clientWidth
+    }));
+    expect(dimensions.scrollWidth, `${slug} at 1280px`).toBe(dimensions.clientWidth);
+  }
+});
+
 test("glossary search filters terms, announces the count and recovers from no results", async ({ page }) => {
   await seed(page);
   await page.goto("/glossary/");
