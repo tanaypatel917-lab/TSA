@@ -8,12 +8,15 @@ import { LostToken } from "@/components/LostToken";
 import { TimelineParticles } from "@/components/three/TimelineParticles";
 import { useMotionPreference } from "@/components/MotionPreferences";
 
+const pad = (value: number) => String(value).padStart(2, "0");
+
 const timelineItems = timelineEras.flatMap((era) => era.entries.map((entry, index) => {
   const key = typeof entry.year === "number" ? String(entry.year) : `next-${index + 1}`;
   const year = typeof entry.year === "number" ? String(entry.year) : "NEXT";
   return {
     key,
     mark: entry.object?.mark ?? "?",
+    year,
     caption: `${year} · ${(entry.object?.label ?? "YOUR TURN").toUpperCase()}`
   };
 }));
@@ -31,6 +34,7 @@ export function TimelinePage() {
   const [particlesEnabled, setParticlesEnabled] = useState(false);
   const { reduced, ready } = useMotionPreference();
   const currentParticle = timelineItems.find((item) => item.key === activeEntry) ?? timelineItems[0];
+  const currentParticleIndex = timelineItems.findIndex((item) => item.key === currentParticle?.key);
 
   useEffect(() => {
     const sections = Array.from(document.querySelectorAll<HTMLElement>(".timeline-era"));
@@ -106,8 +110,17 @@ export function TimelinePage() {
         </nav>
       </aside>
       {particlesEnabled && currentParticle && <aside className="timeline-particles-column" aria-hidden="true">
-        <TimelineParticles mark={currentParticle.mark} onReady={disableParticles} />
-        <p className="timeline-particles-caption">{currentParticle.caption}</p>
+        <div className="timeline-plate">
+          <div className="timeline-plate-head">
+            <span>Wordplay archive</span>
+            <span>Item {pad(currentParticleIndex + 1)} / {pad(timelineItems.length)}</span>
+          </div>
+          <TimelineParticles mark={currentParticle.mark} onReady={disableParticles} />
+          <div className="timeline-plate-label" key={currentParticle.key}>
+            <strong>{currentParticle.year}</strong>
+            <p className="timeline-particles-caption">{currentParticle.caption}</p>
+          </div>
+        </div>
       </aside>}
       <div className="timeline-content">
         {timelineEras.map((era) => (

@@ -19,6 +19,15 @@ test("renders all timeline entries and follows era navigation", async ({ page })
   await expect(page).toHaveURL(/\/modules\/ai-foundations\/lessons\/rules-and-learning\/?$/);
 });
 
+test("shows the initial particle as a numbered archive plate on desktop", async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("wordplay:motion:v1", "full"));
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/timeline/");
+  const plateHead = page.locator(".timeline-plate-head");
+  await expect(plateHead).toBeVisible();
+  await expect(plateHead).toContainText("Item 01 / 12");
+});
+
 test("links from the footer and Explore page", async ({ page }) => {
   await page.goto("/timeline/");
   const footerLink = page.locator("footer").getByRole("link", { name: "Timeline", exact: true });
