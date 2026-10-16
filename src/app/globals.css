@@ -1620,13 +1620,20 @@ html[data-text="larger"] main:not(:has(.world)) { zoom: 1.22; }
   .lesson-facts dd { font-size: 30px; }
   .lesson-facts dt { font-size: 10px; letter-spacing: .05em; }
 }
-@media (min-width: 1024px) and (max-width: 1179px) {
+@media (min-width: 1024px) {
+  .site-navigation a { white-space: nowrap; }
+  .site-navigation .tray-chip { min-height: 41px; }
+}
+@media (min-width: 1024px) and (max-width: 1199px) {
   .site-navigation { gap: 10px; }
   .comfort-pill button, .comfort-pill .motion-toggle { padding-inline: 8px; }
   .comfort-pill > :first-child { padding-left: 11px; }
 }
 @media (min-width: 1200px) and (max-width: 1279px) {
-  .site-navigation { gap: 20px; }
+  .site-navigation { gap: 14px; }
+}
+@media (min-width: 1280px) and (max-width: 1399px) {
+  .site-navigation { gap: 14px; }
 }
 
 /* X-ray: token boundaries */

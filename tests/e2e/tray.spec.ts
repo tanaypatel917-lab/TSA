@@ -151,15 +151,42 @@ test("the desktop header remains on one row at 1024 and 1280 pixels", async ({ p
 });
 
 test("the desktop navigation fits the page at supported widths and routes", async ({ page }) => {
+  const widths = [
+    ...new Set([
+      ...Array.from({ length: 53 }, (_, index) => 1024 + index * 8),
+      1199,
+      1279,
+      1280,
+      1366
+    ])
+  ].sort((a, b) => a - b);
+
   for (const route of ["/", "/modules/", "/timeline/"]) {
-    for (const width of [1024, 1100, 1200, 1279, 1440]) {
+    await page.goto(route);
+
+    for (const width of widths) {
       await page.setViewportSize({ width, height: 900 });
-      await page.goto(route);
-      const dimensions = await page.evaluate(() => ({
-        scrollWidth: document.documentElement.scrollWidth,
-        clientWidth: document.documentElement.clientWidth
-      }));
+      await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => resolve())));
+      const dimensions = await page.evaluate(() => {
+        const linkHeights = [...document.querySelectorAll<HTMLAnchorElement>(".site-navigation a")]
+          .filter(link => {
+            const rect = link.getBoundingClientRect();
+            const style = getComputedStyle(link);
+            return rect.width > 0 && rect.height > 0 && style.display !== "none" && style.visibility !== "hidden";
+          })
+          .map(link => link.getBoundingClientRect().height);
+
+        return {
+          scrollWidth: document.documentElement.scrollWidth,
+          clientWidth: document.documentElement.clientWidth,
+          linkHeightSpread: Math.max(...linkHeights) - Math.min(...linkHeights),
+          visibleLinkCount: linkHeights.length
+        };
+      });
+
       expect(dimensions.scrollWidth, `${route} at ${width}px`).toBe(dimensions.clientWidth);
+      expect(dimensions.visibleLinkCount, `${route} at ${width}px`).toBeGreaterThan(0);
+      expect(dimensions.linkHeightSpread, `${route} at ${width}px`).toBeLessThan(2);
     }
   }
 });
