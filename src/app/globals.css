@@ -1676,7 +1676,7 @@ html[data-text="larger"] main:not(:has(.world)) { zoom: 1.22; }
 .xray-toggle:is(:hover, :focus-visible, [aria-pressed="true"]) { justify-content: flex-start; gap: 8px; max-width: min(300px, calc(100vw - 32px)); }
 .xray-toggle:is(:hover, :focus-visible, [aria-pressed="true"]) .xray-label { max-width: 260px; opacity: 1; }
 .xray-toggle[data-tucked="true"] { translate: 0 calc(100% + 24px); }
-@media (hover: hover) and (pointer: fine) { .xray-toggle:hover { background: var(--sky); } .xray-toggle[aria-pressed="true"]:hover { background: #2A3B5A; } }
+@media (hover: hover) and (pointer: fine) { .xray-toggle:hover { background: var(--paper); translate: 0 -2px; box-shadow: 0 5px 0 var(--ink); } .xray-toggle[aria-pressed="true"]:hover { background: #2A3B5A; } }
 @media (max-width: 767px) {
   .xray-toggle { min-width: 36px; max-width: 36px; height: 36px; padding-inline: 9px; left: 16px; bottom: 16px; font-size: 11.5px; }
 }
