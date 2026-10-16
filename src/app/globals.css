@@ -600,10 +600,22 @@ body:has(.intro-experience) .site-footer { display: none; }
 .chapter-outcomes > ul > li::before { content: "↗"; position: absolute; left: 0; }
 .chapter-rule { margin-top: 18px; font-size: 14px; line-height: 1.6; }
 .chapter-pager { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding-bottom: 88px; }
-.chapter-pager a { display: block; padding-top: 18px; border-top: 1px solid var(--ink); text-decoration: none; }
-.chapter-pager a.is-next { grid-column: 2; text-align: right; }
-.chapter-pager span { display: block; font-size: 13px; }
-.chapter-pager strong { display: block; margin-top: 8px; font-family: var(--font-display), sans-serif; font-size: clamp(26px, 2.8vw, 40px); font-weight: 650; line-height: 1.1; letter-spacing: -.02em; }
+.chapter-pager a { position: relative; overflow: hidden; display: grid; align-content: end; min-height: 280px; padding: 28px clamp(170px, 17vw, 230px) 28px 32px; border: 2px solid var(--ink); border-radius: 12px; background: var(--paper); box-shadow: 8px 8px 0 var(--ink); color: var(--ink); text-align: left; text-decoration: none; }
+.chapter-pager a.is-next { grid-column: 2; }
+.chapter-pager a:only-child { grid-column: 1 / -1; }
+.chapter-pager a[data-module="tools"] { background: var(--sky); }
+.chapter-pager a[data-module="ethics"], .chapter-pager a[data-module="capstone"] { background: var(--clay); }
+.chapter-pager a[data-module="real-world"] { background: var(--ink); box-shadow: 8px 8px 0 var(--clay); color: var(--paper); }
+.chapter-pager a[data-module="real-world"]:focus-visible { outline-color: var(--clay); }
+.chapter-pager span { position: relative; z-index: 1; display: block; font-size: 13px; line-height: 1.3; }
+.chapter-pager strong { position: relative; z-index: 1; display: block; margin-top: 8px; font-family: var(--font-body), sans-serif; font-size: 18px; font-weight: 700; line-height: 1.2; }
+.chapter-pager-question { position: relative; z-index: 1; display: block; max-width: 12ch; margin-top: 7px; font-family: var(--font-display), sans-serif; font-size: clamp(30px, 3.2vw, 48px); font-style: normal; font-weight: 700; line-height: 1; letter-spacing: -.03em; }
+.chapter-pager-note { position: relative; z-index: 1; display: block; max-width: 32ch; margin-top: 8px; font-size: 14px; font-style: normal; line-height: 1.4; }
+.chapter-pager-number { position: absolute; z-index: 0; top: 8px; left: 24px; color: transparent; font-family: var(--font-display), sans-serif; font-size: 96px; font-weight: 650; line-height: .8; -webkit-text-stroke: 2px var(--ink); pointer-events: none; }
+.chapter-pager a[data-module="real-world"] .chapter-pager-number { -webkit-text-stroke-color: var(--paper); }
+.chapter-pager-mark { position: absolute; z-index: 0; right: -10px; bottom: -30px; color: var(--clay); font-family: var(--font-display), sans-serif; font-size: 220px; font-weight: 650; line-height: 1; white-space: nowrap; text-shadow: 3px 3px 0 #B8694A, 6px 6px 0 #B8694A, 9px 9px 0 #A35C40, 12px 12px 0 #8E5037, 22px 24px 20px rgba(28, 42, 67, .18); pointer-events: none; }
+.chapter-pager a[data-module="ethics"] .chapter-pager-mark, .chapter-pager a[data-module="capstone"] .chapter-pager-mark { color: var(--ink); }
+.chapter-pager a[data-module="real-world"] .chapter-pager-mark { color: var(--sky); }
 
 .badges-section { padding-bottom: 96px; }
 .badge-summary { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 18px; padding-block: 36px 28px; border-bottom: 1px solid var(--ink); }
@@ -732,7 +744,6 @@ body:has(.intro-experience) .site-footer { display: none; }
   .program-step:hover { background: rgba(221, 137, 98, .2); }
   .program-step.is-practice:hover { background: rgba(221, 137, 98, .48); }
   .program-step.is-quiz:hover { background: rgba(175, 203, 227, .6); }
-  .chapter-pager a:hover strong { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
   .glossary-letters a:hover { background: var(--clay); }
   .sorting-bin:not([aria-disabled="true"]):hover { background: var(--clay); }
   .sorting-bin:not([aria-disabled="true"]):hover span { color: var(--ink); }
@@ -801,7 +812,11 @@ body:has(.intro-experience) .site-footer { display: none; }
   .step-arrow { grid-column: 3; grid-row: 1; font-size: 18px; }
   .chapter-outcomes { padding: 22px; box-shadow: 5px 5px 0 var(--clay); }
   .chapter-pager { grid-template-columns: 1fr; gap: 16px; padding-bottom: 56px; }
-  .chapter-pager a.is-next { grid-column: 1; text-align: left; }
+  .chapter-pager a, .chapter-pager a.is-next { grid-column: 1; min-height: 220px; padding: 22px 146px 22px 20px; border-radius: 10px; }
+  .chapter-pager span { font-size: 12px; }
+  .chapter-pager-number { top: 6px; left: 18px; font-size: 64px; }
+  .chapter-pager-mark { right: -10px; bottom: -18px; font-size: 140px; }
+  .chapter-pager-question { font-size: clamp(26px, 7vw, 34px); }
   .badges-section { padding-bottom: 60px; }
   .badge-summary strong { font-size: 60px; }
   .glossary-layout { padding-block: 32px 60px; }
@@ -1272,11 +1287,12 @@ html[data-motion="reduced"] .brief-steps li { animation: none !important; }
   .closing-mark { text-shadow: 3px 3px 0 #B8694A, 6px 6px 0 #B8694A, 9px 9px 0 #A35C40, 12px 12px 0 #A35C40, 15px 15px 0 #8E5037, 18px 18px 0 #8E5037, 30px 36px 28px rgba(28, 42, 67, .25); }
   .home-closing h2 { text-shadow: 2px 2px 0 #B8694A, 4px 4px 0 #A35C40, 6px 6px 0 #8E5037, 10px 14px 14px rgba(28, 42, 67, .18); }
 }
-@media (min-width: 900px) {
-  .chapter-pager strong { transition: translate .3s var(--ease-out), text-shadow .3s var(--ease-out); }
-  html[data-motion="full"] .chapter-pager a:hover strong { translate: -4px -5px; text-shadow: 1px 1px 0 var(--clay), 2px 2px 0 var(--clay), 3px 3px 0 #B8694A, 4px 4px 0 #B8694A, 5px 5px 0 #8E5037, 9px 11px 10px rgba(28, 42, 67, .18); }
-  html[data-motion="full"] .chapter-pager a.is-next:hover strong { translate: -6px -5px; }
-  html[data-motion="full"] .chapter-pager a:hover strong { text-decoration: none; }
+@media (min-width: 900px) and (hover: hover) and (pointer: fine) {
+  .chapter-pager a { transition: translate .3s var(--ease-out), box-shadow .3s var(--ease-out); }
+  .chapter-pager-mark { transition: rotate .3s var(--ease-out); }
+  html[data-motion="full"] .chapter-pager a:hover { translate: -4px -4px; box-shadow: 12px 12px 0 var(--ink); }
+  html[data-motion="full"] .chapter-pager a[data-module="real-world"]:hover { box-shadow: 12px 12px 0 var(--clay); }
+  html[data-motion="full"] .chapter-pager a:hover .chapter-pager-mark { rotate: 4deg; }
 }
 @media (min-width: 900px) {
   .not-found h1 { max-width: 9.5ch; }

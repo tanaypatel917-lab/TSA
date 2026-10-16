@@ -48,6 +48,14 @@ test("a chapter overview starts new learners at lesson one", async ({ page }) =>
   await expect(page.locator(".program-step .step-state")).toHaveText(["Lesson", "Lesson", "Lesson", "Lesson", "Lesson", "Practice", "Quiz"]);
 });
 
+test("the next chapter poster links to AI Tools", async ({ page }) => {
+  await seed(page);
+  await page.goto("/modules/ai-foundations/");
+  const nextPoster = page.getByRole("navigation", { name: "Chapters" }).getByRole("link", { name: /Next chapter/ });
+  await expect(nextPoster).toHaveAttribute("href", "/modules/ai-tools/");
+  await expect(nextPoster).toHaveAttribute("data-module", "tools");
+});
+
 test("a chapter overview resumes returning learners and marks finished chapters", async ({ page }) => {
   await seed(page, returning);
   await page.goto("/modules/ai-tools/");
