@@ -136,7 +136,7 @@ export function VoxelGlyph({ mark, className = "" }: { mark: string; className?:
       const resize = new ResizeObserver(size);
       resize.observe(element);
 
-      const hero = element.closest(".chapter-hero, .lesson-opener, .page-hero, .not-found, .quiz-results, .about-principles li, .intro-gate-card") ?? element;
+      const hero = element.closest(".chapter-hero, .study-heading, .lesson-opener, .page-hero, .not-found, .quiz-results, .about-principles li, .intro-gate-card") ?? element;
       const pointer = new THREE.Vector2(9, 9);
       const local = new THREE.Vector3();
       const ray = new THREE.Raycaster();
