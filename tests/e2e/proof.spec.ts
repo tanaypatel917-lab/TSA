@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test";
+import { figureLabels } from "../../src/content/figures";
 import { foundations } from "../../src/content/modules/foundations";
+import { lessonVisuals } from "../../src/content/visuals";
 import { initialState } from "../../src/engine/progress";
 
 const progressKey = "wordplay:progress:v1";
@@ -65,6 +67,36 @@ test("mobile menu supports keyboard links, Escape and focus return", async ({ pa
   await expect(page).toHaveURL(/\/learn\/$/);
   await expect(page.getByRole("heading", { name: "Your next good question." })).toBeVisible();
   await expect(menu).toHaveAttribute("aria-expanded", "false");
+});
+
+test("lesson outlines include labs and sources in reading order", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/modules/ai-foundations/lessons/language-models/");
+  const outline = page.getByRole("navigation", { name: "Lesson outline" });
+  const links = outline.getByRole("link");
+  await expect(links).toHaveText([
+    "Read the lesson",
+    `Try it: ${figureLabels.tokens}`,
+    `Try it: ${figureLabels.predictor}`,
+    "Key takeaways",
+    "Sources"
+  ]);
+  const hrefs = await links.evaluateAll((anchors) => anchors.map((anchor) => anchor.getAttribute("href")));
+  expect(await page.evaluate((targets) => targets.every((href) => href !== null && document.querySelector(href) !== null), hrefs)).toBe(true);
+
+  await page.goto("/modules/ai-foundations/lessons/data-and-bias/");
+  const biasLinks = await page.getByRole("navigation", { name: "Lesson outline" }).getByRole("link").allTextContents();
+  const sections = lessonVisuals["foundations/data-and-bias"].sections;
+  expect(biasLinks).toEqual([
+    sections[0],
+    sections[1],
+    `Try it: ${figureLabels.bias}`,
+    sections[2],
+    sections[3],
+    "Key takeaways",
+    "Sources"
+  ]);
+  expect(biasLinks[sections.indexOf("Past patterns, present bias") + 1]).toBe(`Try it: ${figureLabels.bias}`);
 });
 
 test("the complete lesson preserves content, mobile outline and completion identity", async ({ page }) => {

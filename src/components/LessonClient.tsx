@@ -11,7 +11,7 @@ import { useProgress } from "@/state/ProgressProvider";
 import { todayKey } from "@/engine/dates";
 import { StudyShell } from "./StudyShell";
 import { VoxelGlyph } from "./three/VoxelGlyph";
-import { lessonFigures } from "@/content/figures";
+import { figureLabels, lessonFigures } from "@/content/figures";
 import "./juice.css";
 import { LessonFigure } from "./labs/LessonFigure";
 import { TrayToggle } from "./WordTray";
@@ -29,13 +29,24 @@ export function LessonClient({ module, lesson, index, sources, terms }: { module
   const visual = lessonVisuals[`${module.id}/${lesson.id}`];
   const sections = visual?.sections ?? ["Read the lesson"];
   const figures = lessonFigures[`${module.id}/${lesson.id}`] ?? [];
-  const figuresAfter = (position: number) => figures.filter((figure) => figure.after === position).map((figure) => <div key={figure.kind} className="lesson-band"><LessonFigure kind={figure.kind} /></div>);
+  const orderedFigures = figures.map((figure, index) => ({ figure, index })).sort((a, b) => a.figure.after - b.figure.after || a.index - b.index).map(({ figure }) => figure);
+  const figuresAfter = (position: number) => figures.filter((figure) => figure.after === position).map((figure) => <div key={figure.kind} id={`lesson-lab-${figure.kind}`} className="lesson-band"><LessonFigure kind={figure.kind} /></div>);
   const margin = (position: number) => { const notes = terms.filter((term) => term.paragraph === position); return notes.length > 0 && <span className="lesson-margin" aria-hidden="true">{notes.map((term) => <span key={term.slug}>{term.term}</span>)}</span>; };
   const pullAfter = lesson.body.length >= 3 ? Math.floor(lesson.body.length / 2) - 1 : -1;
   const pull = <blockquote className="lesson-pull" aria-hidden="true"><p data-quote={lesson.keyTakeaways[0]} /></blockquote>;
   const pad = (value: number) => String(value).padStart(2, "0");
   const facts: [string, number][] = [["min read", lesson.minutes], [figures.length === 1 ? "lab" : "labs", figures.length], ["sources", sources.length], ["terms", terms.length], ["quiz questions", module.quiz.length]];
-  const outline = <ol>{sections.map((title, position) => <li key={title}><a href={`#lesson-section-${position}`}>{title}</a></li>)}<li><a href="#takeaways">Key takeaways</a></li></ol>;
+  const outlineItems = sections.flatMap((title, position) => {
+    const sectionFigures = visual ? figures.filter((figure) => figure.after === position) : position === 0 ? orderedFigures : [];
+    return [
+      { href: `#lesson-section-${position}`, kind: "section" as const, title },
+      ...sectionFigures.map((figure) => ({ href: `#lesson-lab-${figure.kind}`, kind: "lab" as const, title: figureLabels[figure.kind] }))
+    ];
+  });
+  const outline = <ol>{outlineItems.map((item) => item.kind === "section"
+    ? <li key={item.href}><a href={item.href}>{item.title}</a></li>
+    : <li key={item.href} data-kind="lab"><a href={item.href}><span className="lesson-outline-lab-prefix">Try it:</span> {item.title}</a></li>
+  )}<li key="#takeaways"><a href="#takeaways">Key takeaways</a></li>{sources.length > 0 && <li key="#lesson-sources"><a href="#lesson-sources">Sources</a></li>}</ol>;
   function openTerm(slug: string, target: HTMLElement) {
     const box = reading.current?.getBoundingClientRect();
     if (!box) return;
@@ -124,7 +135,7 @@ export function LessonClient({ module, lesson, index, sources, terms }: { module
               <p className="small-note">Key takeaways</p>
               <ul>{lesson.keyTakeaways.map((takeaway) => <li key={takeaway}>{takeaway}</li>)}</ul>
             </section>
-            {sources.length > 0 && <section className="lesson-sources" aria-labelledby="lesson-sources-title">
+            {sources.length > 0 && <section className="lesson-sources" id="lesson-sources" aria-labelledby="lesson-sources-title">
               <h2 id="lesson-sources-title">Sources</h2>
               <ol>{sources.map((source) => <li key={source.id}>{source.authors} ({source.date}). <a href={source.url} rel="noreferrer">{source.title}</a>.{source.source && ` ${source.source}.`}</li>)}</ol>
               <Link href="/references" className="text-link text-link--arrow"><span className="text-link-label">All references </span><span aria-hidden="true">↗</span></Link>
